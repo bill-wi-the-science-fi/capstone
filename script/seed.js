@@ -1,7 +1,7 @@
 'use strict'
 
 const db = require('../server/db')
-const {User} = require('../server/db/models')
+const {User, Nomination} = require('../server/db/models')
 
 async function seed() {
   await db.sync({force: true})
@@ -9,8 +9,19 @@ async function seed() {
 
   const users = await Promise.all([
     User.create({email: 'cody@email.com', password: '123'}),
-    User.create({email: 'murphy@email.com', password: '123'})
+    User.create({email: 'murphy@email.com', password: '123'}),
   ])
+  const cody = users[0]
+  const murphy = users[1]
+
+  await cody.setRecipient(murphy)
+
+  let throughRow = await Nomination.findOne({
+    where: {userId: 1, recipientId: 2},
+  })
+  let maybeAward = await throughRow.createAward({title: 'coleaward'})
+
+  console.log('\n --------🚀 \n seed \n throughRow', maybeAward)
 
   console.log(`seeded ${users.length} users`)
   console.log(`seeded successfully`)
