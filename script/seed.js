@@ -1,7 +1,7 @@
 'use strict'
 
 const db = require('../server/db')
-const {User, Nomination} = require('../server/db/models')
+const {User, Nomination, Transaction} = require('../server/db/models')
 
 async function seed() {
   await db.sync({force: true})
@@ -21,8 +21,18 @@ async function seed() {
       email: 'cole@email.com',
     },
   })
+
   cole = cole[0]
 
+  let alansTrx = await Transaction.findOrCreate({
+    where: {
+      transactionHash:
+        '0x05cbd37d856b8a5fb78799c023c132d8feace6d319e1c7d5391bb36fce86a59f',
+      smartContractAddress: '0x60f80121c31a0d46b5279700f9df786054aa5ee5',
+      amountEther: 1000,
+    },
+  })
+  alansTrx = alansTrx[0]
   await cody.addRecipient(murphy)
   //setRecipient is BASICALLY nominate a user.
   await murphy.addRecipient(alan)
@@ -48,9 +58,8 @@ async function seed() {
   let maybeAward3 = await throughRow.createAward({title: 'test'})
   let maybeAward4 = await throughRow3.createAward({title: 'test 2'})
   let maybeAward5 = await throughRow4.createAward({title: 'test Guest'})
-
-  console.log('\n --------🚀 \n seed \n throughRow', maybeAward)
-
+  await alansTrx.setAward(maybeAward4)
+  await alansTrx.setUser(alan)
   console.log(`seeded ${users.length} users`)
   console.log(`seeded successfully`)
 }
