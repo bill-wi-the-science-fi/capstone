@@ -15,7 +15,7 @@ const allUsers = []
  * ACTION CREATORS
  */
 
-const _getAllNominees = () => ({type: GET_ALL_NOMINEES, users})
+const _getAllNominees = (users) => ({type: GET_ALL_NOMINEES, users})
 const _nominateUser = (nominatedUser) => ({
   type: GET_ALL_NOMINEES,
   nominatedUser,

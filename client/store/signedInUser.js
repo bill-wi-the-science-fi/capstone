@@ -69,19 +69,3 @@ export default function (state = defaultUser, action) {
       return state
   }
 }
-
-// export const nomitate = (nominatorUserID, nomineeEmail) => async (dispatch) => {
-//   try {
-//nominate user find or create,  set recipient in the API call
-//returns user
-//add to users array
-
-//THERE WILL NEED TO BE A SEPARATE ACTION TO JUST HAVE A USER CREATE AN ACCOUNT
-
-//create an award
-//add award to awards array
-//
-//   } catch (err) {
-//     console.error(err)
-//   }
-// }

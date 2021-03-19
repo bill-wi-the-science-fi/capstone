@@ -3,6 +3,8 @@ import {createLogger} from 'redux-logger'
 import thunkMiddleware from 'redux-thunk'
 import {composeWithDevTools} from 'redux-devtools-extension'
 import signedInUser from './signedInUser'
+import users from './users'
+import awards from './awards'
 
 const reducer = combineReducers({
   signedInUser,
@@ -17,3 +19,5 @@ const store = createStore(reducer, middleware)
 
 export default store
 export * from './signedInUser'
+export * from './users'
+export * from './awards'
