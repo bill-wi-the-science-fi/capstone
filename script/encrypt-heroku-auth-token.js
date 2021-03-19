@@ -21,7 +21,7 @@ const successMessage = `Complete! Run \`git diff .travis.yml\` to check.`
 /* Clean up system state changes. */
 const clean = () => {
   const externalFiles = ['.tmp.key.pem', '.tmp.token.txt', '.tmp.token.enc']
-  externalFiles.forEach(file => {
+  externalFiles.forEach((file) => {
     if (fs.existsSync(file)) fs.unlinkSync(file)
   })
 }
@@ -29,7 +29,7 @@ const clean = () => {
 /* Get a specific git remote URL. */
 const getRemoteURL = (name, remotes) => {
   try {
-    return remotes.filter(remote => remote.name === name)[0].refs.fetch
+    return remotes.filter((remote) => remote.name === name)[0].refs.fetch
   } catch (err) {
     console.log(
       `It appears that the remote ${name} does not exist.`,
@@ -47,15 +47,15 @@ const getOutputFromCommand = async (command, args) => {
     const stdout = []
     const stderr = []
 
-    process.stdout.on('data', data => {
+    process.stdout.on('data', (data) => {
       stdout.push(data)
     })
 
-    process.stderr.on('data', data => {
+    process.stderr.on('data', (data) => {
       stderr.push(data)
     })
 
-    process.on('close', code => {
+    process.on('close', (code) => {
       if (code) throw new Error(reject(stderr))
       resolve(stdout)
     })
@@ -107,14 +107,16 @@ const updateTravisYAML = (app, key) => {
       api_key: {secure: key} //eslint-disable-line
     })
   )
-  doc.contents.items.filter(item => item.key in keyComments).forEach(item => {
-    item.comment = keyComments[item.key]
-    if (item.key === 'deploy') {
-      item.value.items.forEach(item_ => {
-        item_.commentBefore = keyComments[item_.key]
-      })
-    }
-  })
+  doc.contents.items
+    .filter((item) => item.key in keyComments)
+    .forEach((item) => {
+      item.comment = keyComments[item.key]
+      if (item.key === 'deploy') {
+        item.value.items.forEach((item_) => {
+          item_.commentBefore = keyComments[item_.key]
+        })
+      }
+    })
   doc.comment = ''
   fs.writeFileSync('.travis.yml', doc.toString())
   return true

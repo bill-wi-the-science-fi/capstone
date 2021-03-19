@@ -94,5 +94,5 @@ module.exports = {
   User,
   Transaction,
   Award,
-  Nomination,
+  Nomination
 }

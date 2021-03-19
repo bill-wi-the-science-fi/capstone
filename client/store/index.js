@@ -11,7 +11,7 @@ const reducer = combineReducers({
   signedInUser,
   users, // array initial State // Nomiation lives here
   awards, // array initialState // create award triggers after Nomination and lives here
-  singleAward, // Object initialState
+  singleAward // Object initialState
 })
 const middleware = composeWithDevTools(
   applyMiddleware(thunkMiddleware, createLogger({collapsed: true}))
@@ -23,3 +23,13 @@ export * from './signedInUser'
 export * from './users'
 export * from './awards'
 export * from './singleAward'
+
+/*
+store =
+{
+  signedInUser: {userObject}
+  users: [AllUsersArray]
+  awards: [AllAwardsArray]
+  singleAward: {SingleAwardObject}
+}
+ */

@@ -7,8 +7,8 @@ const Nomination = db.define('nomination', {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
-    allowNull: false,
-  },
+    allowNull: false
+  }
 })
 
 module.exports = Nomination

@@ -6,18 +6,18 @@ const Transaction = db.define('transaction', {
   transactionHash: {
     type: Sequelize.STRING,
     unique: true,
-    allowNull: false,
+    allowNull: false
   },
   smartContractAddress: {
     type: Sequelize.STRING,
     unique: false,
-    allowNull: false,
+    allowNull: false
   },
   amountEther: {
     type: Sequelize.INTEGER,
     unique: true,
-    allowNull: false,
-  },
+    allowNull: false
+  }
 })
 
 module.exports = Transaction

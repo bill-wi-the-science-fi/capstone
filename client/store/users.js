@@ -5,6 +5,7 @@ import axios from 'axios'
  */
 const GET_ALL_NOMINEES = 'GET_ALL_NOMINEES'
 const NOMINATE_A_USER = 'NOMINATE_A_USER'
+const CREATE_NEW_USER = 'CREATE_NEW_USER'
 
 /**
  * INITIAL STATE
@@ -18,9 +19,12 @@ const allUsers = []
 const _getAllNominees = (users) => ({type: GET_ALL_NOMINEES, users})
 const _nominateUser = (nominatedUser) => ({
   type: GET_ALL_NOMINEES,
-  nominatedUser,
+  nominatedUser
 })
-
+const _createUser = (createdUser) => ({
+  type: CREATE_NEW_USER,
+  createdUser
+})
 /**
  * THUNK CREATORS
  */
@@ -40,7 +44,10 @@ export const nominateUser = (nominatorUserID, nomineeEmail) => async (
   try {
     // nominate user find or create,  set recipient in the API call
     // returns user
-    const res = await axios.post('/api/users', {nominatorUserID, nomineeEmail}) //
+    const res = await axios.post('/api/users/nominate', {
+      nominatorUserID,
+      nomineeEmail
+    }) //
     const nominatedUser = res.data
 
     // add to users array
@@ -49,17 +56,28 @@ export const nominateUser = (nominatorUserID, nomineeEmail) => async (
     console.error(err)
   }
 }
-// THERE WILL NEED TO BE A SEPARATE ACTION TO JUST HAVE A USER CREATE AN ACCOUNT
+
+export const createUser = (email) => async (dispatch) => {
+  try {
+    const res = await axios.post('/api/users', {email})
+    const createdUser = res.data
+    dispatch(_createUser(createdUser))
+  } catch (err) {
+    console.error(err)
+  }
+}
 
 /**
  * REDUCER
  */
-export default function (state = defaultUser, action) {
+export default function (state = allUsers, action) {
   switch (action.type) {
     case GET_ALL_NOMINEES:
       return action.users
     case NOMINATE_A_USER:
       return [...state, action.nominatedUser]
+    case CREATE_NEW_USER:
+      return [...state, action.createdUser]
     default:
       return state
   }

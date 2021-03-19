@@ -6,17 +6,17 @@ const User = db.define('user', {
   firstName: {
     type: Sequelize.STRING,
     unique: false,
-    allowNull: true,
+    allowNull: true
   },
   lastName: {
     type: Sequelize.STRING,
     unique: false,
-    allowNull: true,
+    allowNull: true
   },
   email: {
     type: Sequelize.STRING,
     unique: true,
-    allowNull: false,
+    allowNull: false
   },
   password: {
     type: Sequelize.STRING,
@@ -24,7 +24,7 @@ const User = db.define('user', {
     // This is a hack to get around Sequelize's lack of a "private" option.
     get() {
       return () => this.getDataValue('password')
-    },
+    }
   },
   salt: {
     type: Sequelize.STRING,
@@ -32,11 +32,22 @@ const User = db.define('user', {
     // This is a hack to get around Sequelize's lack of a "private" option.
     get() {
       return () => this.getDataValue('salt')
-    },
+    }
   },
   googleId: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
   },
+  ethPublicAddress: {
+    type: Sequelize.STRING,
+    unique: false,
+    defaultValue: '0x76a992fdc12221DEade9b0c299C3deDde5414f7d'
+  },
+  imgUrl: {
+    type: Sequelize.STRING,
+    unique: false,
+    defaultValue:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Oxygen480-emotes-face-smile-big.svg/1200px-Oxygen480-emotes-face-smile-big.svg.png'
+  }
 })
 
 module.exports = User

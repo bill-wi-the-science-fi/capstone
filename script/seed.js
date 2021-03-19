@@ -10,7 +10,7 @@ async function seed() {
   const users = await Promise.all([
     User.create({email: 'cody@email.com', password: '123'}),
     User.create({email: 'murphy@email.com', password: '123'}),
-    User.create({email: 'Alan@email.com', password: '123'}),
+    User.create({email: 'Alan@email.com', password: '123'})
   ])
   const cody = users[0]
   const murphy = users[1]
@@ -18,8 +18,8 @@ async function seed() {
 
   let cole = await User.findOrCreate({
     where: {
-      email: 'cole@email.com',
-    },
+      email: 'cole@email.com'
+    }
   })
 
   cole = cole[0]
@@ -29,8 +29,8 @@ async function seed() {
       transactionHash:
         '0x05cbd37d856b8a5fb78799c023c132d8feace6d319e1c7d5391bb36fce86a59f',
       smartContractAddress: '0x60f80121c31a0d46b5279700f9df786054aa5ee5',
-      amountEther: 1000,
-    },
+      amountEther: 1000
+    }
   })
   alansTrx = alansTrx[0]
   await cody.addRecipient(murphy)
@@ -40,17 +40,17 @@ async function seed() {
   await alan.addRecipient(cole)
 
   let throughRow = await Nomination.findOne({
-    where: {userId: cody.id, recipientId: murphy.id},
+    where: {userId: cody.id, recipientId: murphy.id}
   })
   let throughRow2 = await Nomination.findOne({
-    where: {userId: murphy.id, recipientId: alan.id},
+    where: {userId: murphy.id, recipientId: alan.id}
   })
   let throughRow3 = await Nomination.findOne({
-    where: {userId: alan.id, recipientId: murphy.id},
+    where: {userId: alan.id, recipientId: murphy.id}
   })
 
   let throughRow4 = await Nomination.findOne({
-    where: {userId: alan.id, recipientId: cole.id},
+    where: {userId: alan.id, recipientId: cole.id}
   })
 
   let maybeAward = await throughRow.createAward({title: 'coleaward'})
