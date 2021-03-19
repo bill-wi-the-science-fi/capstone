@@ -15,13 +15,13 @@ const defaultUser = {}
 /**
  * ACTION CREATORS
  */
-const getUser = user => ({type: GET_USER, user})
+const getUser = (user) => ({type: GET_USER, user})
 const removeUser = () => ({type: REMOVE_USER})
 
 /**
  * THUNK CREATORS
  */
-export const me = () => async dispatch => {
+export const me = () => async (dispatch) => {
   try {
     const res = await axios.get('/auth/me')
     dispatch(getUser(res.data || defaultUser))
@@ -30,7 +30,7 @@ export const me = () => async dispatch => {
   }
 }
 
-export const auth = (email, password, method) => async dispatch => {
+export const auth = (email, password, method) => async (dispatch) => {
   let res
   try {
     res = await axios.post(`/auth/${method}`, {email, password})
@@ -46,7 +46,7 @@ export const auth = (email, password, method) => async dispatch => {
   }
 }
 
-export const logout = () => async dispatch => {
+export const logout = () => async (dispatch) => {
   try {
     await axios.post('/auth/logout')
     dispatch(removeUser())
@@ -59,7 +59,7 @@ export const logout = () => async dispatch => {
 /**
  * REDUCER
  */
-export default function(state = defaultUser, action) {
+export default function (state = defaultUser, action) {
   switch (action.type) {
     case GET_USER:
       return action.user
@@ -69,3 +69,19 @@ export default function(state = defaultUser, action) {
       return state
   }
 }
+
+// export const nomitate = (nominatorUserID, nomineeEmail) => async (dispatch) => {
+//   try {
+//nominate user find or create,  set recipient in the API call
+//returns user
+//add to users array
+
+//THERE WILL NEED TO BE A SEPARATE ACTION TO JUST HAVE A USER CREATE AN ACCOUNT
+
+//create an award
+//add award to awards array
+//
+//   } catch (err) {
+//     console.error(err)
+//   }
+// }

@@ -30,10 +30,10 @@ const Award = db.define('award', {
       'https://media.npr.org/assets/img/2015/10/16/undefined_wide-3e974801314a154e108c3ed9c07f501ad477e14b.jpg',
   },
   timeConstraint: {
-    type: Sequelize.TEXT,
+    type: Sequelize.DATE,
     unique: false,
-    defaultValue:
-      'https://media.npr.org/assets/img/2015/10/16/undefined_wide-3e974801314a154e108c3ed9c07f501ad477e14b.jpg',
+    allowNull: true,
+    defaultValue: Date.now(),
   },
 })
 
