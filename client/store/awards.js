@@ -44,7 +44,6 @@ export const createAward = (nominatorUserID, nomineeEmail) => async (
     console.error(err)
   }
 }
-// THERE WILL NEED TO BE A SEPARATE ACTION TO JUST HAVE A USER CREATE AN ACCOUNT
 
 /**
  * REDUCER
@@ -59,6 +58,3 @@ export default function (state = allAwards, action) {
       return state
   }
 }
-
-// create an award
-// add award to awards array
