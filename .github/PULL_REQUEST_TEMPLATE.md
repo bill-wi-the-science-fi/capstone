@@ -1,8 +1,8 @@
 ### Assignee Tasks
 
-- [ ] added unit tests (or none needed)
-- [ ] written relevant docs (or none needed)
-- [ ] referenced any relevant issues (or none exist)
+- [ ] Added comments where needed
+- [ ] No breaking changes
+- [ ] Pulled from master prior to making this PR
 
 ### Guidelines
 
