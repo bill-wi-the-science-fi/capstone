@@ -49,7 +49,9 @@ router.post('/nominate', async (req, res, next) => {
       description,
       nominatorUserID,
       email,
-      time,
+      timeConstraint,
+      donationLimit,
+      donationTotal,
       img
     } = req.body
     let nominee = await User.findOrCreate({where: {email: email}})
@@ -63,7 +65,9 @@ router.post('/nominate', async (req, res, next) => {
       title: title,
       category: category,
       description: description,
-      time: time,
+      timeConstraint: timeConstraint,
+      donationLimit: donationLimit,
+      donationTotal: donationTotal,
       img: img
     })
     res.json(newAward)

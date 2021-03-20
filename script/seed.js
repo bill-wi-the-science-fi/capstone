@@ -40,7 +40,10 @@ async function seed() {
   await alan.addRecipient(cole)
 
   let throughRow = await Nomination.findOne({
-    where: {userId: cody.id, recipientId: murphy.id}
+    where: {
+      userId: cody.id,
+      recipientId: murphy.id
+    }
   })
   let throughRow2 = await Nomination.findOne({
     where: {userId: murphy.id, recipientId: alan.id}
@@ -53,11 +56,31 @@ async function seed() {
     where: {userId: alan.id, recipientId: cole.id}
   })
 
-  let maybeAward = await throughRow.createAward({title: 'coleaward'})
-  let maybeAward2 = await throughRow2.createAward({title: 'alanAward'})
-  let maybeAward3 = await throughRow.createAward({title: 'test'})
-  let maybeAward4 = await throughRow3.createAward({title: 'test 2'})
-  let maybeAward5 = await throughRow4.createAward({title: 'test Guest'})
+  let maybeAward = await throughRow.createAward({
+    title: 'coleaward',
+    donationLimit: 1000,
+    donationTotal: 60
+  })
+  let maybeAward2 = await throughRow2.createAward({
+    title: 'alanAward',
+    donationLimit: 1000,
+    donationTotal: 50
+  })
+  let maybeAward3 = await throughRow.createAward({
+    title: 'test',
+    donationLimit: 1000,
+    donationTotal: 40
+  })
+  let maybeAward4 = await throughRow3.createAward({
+    title: 'test 2',
+    donationLimit: 1000,
+    donationTotal: 30
+  })
+  let maybeAward5 = await throughRow4.createAward({
+    title: 'test Guest',
+    donationLimit: 1000,
+    donationTotal: 20
+  })
   await alansTrx.setAward(maybeAward4)
   await alansTrx.setUser(alan)
   console.log(`seeded ${users.length} users`)

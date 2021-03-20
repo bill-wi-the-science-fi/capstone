@@ -1,31 +1,37 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import {Link} from 'react-router-dom'
+import {Navbar, Nav, Form, FormControl, Button} from 'react-bootstrap'
 import {logout} from '../store'
 
-const Navbar = ({handleClick, isLoggedIn}) => (
-  <div>
-    <h1>BOILERMAKER</h1>
-    <nav>
-      {isLoggedIn ? (
-        <div>
-          {/* The navbar will show these links after you log in */}
-          <Link to="/home">Home</Link>
-          <a href="#" onClick={handleClick}>
+const NavbarBootstrap = ({handleClick, isLoggedIn}) => (
+  <Navbar collapseOnSelect expand="md" bg="dark" variant="dark">
+    <Navbar.Brand href="#home">Boilermaker</Navbar.Brand>
+
+    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+    <Navbar.Collapse id="responsive-navbar-nav">
+      <Nav className="mr-auto">
+        <Nav.Link href="home">Home</Nav.Link>
+        <Nav.Link href="nominate">Nominate</Nav.Link>
+        {isLoggedIn ? (
+          <Nav.Link href="home" onClick={handleClick}>
             Logout
-          </a>
-        </div>
-      ) : (
-        <div>
-          {/* The navbar will show these links before you log in */}
-          <Link to="/login">Login</Link>
-          <Link to="/signup">Sign Up</Link>
-        </div>
-      )}
-    </nav>
-    <hr />
-  </div>
+          </Nav.Link>
+        ) : (
+          <React.Fragment>
+            <Nav.Link href="login">Login</Nav.Link>
+            <Nav.Link href="signup">Sign Up</Nav.Link>
+          </React.Fragment>
+        )}
+      </Nav>
+      <Nav>
+        <Form inline>
+          <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+          <Button variant="outline-light">Search</Button>
+        </Form>
+      </Nav>
+    </Navbar.Collapse>
+  </Navbar>
 )
 
 /**
@@ -45,7 +51,7 @@ const mapDispatch = (dispatch) => {
   }
 }
 
-export default connect(mapState, mapDispatch)(Navbar)
+export default connect(mapState, mapDispatch)(NavbarBootstrap)
 
 /**
  * PROP TYPES
