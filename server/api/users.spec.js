@@ -21,9 +21,7 @@ describe('User routes', () => {
     })
 
     it('GET /api/users', async () => {
-      const res = await request(app)
-        .get('/api/users')
-        .expect(200)
+      const res = await request(app).get('/api/users').expect(200)
 
       expect(res.body).to.be.an('array')
       expect(res.body[0].email).to.be.equal(codysEmail)

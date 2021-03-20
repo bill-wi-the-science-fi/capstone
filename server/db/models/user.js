@@ -3,6 +3,16 @@ const Sequelize = require('sequelize')
 const db = require('../db')
 
 const User = db.define('user', {
+  firstName: {
+    type: Sequelize.STRING,
+    unique: false,
+    allowNull: true
+  },
+  lastName: {
+    type: Sequelize.STRING,
+    unique: false,
+    allowNull: true
+  },
   email: {
     type: Sequelize.STRING,
     unique: true,
@@ -26,6 +36,17 @@ const User = db.define('user', {
   },
   googleId: {
     type: Sequelize.STRING
+  },
+  ethPublicAddress: {
+    type: Sequelize.STRING,
+    unique: false,
+    defaultValue: '0x76a992fdc12221DEade9b0c299C3deDde5414f7d'
+  },
+  imgUrl: {
+    type: Sequelize.STRING,
+    unique: false,
+    defaultValue:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Oxygen480-emotes-face-smile-big.svg/1200px-Oxygen480-emotes-face-smile-big.svg.png'
   }
 })
 
@@ -34,18 +55,18 @@ module.exports = User
 /**
  * instanceMethods
  */
-User.prototype.correctPassword = function(candidatePwd) {
+User.prototype.correctPassword = function (candidatePwd) {
   return User.encryptPassword(candidatePwd, this.salt()) === this.password()
 }
 
 /**
  * classMethods
  */
-User.generateSalt = function() {
+User.generateSalt = function () {
   return crypto.randomBytes(16).toString('base64')
 }
 
-User.encryptPassword = function(plainText, salt) {
+User.encryptPassword = function (plainText, salt) {
   return crypto
     .createHash('RSA-SHA256')
     .update(plainText)
@@ -56,7 +77,7 @@ User.encryptPassword = function(plainText, salt) {
 /**
  * hooks
  */
-const setSaltAndPassword = user => {
+const setSaltAndPassword = (user) => {
   if (user.changed('password')) {
     user.salt = User.generateSalt()
     user.password = User.encryptPassword(user.password(), user.salt())
@@ -65,6 +86,6 @@ const setSaltAndPassword = user => {
 
 User.beforeCreate(setSaltAndPassword)
 User.beforeUpdate(setSaltAndPassword)
-User.beforeBulkCreate(users => {
+User.beforeBulkCreate((users) => {
   users.forEach(setSaltAndPassword)
 })

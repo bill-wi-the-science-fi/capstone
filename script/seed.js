@@ -1,7 +1,7 @@
 'use strict'
 
 const db = require('../server/db')
-const {User} = require('../server/db/models')
+const {User, Nomination, Transaction} = require('../server/db/models')
 
 async function seed() {
   await db.sync({force: true})
@@ -9,9 +9,57 @@ async function seed() {
 
   const users = await Promise.all([
     User.create({email: 'cody@email.com', password: '123'}),
-    User.create({email: 'murphy@email.com', password: '123'})
+    User.create({email: 'murphy@email.com', password: '123'}),
+    User.create({email: 'Alan@email.com', password: '123'})
   ])
+  const cody = users[0]
+  const murphy = users[1]
+  const alan = users[2]
 
+  let cole = await User.findOrCreate({
+    where: {
+      email: 'cole@email.com'
+    }
+  })
+
+  cole = cole[0]
+
+  let alansTrx = await Transaction.findOrCreate({
+    where: {
+      transactionHash:
+        '0x05cbd37d856b8a5fb78799c023c132d8feace6d319e1c7d5391bb36fce86a59f',
+      smartContractAddress: '0x60f80121c31a0d46b5279700f9df786054aa5ee5',
+      amountEther: 1000
+    }
+  })
+  alansTrx = alansTrx[0]
+  await cody.addRecipient(murphy)
+  //setRecipient is BASICALLY nominate a user.
+  await murphy.addRecipient(alan)
+  await alan.addRecipient(murphy)
+  await alan.addRecipient(cole)
+
+  let throughRow = await Nomination.findOne({
+    where: {userId: cody.id, recipientId: murphy.id}
+  })
+  let throughRow2 = await Nomination.findOne({
+    where: {userId: murphy.id, recipientId: alan.id}
+  })
+  let throughRow3 = await Nomination.findOne({
+    where: {userId: alan.id, recipientId: murphy.id}
+  })
+
+  let throughRow4 = await Nomination.findOne({
+    where: {userId: alan.id, recipientId: cole.id}
+  })
+
+  let maybeAward = await throughRow.createAward({title: 'coleaward'})
+  let maybeAward2 = await throughRow2.createAward({title: 'alanAward'})
+  let maybeAward3 = await throughRow.createAward({title: 'test'})
+  let maybeAward4 = await throughRow3.createAward({title: 'test 2'})
+  let maybeAward5 = await throughRow4.createAward({title: 'test Guest'})
+  await alansTrx.setAward(maybeAward4)
+  await alansTrx.setUser(alan)
   console.log(`seeded ${users.length} users`)
   console.log(`seeded successfully`)
 }
