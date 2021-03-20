@@ -39,9 +39,9 @@ class Routes extends Component {
  */
 const mapState = (state) => {
   return {
-    // Being 'logged in' for our purposes will be defined has having a state.user that has a truthy id.
-    // Otherwise, state.user will be an empty object, and state.user.id will be falsey
-    isLoggedIn: !!state.user.id
+    // Being 'logged in' for our purposes will be defined has having a state.signedInUser that has a truthy id.
+    // Otherwise, state.signedInUser will be an empty object, and state.signedInUser.id will be falsey
+    isLoggedIn: !!state.signedInUser.id
   }
 }
 
