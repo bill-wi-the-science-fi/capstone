@@ -76,12 +76,12 @@ export const HomeLanding = () => {
                 src="https://cdn.stocksnap.io/img-thumbs/960w/businessman-thinking_TGG4JHNHB8.jpg"
               />
               <Card.Body>
-                <Card.Title>Card Title</Card.Title>
+                <Card.Title>Open Source Creator</Card.Title>
                 <Card.Text>
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
+                  Nimit has contributed to hundreds of open source projects that
+                  with over 1,000,000 downloads.
                 </Card.Text>
-                <Button variant="success">Go somewhere</Button>
+                <Button variant="success">Learn More</Button>
               </Card.Body>
             </Card>
           </div>
@@ -92,12 +92,12 @@ export const HomeLanding = () => {
                 src="https://cdn.stocksnap.io/img-thumbs/960w/woman-wheelbarrow_NSDVZHHF64.jpg"
               />
               <Card.Body>
-                <Card.Title>Card Title</Card.Title>
+                <Card.Title>Sustainable Farm Girl</Card.Title>
                 <Card.Text>
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
+                  Kelsey has been active in sustainability for the last 3 years,
+                  and is engaged in her community.
                 </Card.Text>
-                <Button variant="success">Go somewhere</Button>
+                <Button variant="success">Learn More</Button>
               </Card.Body>
             </Card>
           </div>
@@ -108,12 +108,12 @@ export const HomeLanding = () => {
                 src="https://cdn.stocksnap.io/img-thumbs/960w/business-work_1QH1QRSAF2.jpg"
               />
               <Card.Body>
-                <Card.Title>Card Title</Card.Title>
+                <Card.Title>Restoration Guru</Card.Title>
                 <Card.Text>
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
+                  Carl has dedicated years of his career to repurpose old trash
+                  into amazing decorative pieces.
                 </Card.Text>
-                <Button variant="success">Go somewhere</Button>
+                <Button variant="success">Learn More</Button>
               </Card.Body>
             </Card>
           </div>
