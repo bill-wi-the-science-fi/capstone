@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {Button, Card} from 'react-bootstrap'
 import {connect} from 'react-redux'
 import {getAllAwards} from '../store'
+import {Link} from 'react-router-dom'
 
 /**
  * COMPONENT
@@ -30,7 +31,11 @@ class AllAwards extends Component {
                   <Card.Title>{award.title}</Card.Title>
                   <Card.Text>{award.description}</Card.Text>
                   <Button variant="outline-secondary">Donate</Button>
-                  <Button href={`awards/${award.id}`} variant="success ml-2">
+                  <Button
+                    as={Link}
+                    to={`awards/${award.id}`}
+                    variant="success ml-2"
+                  >
                     More Info
                   </Button>
                 </Card.Body>

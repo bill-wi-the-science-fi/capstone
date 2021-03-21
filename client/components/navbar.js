@@ -1,26 +1,37 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {Navbar, Nav, Form, FormControl, Button} from 'react-bootstrap'
 import {logout} from '../store'
 
 const NavbarBootstrap = ({handleClick, isLoggedIn}) => (
   <Navbar collapseOnSelect expand="md" bg="light" variant="light">
-    <Navbar.Brand href="#home">Boilermaker</Navbar.Brand>
+    <Navbar.Brand as={Link} to="/">
+      Boilermaker
+    </Navbar.Brand>
 
     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
     <Navbar.Collapse id="responsive-navbar-nav">
       <Nav className="mr-auto">
-        <Nav.Link href="home">Home</Nav.Link>
-        <Nav.Link href="nominate">Nominate</Nav.Link>
+        <Nav.Link as={Link} to="/">
+          Home
+        </Nav.Link>
+        <Nav.Link as={Link} to="/nominate">
+          Nominate
+        </Nav.Link>
         {isLoggedIn ? (
-          <Nav.Link href="home" onClick={handleClick}>
+          <Nav.Link as={Link} to="/" onClick={handleClick}>
             Logout
           </Nav.Link>
         ) : (
           <React.Fragment>
-            <Nav.Link href="login">Login</Nav.Link>
-            <Nav.Link href="signup">Sign Up</Nav.Link>
+            <Nav.Link as={Link} to="/login">
+              Login
+            </Nav.Link>
+            <Nav.Link as={Link} to="/signup">
+              Sign Up
+            </Nav.Link>
           </React.Fragment>
         )}
       </Nav>
@@ -56,7 +67,3 @@ export default connect(mapState, mapDispatch)(NavbarBootstrap)
 /**
  * PROP TYPES
  */
-Navbar.propTypes = {
-  handleClick: PropTypes.func.isRequired,
-  isLoggedIn: PropTypes.bool.isRequired
-}

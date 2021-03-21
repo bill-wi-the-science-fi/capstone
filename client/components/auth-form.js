@@ -28,9 +28,9 @@ const AuthForm = (props) => {
 
         {error && error.response && <div> {error.response.data} </div>}
       </Form>
-      <container>
+      <div className="container ml-0">
         <a href="/auth/google">{displayName} with Google</a>
-      </container>
+      </div>
     </div>
   )
 }
@@ -63,8 +63,8 @@ const mapDispatch = (dispatch) => {
     handleSubmit(evt) {
       evt.preventDefault()
       const formName = evt.target.name
-      const email = evt.target.email.value
-      const password = evt.target.password.value
+      const email = evt.target[0].value
+      const password = evt.target[1].value
       dispatch(auth(email, password, formName))
     }
   }

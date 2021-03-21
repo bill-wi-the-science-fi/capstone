@@ -1,5 +1,7 @@
 import React from 'react'
 import {Carousel, Jumbotron, Button, Card} from 'react-bootstrap'
+import {Link} from 'react-router-dom'
+
 import {connect} from 'react-redux'
 
 /**
@@ -60,7 +62,7 @@ export const HomeLanding = () => {
               everybody else.
             </p>
             <p>
-              <Button href="/awards" variant="success">
+              <Button as={Link} to="/awards" variant="success">
                 See our Nominees
               </Button>
             </p>
