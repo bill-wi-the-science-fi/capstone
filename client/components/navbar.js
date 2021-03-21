@@ -5,7 +5,7 @@ import {Navbar, Nav, Form, FormControl, Button} from 'react-bootstrap'
 import {logout} from '../store'
 
 const NavbarBootstrap = ({handleClick, isLoggedIn}) => (
-  <Navbar collapseOnSelect expand="md" bg="dark" variant="dark">
+  <Navbar collapseOnSelect expand="md" bg="light" variant="light">
     <Navbar.Brand href="#home">Boilermaker</Navbar.Brand>
 
     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -27,7 +27,7 @@ const NavbarBootstrap = ({handleClick, isLoggedIn}) => (
       <Nav>
         <Form inline>
           <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-          <Button variant="outline-light">Search</Button>
+          <Button variant="outline-success">Search</Button>
         </Form>
       </Nav>
     </Navbar.Collapse>
