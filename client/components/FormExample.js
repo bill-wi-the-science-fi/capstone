@@ -14,10 +14,10 @@ const schema = yup.object().shape({
   firstName: yup.string().required(),
   lastName: yup.string().required(),
   email: yup.string().email('Invalid email').required('Required'),
-  // category: yup.string().required(),
+  category: yup.string().required(),
   donation: yup.number().required(),
   title: yup.string().required(),
-  description: yup.string().required()
+  awardDescription: yup.string().required()
 
   // file: yup.mixed().required()
 })
@@ -32,7 +32,7 @@ class FormExample extends Component {
     return (
       <Formik
         validationSchema={schema}
-        onSubmit={console.log('hello')}
+        onSubmit={console.log}
         initialValues={{
           firstName: '',
           lastName: '',
@@ -40,8 +40,8 @@ class FormExample extends Component {
           category: '',
           donation: '',
           title: '',
-          description: '',
-          file: null
+          awardDescription: ''
+          // file: null
         }}
       >
         {({
@@ -110,21 +110,6 @@ class FormExample extends Component {
                   isValid={touched.title && !errors.title}
                 />
               </Form.Group>
-              <Form.Group
-                as={Col}
-                md="4"
-                controlId="exampleForm.ControlSelect1"
-              >
-                <Form.Label>Select Award Category</Form.Label>
-                <Form.Control as="select">
-                  <option>Open-Source</option>
-                  <option>Community</option>
-                  <option>Behind the scenes</option>
-                  <option>Health and wellness</option>
-                  <option>Volunteer</option>
-                  <option>Animals</option>
-                </Form.Control>
-              </Form.Group>
               <Form.Group as={Col} md="4" controlId="validationFormik105">
                 <Form.Label>Donation</Form.Label>
                 <Form.Control
@@ -137,11 +122,10 @@ class FormExample extends Component {
                   isValid={touched.donation && !errors.donation}
                 />
               </Form.Group>
-            </Form.Row>
-            <Form.Row>
               <Form.Group as={Col} md="4" controlId="validationFormik103">
                 <Form.Label>Award Description</Form.Label>
                 <Form.Control
+                  type="text"
                   as="textarea"
                   rows={3}
                   placeholder="What are they doing that is so amazing"
@@ -152,33 +136,20 @@ class FormExample extends Component {
                   isValid={touched.awardDescription && !errors.awardDescription}
                 />
               </Form.Group>
+              <Form.Group as={Col} md="4" controlId="validationFormik105">
+                <Form.Label>Category</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Category"
+                  name="category"
+                  value={values.category}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  isValid={touched.category && !errors.category}
+                />
+              </Form.Group>
             </Form.Row>
 
-            <Form.Group>
-              <Form.File
-                className="position-relative"
-                required
-                name="Image: Show us the great work they're doing!"
-                label="image"
-                onChange={handleChange}
-                isInvalid={!!errors.image}
-                feedback={errors.image}
-                id="validationFormik106"
-                feedbackTooltip
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Check
-                required
-                name="terms"
-                label="I agree to donate"
-                onChange={handleChange}
-                isInvalid={!!errors.terms}
-                feedback={errors.terms}
-                id="validationFormik107"
-                feedbackTooltip
-              />
-            </Form.Group>
             <Button type="submit">Submit form</Button>
           </Form>
         )}

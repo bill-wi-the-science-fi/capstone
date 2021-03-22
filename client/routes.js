@@ -9,7 +9,8 @@ import {
   AllAwards,
   SingleAward,
   NominationForm,
-  FormExample
+  FormExample,
+  DonateForm
 } from './components'
 import {me} from './store'
 
@@ -30,6 +31,8 @@ class Routes extends Component {
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/nominate" component={FormExample} />
+        <Route path="/donate" component={DonateForm} />
+
         {/* <Route path="/example" component={FormExample} /> */}
 
         <Route exact path="/awards/:id" component={SingleAward} />
