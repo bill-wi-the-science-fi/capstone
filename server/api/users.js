@@ -55,7 +55,11 @@ router.post('/nominate', async (req, res, next) => {
       img
     } = req.body
     let nominee = await User.findOrCreate({where: {email: email}})
+    //If they are found, we have an address, if created, we don't.
+    let userWasCreated = nominee[1] //false means they existed already
     nominee = nominee[0]
+    //
+
     const nominator = await User.findOne({where: {id: nominatorUserID}})
     await nominator.addRecipient(nominee)
     let throughRow = await Nomination.findOne({
@@ -70,6 +74,10 @@ router.post('/nominate', async (req, res, next) => {
       donationTotal: donationTotal,
       img: img
     })
+    //Send additonal info where we want to (like AwardID, recipient address)
+
+    //send user instead
+
     res.json(newAward)
   } catch (err) {
     next(err)
