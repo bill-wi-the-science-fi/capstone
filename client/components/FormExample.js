@@ -13,8 +13,8 @@ const schema = yup.object().shape({
   firstName: yup.string().required(),
   lastName: yup.string().required(),
   email: yup.string().email('Invalid email').required('Required'),
-  category: yup.string().required(),
-  file: yup.mixed().required()
+  category: yup.string().required()
+  // file: yup.mixed().required()
 })
 
 function FormExample() {
@@ -113,6 +113,32 @@ function FormExample() {
                   Looks good!
                 </Form.Control.Feedback>
               </Form.Control>
+            </Form.Group>
+            <Form.Group as={Col} md="4" controlId="validationFormik103">
+              <Form.Label>Award Title</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Award Title"
+                name="awardTitle"
+                value={values.awardTitle}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                isValid={touched.awardTitle && !errors.awardTitle}
+              />
+              <Form.Control.Feedback tooltip>Looks good!</Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group as={Col} md="4" controlId="validationFormik103">
+              <Form.Label>Donation</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Donation"
+                name="donation"
+                value={values.donation}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                isValid={touched.donation && !errors.donation}
+              />
+              <Form.Control.Feedback tooltip>Looks good!</Form.Control.Feedback>
             </Form.Group>
           </Form.Row>
 
