@@ -5,12 +5,12 @@ const db = require('../db')
 const Award = db.define('award', {
   title: {
     type: Sequelize.STRING,
-    unique: true,
+    unique: false,
     allowNull: false
   },
   category: {
     type: Sequelize.STRING,
-    unique: true,
+    unique: false,
     allowNull: true
   },
   open: {
@@ -20,7 +20,7 @@ const Award = db.define('award', {
   },
   description: {
     type: Sequelize.TEXT,
-    unique: true,
+    unique: false,
     allowNull: true
   },
   imageUrl: {
