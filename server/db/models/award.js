@@ -1,4 +1,3 @@
-const crypto = require('crypto')
 const Sequelize = require('sequelize')
 const db = require('../db')
 
@@ -9,9 +8,16 @@ const Award = db.define('award', {
     allowNull: false
   },
   category: {
-    type: Sequelize.STRING,
+    type: Sequelize.ENUM(
+      'Open-Source',
+      'Community',
+      'Behind the scenes',
+      'Health and wellness',
+      'Volunteer',
+      'Animals'
+    ),
     unique: false,
-    allowNull: true
+    defaultValue: 'Community'
   },
   open: {
     type: Sequelize.ENUM('open', 'closed'),

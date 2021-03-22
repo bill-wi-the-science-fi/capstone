@@ -17,13 +17,9 @@ const Nomination = require('./nomination')
  * instead of: const User = require('../db/models/user')
  */
 
-// User.belongsToMany(User, {as: 'nominee', through: 'nomination'})
 User.belongsToMany(User, {as: 'recipient', through: 'nomination'})
 
 Nomination.hasMany(Award, {foreignKey: 'pairId'})
-
-// User.hasMany(Award)
-// Award.belongsTo(User)
 
 Award.hasMany(Transaction)
 Transaction.belongsTo(Award)

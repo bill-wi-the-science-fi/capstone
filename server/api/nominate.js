@@ -18,23 +18,15 @@ router.post('/', async (req, res, next) => {
       nomineeLast,
       donationTotal
     } = req.body
-
+    let recipientAddress
     // find or create the NOMINEE
-    let nominee = await User.findOrCreate({where: {email: nomineeEmail}})
-    // Get nominee instance
-    nominee = nominee[0]
-
-    // T / F | New user
-    let userWasCreated = nominee[1]
-    // Add first and last name to the nominee
-
-    if (userWasCreated) {
-      await nominee.update({firstName: nomineeFirst, lastName: nomineeLast})
-    }
+    let [nominee, userWasCreated] = await User.findOrCreate({
+      where: {email: nomineeEmail}
+    })
 
     // Get noiminator Instance
     const nominator = await User.findOne({where: {id: nominatorId}})
-    //
+
     await nominator.addRecipient(nominee)
 
     let throughRow = await Nomination.findOne({
@@ -50,17 +42,18 @@ router.post('/', async (req, res, next) => {
       donationTotal: donationTotal
     })
 
-    let stuff = Award.findOne({
-      where: {id: newAward.id},
-      include: {
-        model: Nomination,
-        include: {
-          model: User
-        }
-      }
-    })
+    // Add first and last name to the nominee & set address
+    if (userWasCreated) {
+      await nominee.update({firstName: nomineeFirst, lastName: nomineeLast})
+      recipientAddress = nominator.ethPublicAddress
+    } else recipientAddress = nominee.ethPublicAddress
 
-    res.json(stuff)
+    // Send award and recipient to our reducer.
+    const result = {
+      awardId: newAward.id,
+      recipient: recipientAddress
+    }
+    res.json(result)
   } catch (err) {
     next(err)
   }

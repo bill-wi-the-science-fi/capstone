@@ -25,6 +25,7 @@ export * from './signedInUser'
 export * from './users'
 export * from './awards'
 export * from './singleAward'
+export * from './nominate'
 
 /*
 store =
