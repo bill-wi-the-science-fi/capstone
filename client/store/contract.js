@@ -14,17 +14,20 @@ const getWeb3AndContract = (data) => {
 }
 // thunk
 
+// establish connection with web3 (users account), and connection with contract
 export const fetchWeb3AndContract = () => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     try {
       const web3 = await getWeb3()
       const accounts = await web3.eth.getAccounts()
       const networkId = await web3.eth.net.getId()
       const deployedNetwork = Nominate.networks[networkId]
-      const contract = new web3.eth.Contract(
+      const contract = await new web3.eth.Contract(
         Nominate.abi,
         deployedNetwork && deployedNetwork.address
       )
+
+      console.log('contractInstance ---------------------', getState())
       dispatch(getWeb3AndContract({web3, accounts, contract}))
     } catch (error) {
       console.log(error)
@@ -45,7 +48,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         web3: action.web3,
-        contract: action.contract,
+        contractInstance: action.contract,
         accounts: action.accounts
       }
     default:

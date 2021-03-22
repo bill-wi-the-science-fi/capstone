@@ -24,6 +24,7 @@ const schema = yup.object().shape({
 
 class FormExample extends Component {
   componentDidMount() {
+    console.log('component mounts')
     this.props.fetchWeb3AndContract()
   }
 
@@ -191,7 +192,10 @@ class FormExample extends Component {
  */
 const mapState = (state) => {
   return {
-    signedInUser: state.signedInUser
+    signedInUser: state.signedInUser,
+    web3: state.contract.web3,
+    contractInstance: state.contract.contractInstance,
+    accounts: state.contract.accounts
   }
 }
 
