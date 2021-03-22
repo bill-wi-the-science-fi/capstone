@@ -29,8 +29,8 @@ class Routes extends Component {
         {/* Routes placed here are available to all visitors */}
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
-        <Route path="/nominate" component={NominationForm} />
-        <Route path="/example" component={FormExample} />
+        <Route path="/nominate" component={FormExample} />
+        {/* <Route path="/example" component={FormExample} /> */}
 
         <Route exact path="/awards/:id" component={SingleAward} />
 
