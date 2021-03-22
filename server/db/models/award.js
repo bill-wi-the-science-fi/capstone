@@ -20,7 +20,7 @@ const Award = db.define('award', {
   },
   description: {
     type: Sequelize.TEXT,
-    unique: true,
+    unique: false,
     allowNull: true
   },
   imageUrl: {
