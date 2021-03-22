@@ -3,6 +3,7 @@ import {Button, Col, Form} from 'react-bootstrap'
 import {connect} from 'react-redux'
 import {Formik} from 'formik'
 import * as yup from 'yup'
+import {fetchWeb3AndContract} from '../store/contract'
 // import {getSingleAward} from '../store'
 
 /**
@@ -22,7 +23,9 @@ const schema = yup.object().shape({
 })
 
 class FormExample extends Component {
-  componentDidMount() {}
+  componentDidMount() {
+    this.props.fetchWeb3AndContract()
+  }
 
   render() {
     return (
@@ -193,7 +196,9 @@ const mapState = (state) => {
 }
 
 const mapDispatch = (dispatch) => {
-  return {}
+  return {
+    fetchWeb3AndContract: () => dispatch(fetchWeb3AndContract())
+  }
 }
 
 export default connect(mapState, mapDispatch)(FormExample)
