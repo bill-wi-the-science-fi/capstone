@@ -11,5 +11,6 @@ export {default as HomeLanding} from './HomeLanding'
 export {default as AllAwards} from './AllAwards'
 export {default as SingleAward} from './SingleAward'
 export {default as NominationForm} from './NominationForm'
+export {default as FormExample} from './FormExample'
 
 export {Login, Signup} from './auth-form'

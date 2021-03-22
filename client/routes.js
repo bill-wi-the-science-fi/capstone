@@ -8,7 +8,8 @@ import {
   HomeLanding,
   AllAwards,
   SingleAward,
-  NominationForm
+  NominationForm,
+  FormExample
 } from './components'
 import {me} from './store'
 
@@ -29,6 +30,8 @@ class Routes extends Component {
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/nominate" component={NominationForm} />
+        <Route path="/example" component={FormExample} />
+
         <Route exact path="/awards/:id" component={SingleAward} />
 
         <Route path="/awards" component={AllAwards} />
