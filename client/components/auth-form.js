@@ -1,4 +1,5 @@
 import React from 'react'
+import {Button, Form} from 'react-bootstrap'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
 import {auth} from '../store'
@@ -11,25 +12,25 @@ const AuthForm = (props) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit} name={name}>
-        <div>
-          <label htmlFor="email">
-            <small>Email</small>
-          </label>
-          <input name="email" type="text" />
-        </div>
-        <div>
-          <label htmlFor="password">
-            <small>Password</small>
-          </label>
-          <input name="password" type="password" />
-        </div>
-        <div>
-          <button type="submit">{displayName}</button>
-        </div>
+      <Form onSubmit={handleSubmit} name={name}>
+        <Form.Group controlId="formBasicEmail">
+          <Form.Label>Email</Form.Label>
+          <Form.Control type="email" placeholder="Enter email" />
+        </Form.Group>
+
+        <Form.Group controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control type="password" placeholder="Password" />
+        </Form.Group>
+        <Button variant="dark" type="submit">
+          {displayName}
+        </Button>
+
         {error && error.response && <div> {error.response.data} </div>}
-      </form>
-      <a href="/auth/google">{displayName} with Google</a>
+      </Form>
+      <div className="container ml-0">
+        <a href="/auth/google">{displayName} with Google</a>
+      </div>
     </div>
   )
 }
@@ -62,8 +63,8 @@ const mapDispatch = (dispatch) => {
     handleSubmit(evt) {
       evt.preventDefault()
       const formName = evt.target.name
-      const email = evt.target.email.value
-      const password = evt.target.password.value
+      const email = evt.target[0].value
+      const password = evt.target[1].value
       dispatch(auth(email, password, formName))
     }
   }

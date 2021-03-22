@@ -24,7 +24,7 @@ const _getSingleAward = (singleAward) => ({type: GET_SINGLE_AWARD, singleAward})
 
 export const getSingleAward = (awardId) => async (dispatch) => {
   try {
-    const res = await axios.get(`/api/awards/:${awardId}`) //figure out that later
+    const res = await axios.get(`/api/awards/${awardId}`) //figure out that later
     dispatch(_getSingleAward(res.data))
   } catch (err) {
     console.error(err)

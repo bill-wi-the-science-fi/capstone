@@ -34,6 +34,16 @@ const Award = db.define('award', {
     unique: false,
     allowNull: true,
     defaultValue: Date.now()
+  },
+  donationLimit: {
+    type: Sequelize.INTEGER,
+    unique: false,
+    allowNull: false
+  },
+  donationTotal: {
+    type: Sequelize.INTEGER,
+    unique: false,
+    allowNull: false
   }
 })
 
