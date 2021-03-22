@@ -14,28 +14,36 @@ const nominate = {}
  * ACTION CREATORS
  */
 
-const _nominateUser = (nominatedUser) => ({
-  type: GET_ALL_NOMINEES,
-  nominatedUser
+const _nominateUser = (award) => ({
+  type: NOMINATE_A_USER,
+  award
 })
 /**
  * THUNK CREATORS
  */
 
-export const nominateUser = (nominatorUserID, nomineeEmail) => async (
-  dispatch
-) => {
+/*
+const sentFromFont = {
+  title: '',
+  category: '',
+  description: '',
+  img: '',
+  donationLimit: '',
+  nominatorObject: '',
+  nomineeEmail: '',
+  nomineeFirst: '',
+  nomineeLast: '',
+  initialDonation: ''
+}
+ */
+export const nominateUser = (sentFromFront) => async (dispatch) => {
   try {
     // nominate user find or create,  set recipient in the API call
     // returns user
-    const res = await axios.post('/api/nominate', {
-      nominatorUserID,
-      nomineeEmail
-    }) //
-    const nominatedUser = res.data
-
+    const res = await axios.post('/api/nominate', sentFromFront) //
+    const award = res.data
     // add to users array
-    dispatch(_nominateUser(nominatedUser))
+    dispatch(_nominateUser(award))
   } catch (err) {
     console.error(err)
   }
@@ -47,7 +55,7 @@ export const nominateUser = (nominatorUserID, nomineeEmail) => async (
 export default function (state = nominate, action) {
   switch (action.type) {
     case NOMINATE_A_USER:
-      return [...state, action.nominatedUser]
+      return action.award
     default:
       return state
   }

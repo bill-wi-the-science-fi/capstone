@@ -5,12 +5,12 @@ const db = require('../db')
 const Award = db.define('award', {
   title: {
     type: Sequelize.STRING,
-    unique: true,
+    unique: false,
     allowNull: false
   },
   category: {
     type: Sequelize.STRING,
-    unique: true,
+    unique: false,
     allowNull: true
   },
   open: {
@@ -29,6 +29,7 @@ const Award = db.define('award', {
     defaultValue:
       'https://media.npr.org/assets/img/2015/10/16/undefined_wide-3e974801314a154e108c3ed9c07f501ad477e14b.jpg'
   },
+  // make default 2 weeks
   timeConstraint: {
     type: Sequelize.DATE,
     unique: false,
