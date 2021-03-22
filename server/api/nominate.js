@@ -5,6 +5,7 @@ module.exports = router
 // nominateUser thunk
 // this will be the route attatched to the "nominate" form on the front end
 router.post('/', async (req, res, next) => {
+  console.log('\n --------🚀 \n router.post \n req.body', req.body)
   try {
     const {
       title,
@@ -13,15 +14,15 @@ router.post('/', async (req, res, next) => {
       imgUrl,
       donationLimit,
       nominatorId,
-      nomineeEmail,
-      nomineeFirst,
-      nomineeLast,
+      email,
+      firstName,
+      lastName,
       donationTotal
     } = req.body
     let recipientAddress
     // find or create the NOMINEE
     let [nominee, userWasCreated] = await User.findOrCreate({
-      where: {email: nomineeEmail}
+      where: {email: email}
     })
 
     // Get noiminator Instance
@@ -44,7 +45,7 @@ router.post('/', async (req, res, next) => {
 
     // Add first and last name to the nominee & set address
     if (userWasCreated) {
-      await nominee.update({firstName: nomineeFirst, lastName: nomineeLast})
+      await nominee.update({firstName: firstName, lastName: lastName})
       recipientAddress = nominator.ethPublicAddress
     } else recipientAddress = nominee.ethPublicAddress
 

@@ -3,7 +3,9 @@ import {Button, Col, Form} from 'react-bootstrap'
 import {connect} from 'react-redux'
 import {Formik} from 'formik'
 import * as yup from 'yup'
-// import {getSingleAward} from '../store'
+import getWeb3 from '../common/getWeb3'
+import Nominate from '../contracts/Nominate.json'
+import {nominateUser} from '../store'
 
 /**
  * COMPONENT
@@ -21,14 +23,81 @@ const schema = yup.object().shape({
   // file: yup.mixed().required()
 })
 
-class FormExample extends Component {
-  componentDidMount() {}
+class NominateForm extends Component {
+  constructor() {
+    super()
+    this.onSubmit = this.onSubmit.bind(this)
+  }
+  async componentDidMount() {
+    try {
+      // Get network provider and web3 instance. -> web3 attached to state
+      const web3 = await getWeb3()
+      // check if window object has ethereum object provided -> MM
+
+      // Use web3 to get the user's accounts.
+      // promps user to select which accounts the website shoul have access to -> pick first one
+      const accounts = await web3.eth.getAccounts()
+      console.log('accounts from componentDidMount', accounts)
+      // Get the contract instance.
+      const networkId = await web3.eth.net.getId()
+      console.log('networkId---------------------', networkId)
+      //const deployedNetwork = Nominate.networks[networkId];
+      const deployedNetwork = Nominate.networks[networkId]
+      const instance = new web3.eth.Contract(
+        Nominate.abi,
+        deployedNetwork && deployedNetwork.address
+      )
+      const balance = await instance.methods.balanceOfContract().call()
+      // Set web3, accounts, and contract to the state, and then proceed with an
+      // example of interacting with the contract's methods.
+
+      this.setState((state) => ({
+        ...state,
+        web3,
+        accounts,
+        contract: instance,
+        storageValue: web3.utils.fromWei(balance.toString(), 'ether')
+      }))
+    } catch (error) {
+      // Catch any errors for any of the above operations.
+      // *** if browser does not have metamask -> will throw error
+      console.log(
+        error,
+        `Failed to load web3, accounts, or contract. Check console for details.`
+      )
+    }
+  }
+
+  /* async  */ onSubmit(formValues) {
+    // formValues.preventDefault()
+    // const {
+    //   title,
+    //   category,
+    //   description,
+    //   // imgUrl,
+    //   donationLimit,
+    //   // nominatorId,
+    //   nomineeEmail,
+    //   nomineeFirst,
+    //   nomineeLast,
+    //   donationTotal
+    // } = formValues
+    formValues.nominatorId = this.props.signedInUser.id
+    // this.props.nominateUser(formValues)
+    // await this.startAwardAndDonate(
+    //   this.state.form.awardId,
+    //   null,
+    //   this.state.form.amount
+    // )
+    console.log(formValues)
+  }
 
   render() {
+    console.log(this.state)
     return (
       <Formik
         validationSchema={schema}
-        onSubmit={console.log}
+        onSubmit={this.onSubmit}
         initialValues={{
           firstName: '',
           lastName: '',
@@ -159,12 +228,15 @@ class FormExample extends Component {
  */
 const mapState = (state) => {
   return {
+    ...state,
     signedInUser: state.signedInUser
   }
 }
 
 const mapDispatch = (dispatch) => {
-  return {}
+  return {
+    nominateUser: (formData) => dispatch(nominateUser(formData))
+  }
 }
 
-export default connect(mapState, mapDispatch)(FormExample)
+export default connect(mapState, mapDispatch)(NominateForm)
