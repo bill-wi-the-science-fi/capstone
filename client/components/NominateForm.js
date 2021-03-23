@@ -16,9 +16,9 @@ const schema = yup.object().shape({
   lastName: yup.string().required(),
   email: yup.string().email('Invalid email').required('Required'),
   category: yup.string().required(),
-  donation: yup.number().required(),
+  donationTotal: yup.number().required(),
   title: yup.string().required(),
-  awardDescription: yup.string().required()
+  description: yup.string().required()
 
   // file: yup.mixed().required()
 })
@@ -75,15 +75,18 @@ class NominateForm extends Component {
     //   category,
     //   description,
     //   // imgUrl,
-    //   donationLimit,
+    //   donationTotalLimit,
     //   // nominatorId,
     //   nomineeEmail,
     //   nomineeFirst,
     //   nomineeLast,
-    //   donationTotal
+    //   donationTotalTotal
     // } = formValues
+
     formValues.nominatorId = this.props.signedInUser.id
-    // this.props.nominateUser(formValues)
+
+    this.props.nominateUser(formValues)
+
     // await this.startAwardAndDonate(
     //   this.state.form.awardId,
     //   null,
@@ -103,9 +106,9 @@ class NominateForm extends Component {
           lastName: '',
           email: '',
           category: '',
-          donation: '',
+          donationTotal: '',
           title: '',
-          awardDescription: ''
+          description: ''
           // file: null
         }}
       >
@@ -180,11 +183,11 @@ class NominateForm extends Component {
                 <Form.Control
                   type="text"
                   placeholder="Donation"
-                  name="donation"
-                  value={values.donation}
+                  name="donationTotal"
+                  value={values.donationTotal}
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  isValid={touched.donation && !errors.donation}
+                  isValid={touched.donationTotal && !errors.donationTotal}
                 />
               </Form.Group>
               <Form.Group as={Col} md="4" controlId="validationFormik103">
@@ -194,11 +197,11 @@ class NominateForm extends Component {
                   as="textarea"
                   rows={3}
                   placeholder="What are they doing that is so amazing"
-                  name="awardDescription"
+                  name="description"
                   onBlur={handleBlur}
-                  value={values.awardDescription}
+                  value={values.description}
                   onChange={handleChange}
-                  isValid={touched.awardDescription && !errors.awardDescription}
+                  isValid={touched.description && !errors.description}
                 />
               </Form.Group>
               <Form.Group as={Col} md="4" controlId="validationFormik105">
