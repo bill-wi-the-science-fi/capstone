@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import {Button, Col, Form} from 'react-bootstrap'
-import {connect, dispatch} from 'react-redux'
+import {connect} from 'react-redux'
 import {Formik} from 'formik'
 import * as yup from 'yup'
-import {auth} from '../store'
-
+import {authSignUp} from '../store'
+import getWeb3 from '../common/getWeb3'
 /**
  * COMPONENT
  */
@@ -31,16 +31,33 @@ const schema = yup.object().shape({
 })
 
 class SignUpForm extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      accounts: []
+    }
+  }
   async componentDidMount() {
-    //make a call to get the email, first and last IF it already is coming from a referral link?
+    try {
+      const web3 = await getWeb3()
+      const accounts = await web3.eth.getAccounts()
+      if (accounts) {
+        this.setState((prevState) => ({
+          ...prevState,
+          accounts: accounts
+        }))
+      }
+    } catch (error) {
+      alert('In order to sign up please install and connect MetaMask')
+      this.props.history.goBack()
+    }
   }
 
   render() {
-    console.log(this.state, 'state -------------------')
     return (
       <Formik
         validationSchema={schema}
-        onSubmit={this.props.onSubmit}
+        onSubmit={(evt, state) => this.props.onSubmit(evt, this.state)}
         initialValues={{
           firstName: '',
           lastName: '',
@@ -159,11 +176,15 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    onSubmit(evt) {
+    onSubmit(evt, state) {
       const {firstName, lastName, email, password, imgUrl} = evt
-
-      console.log('event', evt)
-      dispatch(auth(firstName, lastName, email, password, imgUrl, 'signup'))
+      const ethPublicAddress = state.accounts[0]
+      dispatch(
+        authSignUp(
+          {ethPublicAddress, firstName, lastName, email, password, imgUrl},
+          'signup'
+        )
+      )
     }
   }
 }
