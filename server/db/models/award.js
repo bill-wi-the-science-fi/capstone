@@ -47,7 +47,7 @@ const Award = db.define('award', {
     defaultValue: 5
   },
   donationTotal: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.FLOAT,
     unique: false,
     allowNull: false
   }

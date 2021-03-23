@@ -96,9 +96,16 @@ class NominateForm extends Component {
   }
 
   async onSubmit(formValues) {
+    console.log('formvalues', formValues)
     // formValues.preventDefault()
     formValues.nominatorId = this.props.signedInUser.id
     await this.props.nominateUser(formValues)
+    console.log(
+      'before submitting',
+      this.props.nominate.awardId,
+      this.props.nominate.recipient,
+      formValues.donationTotal
+    )
     await this.startAwardAndDonate(
       this.props.nominate.awardId,
       this.props.nominate.recipient,
