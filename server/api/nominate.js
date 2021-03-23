@@ -5,7 +5,6 @@ module.exports = router
 // nominateUser thunk
 // this will be the route attatched to the "nominate" form on the front end
 router.post('/', async (req, res, next) => {
-  console.log('\n --------🚀 \n router.post \n req.body', req.body)
   try {
     const {
       title,

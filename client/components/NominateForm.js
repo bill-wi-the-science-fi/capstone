@@ -27,6 +27,7 @@ class NominateForm extends Component {
   constructor() {
     super()
     this.onSubmit = this.onSubmit.bind(this)
+    this.startAwardAndDonate = this.startAwardAndDonate.bind(this)
   }
   async componentDidMount() {
     try {
@@ -37,10 +38,8 @@ class NominateForm extends Component {
       // Use web3 to get the user's accounts.
       // promps user to select which accounts the website shoul have access to -> pick first one
       const accounts = await web3.eth.getAccounts()
-      console.log('accounts from componentDidMount', accounts)
       // Get the contract instance.
       const networkId = await web3.eth.net.getId()
-      console.log('networkId---------------------', networkId)
       //const deployedNetwork = Nominate.networks[networkId];
       const deployedNetwork = Nominate.networks[networkId]
       const instance = new web3.eth.Contract(
@@ -68,35 +67,44 @@ class NominateForm extends Component {
     }
   }
 
-  /* async  */ onSubmit(formValues) {
+  startAwardAndDonate = async (awardId, recipientAddress, amountOfDonation) => {
+    try {
+      const {accounts, contract} = this.state
+      await contract.methods
+        .startAwardAndDonate(
+          awardId,
+          recipientAddress
+            ? recipientAddress
+            : '0x76c4a4d9a0B949f22A82CB165a169691559028C3'
+        )
+        .send({
+          from: accounts[0],
+          gas: '3000000',
+          value: this.state.web3.utils.toWei(
+            amountOfDonation.toString(),
+            'ether'
+          )
+        })
+      // Update state with the result.
+      //const balance = await contract.methods.balanceOfContract().call();
+      //this.setState({ storageValue: balance });
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async onSubmit(formValues) {
     // formValues.preventDefault()
-    // const {
-    //   title,
-    //   category,
-    //   description,
-    //   // imgUrl,
-    //   donationTotalLimit,
-    //   // nominatorId,
-    //   nomineeEmail,
-    //   nomineeFirst,
-    //   nomineeLast,
-    //   donationTotalTotal
-    // } = formValues
-
     formValues.nominatorId = this.props.signedInUser.id
-
-    this.props.nominateUser(formValues)
-
-    // await this.startAwardAndDonate(
-    //   this.state.form.awardId,
-    //   null,
-    //   this.state.form.amount
-    // )
-    console.log(formValues)
+    await this.props.nominateUser(formValues)
+    let didIwork = await this.startAwardAndDonate(
+      this.props.nominate.awardId,
+      this.props.nominate.recipient,
+      formValues.donationTotal
+    )
   }
 
   render() {
-    console.log(this.state)
     return (
       <Formik
         validationSchema={schema}
