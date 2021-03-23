@@ -105,6 +105,7 @@ class NominateForm extends Component {
   }
 
   render() {
+    console.log(this.state, 'state -------------------')
     return (
       <Formik
         validationSchema={schema}
