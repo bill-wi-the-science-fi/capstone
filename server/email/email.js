@@ -18,7 +18,7 @@ const config = {
   url: 'https://api.sendgrid.com/v3/mail/send',
   headers: {
     Authorization:
-      'Bearer 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',
+      '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',
     'Content-Type': 'application/json'
   },
   data: data
