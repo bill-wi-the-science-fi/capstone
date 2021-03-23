@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Button, Col, Form} from 'react-bootstrap'
-import {connect} from 'react-redux'
+import {connect, dispatch} from 'react-redux'
 import {Formik} from 'formik'
 import * as yup from 'yup'
 import {auth} from '../store'
@@ -26,15 +26,11 @@ class SignUpForm extends Component {
     //make a call to get the email, first and last IF it already is coming from a referral link?
   }
 
-  async onSubmit(formValues) {
-    // formValues.preventDefault()
-    // formValues.nominatorId = this.props.signedInUser.id
-    // await this.props.nominateUser(formValues)
-    // let didIwork = await this.startAwardAndDonate(
-    //   this.props.nominate.awardId,
-    //   this.props.nominate.recipient,
-    //   formValues.donationTotal
-    // )
+  onSubmit(evt) {
+    // evt.preventDefault()
+    console.log('event target', evt)
+    dispatch(auth(evt))
+    //Sending different things?
   }
 
   render() {
@@ -42,13 +38,13 @@ class SignUpForm extends Component {
     return (
       <Formik
         validationSchema={schema}
-        onSubmit={this.props.onSubmit}
+        onSubmit={this.onSubmit}
         initialValues={{
           firstName: '',
           lastName: '',
-          email: 'default from server?',
+          email: '',
           password: '',
-          imgUrl: ','
+          imgUrl: ''
         }}
       >
         {({
@@ -105,7 +101,15 @@ class SignUpForm extends Component {
               </Form.Group>
               <Form.Group controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" />
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                  value={values.password}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  isValid={touched.password && !errors.password}
+                />
               </Form.Group>
             </Form.Row>
             <Form.Row>
@@ -139,19 +143,7 @@ const mapState = (state) => {
 }
 
 const mapDispatch = (dispatch) => {
-  return {
-    handleSubmit(evt) {
-      evt.preventDefault()
-      const formName = evt.target.name
-      const email = evt.target[0].value
-      const password = evt.target[1].value
-      const firstName = evt.target[1].value
-      const lastName = evt.target[1].value
-
-      dispatch(auth(email, password, formName))
-      //Sending different things?
-    }
-  }
+  return {}
 }
 
 export default connect(mapState, mapDispatch)(SignUpForm)
