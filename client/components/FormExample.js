@@ -23,9 +23,10 @@ const schema = yup.object().shape({
 })
 
 class FormExample extends Component {
-  componentDidMount() {
+  async componentDidMount() {
     console.log('component mounts')
-    this.props.fetchWeb3AndContract()
+    await this.props.fetchWeb3AndContract()
+    console.log('props from component ---------------------', this.props)
   }
 
   render() {

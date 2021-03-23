@@ -12,22 +12,22 @@ const getWeb3AndContract = (data) => {
     accounts: data.accounts
   }
 }
-// thunk
+// thunks
 
 // establish connection with web3 (users account), and connection with contract
 export const fetchWeb3AndContract = () => {
+  console.log('fetch is running')
   return async (dispatch, getState) => {
     try {
       const web3 = await getWeb3()
       const accounts = await web3.eth.getAccounts()
       const networkId = await web3.eth.net.getId()
       const deployedNetwork = Nominate.networks[networkId]
-      const contract = await new web3.eth.Contract(
+      const contract = new web3.eth.Contract(
         Nominate.abi,
         deployedNetwork && deployedNetwork.address
       )
-
-      console.log('contractInstance ---------------------', getState())
+      console.log('end of try is running', getState())
       dispatch(getWeb3AndContract({web3, accounts, contract}))
     } catch (error) {
       console.log(error)
