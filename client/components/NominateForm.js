@@ -99,7 +99,7 @@ class NominateForm extends Component {
     // formValues.preventDefault()
     formValues.nominatorId = this.props.signedInUser.id
     await this.props.nominateUser(formValues)
-    let didIwork = await this.startAwardAndDonate(
+    await this.startAwardAndDonate(
       this.props.nominate.awardId,
       this.props.nominate.recipient,
       formValues.donationTotal
@@ -107,7 +107,6 @@ class NominateForm extends Component {
   }
 
   render() {
-    console.log(this.state, 'state -------------------')
     return (
       <Formik
         validationSchema={schema}

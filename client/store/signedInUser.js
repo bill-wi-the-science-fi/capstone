@@ -41,8 +41,13 @@ export const auth = (
 ) => async (dispatch) => {
   let res
   try {
-    // ************ CHANGE OBJ PASSED IN ***********
-    res = await axios.post(`/auth/${method}`, {email, password})
+    res = await axios.post(`/auth/${method}`, {
+      firstName,
+      lastName,
+      email,
+      password,
+      imgUrl
+    })
   } catch (authError) {
     return dispatch(getUser({error: authError}))
   }
