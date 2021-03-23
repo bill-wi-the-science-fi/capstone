@@ -3,6 +3,8 @@ import {Button, Col, Form} from 'react-bootstrap'
 import {connect} from 'react-redux'
 import {Formik} from 'formik'
 import * as yup from 'yup'
+import {fetchWeb3AndContract} from '../store/contract'
+// import {getSingleAward} from '../store'
 import getWeb3 from '../common/getWeb3'
 import Nominate from '../contracts/Nominate.json'
 import {nominateUser} from '../store'
@@ -97,7 +99,7 @@ class NominateForm extends Component {
     // formValues.preventDefault()
     formValues.nominatorId = this.props.signedInUser.id
     await this.props.nominateUser(formValues)
-    let didIwork = await this.startAwardAndDonate(
+    await this.startAwardAndDonate(
       this.props.nominate.awardId,
       this.props.nominate.recipient,
       formValues.donationTotal
@@ -105,7 +107,6 @@ class NominateForm extends Component {
   }
 
   render() {
-    console.log(this.state, 'state -------------------')
     return (
       <Formik
         validationSchema={schema}
@@ -240,13 +241,17 @@ class NominateForm extends Component {
  */
 const mapState = (state) => {
   return {
-    ...state,
-    signedInUser: state.signedInUser
+    signedInUser: state.signedInUser,
+    web3: state.contract.web3,
+    contractInstance: state.contract.contractInstance,
+    accounts: state.contract.accounts,
+    ...state
   }
 }
 
 const mapDispatch = (dispatch) => {
   return {
+    fetchWeb3AndContract: () => dispatch(fetchWeb3AndContract()),
     nominateUser: (formData) => dispatch(nominateUser(formData))
   }
 }
