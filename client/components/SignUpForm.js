@@ -27,13 +27,15 @@ const schema = yup.object().shape({
       is: (password) => !!(password && password.length > 0),
       then: yup.string().oneOf([yup.ref('password')], "Password doesn't match")
     }),
-  imgUrl: yup.string()
+  imgUrl: yup.string(),
+  pin: yup.string().required()
 })
 
 class SignUpForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      urlCheckForPin: this.props.match.path === '/signup',
       accounts: []
     }
   }
@@ -64,7 +66,8 @@ class SignUpForm extends Component {
           email: '',
           password: '',
           passwordConfirm: '',
-          imgUrl: ''
+          imgUrl: '',
+          pin: ''
         }}
       >
         {({
@@ -143,6 +146,22 @@ class SignUpForm extends Component {
                   isValid={touched.passwordConfirm && !errors.passwordConfirm}
                 />
               </Form.Group>
+              {!this.state.urlCheckForPin ? (
+                <Form.Group controlId="formBasicPasswordConfirm">
+                  <Form.Label>PIN</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="PIN from email"
+                    name="pin"
+                    value={values.pin}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    isValid={touched.pin && !errors.pin}
+                  />
+                </Form.Group>
+              ) : (
+                ''
+              )}
             </Form.Row>
             <Form.Row>
               <Form.Group as={Col} md="4" controlId="validationFormik104">
@@ -158,7 +177,6 @@ class SignUpForm extends Component {
                 />
               </Form.Group>
             </Form.Row>
-
             <Button type="submit">Submit form</Button>
           </Form>
         )}
@@ -177,11 +195,12 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     onSubmit(evt, state) {
-      const {firstName, lastName, email, password, imgUrl} = evt
+      console.log(evt)
+      const {firstName, lastName, email, password, imgUrl, pin} = evt
       const ethPublicAddress = state.accounts[0]
       dispatch(
         authSignUp(
-          {ethPublicAddress, firstName, lastName, email, password, imgUrl},
+          {ethPublicAddress, firstName, lastName, email, password, imgUrl, pin},
           'signup'
         )
       )

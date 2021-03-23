@@ -39,17 +39,20 @@ export function authSignUp(userInfoObject, method) {
       lastName,
       email,
       password,
-      imgUrl
+      imgUrl,
+      pin
     } = userInfoObject
     let res
     try {
+      // send to PIN route -> what to send???
       res = await axios.post(`/auth/${method}`, {
         ethPublicAddress,
         firstName,
         lastName,
         email,
         password,
-        imgUrl
+        imgUrl,
+        pin
       })
     } catch (authError) {
       return dispatch(getUser({error: authError}))
