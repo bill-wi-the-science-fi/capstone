@@ -26,6 +26,14 @@ const User = db.define('user', {
       return () => this.getDataValue('password')
     }
   },
+  signUpPin: {
+    type: Sequelize.STRING,
+    // Making `.password` act like a func hides it when serializing to JSON.
+    // This is a hack to get around Sequelize's lack of a "private" option.
+    get() {
+      return () => this.getDataValue('signUpPin')
+    }
+  },
   salt: {
     type: Sequelize.STRING,
     // Making `.salt` act like a function hides it when serializing to JSON.
@@ -59,6 +67,10 @@ User.prototype.correctPassword = function (candidatePwd) {
   return User.encryptPassword(candidatePwd, this.salt()) === this.password()
 }
 
+User.prototype.correctSignUpPin = function (candidatePin) {
+  return User.encryptSignUpPin(candidatePin, this.salt()) === this.signUpPin()
+}
+
 /**
  * classMethods
  */
@@ -67,6 +79,13 @@ User.generateSalt = function () {
 }
 
 User.encryptPassword = function (plainText, salt) {
+  return crypto
+    .createHash('RSA-SHA256')
+    .update(plainText)
+    .update(salt)
+    .digest('hex')
+}
+User.encryptSignUpPin = function (plainText, salt) {
   return crypto
     .createHash('RSA-SHA256')
     .update(plainText)
@@ -83,9 +102,19 @@ const setSaltAndPassword = (user) => {
     user.password = User.encryptPassword(user.password(), user.salt())
   }
 }
+const setSignUpPin = (user) => {
+  if (user.changed('signUpPin')) {
+    user.signUpPin = User.encryptSignUpPin(user.signUpPin(), user.salt())
+  }
+}
 
 User.beforeCreate(setSaltAndPassword)
 User.beforeUpdate(setSaltAndPassword)
 User.beforeBulkCreate((users) => {
   users.forEach(setSaltAndPassword)
+})
+User.beforeCreate(setSignUpPin)
+User.beforeUpdate(setSignUpPin)
+User.beforeBulkCreate((users) => {
+  users.forEach(setSignUpPin)
 })

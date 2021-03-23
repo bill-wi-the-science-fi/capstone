@@ -47,7 +47,12 @@ router.post('/', async (req, res, next) => {
     // Add first and last name to the nominee & set address
     // if nominee is signed up but does not have a public address available, use the nominator address
     if (userWasCreated) {
-      await nominee.update({firstName: firstName, lastName: lastName})
+      const signUpPin = Math.floor(100000 + Math.random() * 900000)
+      await nominee.update({
+        firstName: firstName,
+        lastName: lastName,
+        signUpPin: signUpPin
+      })
       //placeholder url until we create an identifier
       sendEmail(email, firstName, nominator.firstName)
       recipientAddress = nominator.ethPublicAddress
@@ -65,11 +70,26 @@ router.post('/', async (req, res, next) => {
   }
 })
 
+//email, 6 digit key salt hashing, joined t/f?,
+
+//email link is generated using the hash and email,
+
+//we can query our database,
+
+//we can take the query params, based on it, check db, if true
+//load form regardless
+
+//email
+
+//if valid key-pair, sign up, and they will be eligible an award
+
+//otherwise regular signup
+
 //in the database we want a hook
 
-//hook should be after validation
+//hook should be before validation
 
-//math.random 6 digits
+//if user.pin DNE we do a math.random 6 digits
 
 //user.update with math.random value
 

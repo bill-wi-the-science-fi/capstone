@@ -8,8 +8,16 @@ async function seed() {
   console.log('db synced!')
 
   const users = await Promise.all([
-    User.create({email: 'cody@email.com', password: '123'}),
-    User.create({email: 'murphy@email.com', password: '123'}),
+    User.create({
+      email: 'cody@email.com',
+      password: '123',
+      signUpPin: '215019'
+    }),
+    User.create({
+      email: 'murphy@email.com',
+      password: '123',
+      signUpPin: '215019'
+    }),
     User.create({
       email: 'alanowatson@gmail.com',
       firstName: 'Alan',
@@ -17,7 +25,8 @@ async function seed() {
       password: 'Ether2TheMoon!',
       ethPublicAddress: '0x4c5f05721bbcfabec7a5a2f58760d0a0ef20d0e6',
       imgUrl:
-        'https://tisch.nyu.edu/content/dam/tisch/clive-davis-institute/alanwatson_crop.jpg'
+        'https://tisch.nyu.edu/content/dam/tisch/clive-davis-institute/alanwatson_crop.jpg',
+      signUpPin: '230419'
     })
   ])
   const cody = users[0]
