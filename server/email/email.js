@@ -1,45 +1,32 @@
 const sgMail = require('@sendgrid/mail')
-const SENDGRID_API_KEY = require('../../secrets')
-sgMail.setApiKey(
-  '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'
-)
-const msg = {
-  to: ' vpatel621@gmail.com', // Change to your recipient
-  from: 'vpatel621@gmail.com', // Change to your verified sender
-  subject: 'Sending with SendGrid is Fun',
-  text: 'and easy to do anywhere, even with Node.js',
-  html: '<strong>and easy to do anywhere, even with Node.js</strong>'
+const axios = require('axios')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+
+const data = JSON.stringify({
+  personalizations: [
+    {
+      to: [{email: 'vpatel2@binghamton.edu', name: 'John Doe'}],
+      subject: 'Hello, World!'
+    }
+  ],
+  from: {email: 'vpatel621@gmail.com', name: 'John Doe'},
+  reply_to: {email: 'vpatel621@gmail.com', name: 'John Doe'},
+  content: [{value: 'Working Hello from the other side', type: 'text/plain'}]
+})
+const config = {
+  method: 'post',
+  url: 'https://api.sendgrid.com/v3/mail/send',
+  headers: {
+    Authorization:
+      'Bearer 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',
+    'Content-Type': 'application/json'
+  },
+  data: data
 }
-sgMail
-  .send(msg)
-  .then(() => {
-    console.log('Email sent')
+axios(config)
+  .then(function (response) {
+    console.log(response.config)
   })
-  .catch((error) => {
-    console.error(error)
+  .catch(function (error) {
+    console.log(error)
   })
-
-// sgMail.setApiKey(
-//   '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'
-// )
-// const msg = {
-//   to: 'vpatel621@gmail.com.com',
-//   from: 'vpatel621@gmail.com.com', // Use the email address or domain you verified above
-//   subject: 'Sending with Twilio SendGrid is Fun',
-//   text: 'and easy to do anywhere, even with Node.js',
-//   html: '<strong>and easy to do anywhere, even with Node.js</strong>'
-// }(
-//   //ES6
-//   //ES8
-//   async () => {
-//     try {
-//       await sgMail.send(msg)
-//     } catch (error) {
-//       console.error(error)
-
-//       if (error.response) {
-//         console.error(error.response.body)
-//       }
-//     }
-//   }
-// )()
