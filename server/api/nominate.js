@@ -43,11 +43,17 @@ router.post('/', async (req, res, next) => {
     })
 
     // Add first and last name to the nominee & set address
+    // if nominee is signed up but does not have a public address available, use the nominator address
     if (userWasCreated) {
       await nominee.update({firstName: firstName, lastName: lastName})
+      //recipientAddress = nominator.ethPublicAddress
+    }
+    //console.log('eth public address nominee -------', nominee.ethPublicAddress)
+    if (!nominee.ethPublicAddress) {
       recipientAddress = nominator.ethPublicAddress
-    } else recipientAddress = nominee.ethPublicAddress
-
+    } else {
+      recipientAddress = nominee.ethPublicAddress
+    }
     // Send award and recipient to our reducer.
     const result = {
       awardId: newAward.id,
