@@ -8,8 +8,7 @@ import {
   HomeLanding,
   AllAwards,
   SingleAward,
-  NominationForm,
-  FormExample,
+  NominateForm,
   DonateForm
 } from './components'
 import {me} from './store'
@@ -30,15 +29,10 @@ class Routes extends Component {
         {/* Routes placed here are available to all visitors */}
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
-        <Route path="/nominate" component={FormExample} />
+        <Route path="/nominate" component={NominateForm} />
         <Route path="/donate" component={DonateForm} />
-
-        {/* <Route path="/example" component={FormExample} /> */}
-
         <Route exact path="/awards/:id" component={SingleAward} />
-
         <Route path="/awards" component={AllAwards} />
-
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}
