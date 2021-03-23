@@ -27,8 +27,8 @@ const schema = yup.object().shape({
       is: (password) => !!(password && password.length > 0),
       then: yup.string().oneOf([yup.ref('password')], "Password doesn't match")
     }),
-  imgUrl: yup.string(),
-  pin: yup.string().required()
+  imgUrl: yup.string()
+  //pin: yup.string().required()
 })
 
 class SignUpForm extends Component {
@@ -66,8 +66,8 @@ class SignUpForm extends Component {
           email: '',
           password: '',
           passwordConfirm: '',
-          imgUrl: '',
-          pin: ''
+          imgUrl: ''
+          //pin: ''
         }}
       >
         {({
@@ -146,7 +146,7 @@ class SignUpForm extends Component {
                   isValid={touched.passwordConfirm && !errors.passwordConfirm}
                 />
               </Form.Group>
-              {!this.state.urlCheckForPin ? (
+              {/* {!this.state.urlCheckForPin ? (
                 <Form.Group controlId="formBasicPasswordConfirm">
                   <Form.Label>PIN</Form.Label>
                   <Form.Control
@@ -161,7 +161,7 @@ class SignUpForm extends Component {
                 </Form.Group>
               ) : (
                 ''
-              )}
+              )} */}
             </Form.Row>
             <Form.Row>
               <Form.Group as={Col} md="4" controlId="validationFormik104">
@@ -195,12 +195,12 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     onSubmit(evt, state) {
-      console.log(evt)
-      const {firstName, lastName, email, password, imgUrl, pin} = evt
+      // const {pin} = evt
+      const {firstName, lastName, email, password, imgUrl} = evt
       const ethPublicAddress = state.accounts[0]
       dispatch(
         authSignUp(
-          {ethPublicAddress, firstName, lastName, email, password, imgUrl, pin},
+          {ethPublicAddress, firstName, lastName, email, password, imgUrl},
           'signup'
         )
       )
