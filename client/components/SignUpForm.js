@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import {Button, Col, Form} from 'react-bootstrap'
-import {connect, dispatch} from 'react-redux'
+import {connect} from 'react-redux'
 import {Formik} from 'formik'
 import * as yup from 'yup'
-import {auth} from '../store'
-
+import {authSignUp} from '../store'
+import getWeb3 from '../common/getWeb3'
 /**
  * COMPONENT
  */
@@ -27,27 +27,47 @@ const schema = yup.object().shape({
       is: (password) => !!(password && password.length > 0),
       then: yup.string().oneOf([yup.ref('password')], "Password doesn't match")
     }),
-  imgUrl: yup.string()
+  imgUrl: yup.string(),
+  pin: yup.string().required()
 })
 
 class SignUpForm extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      urlCheckForPin: this.props.match.path === '/signup',
+      accounts: []
+    }
+  }
   async componentDidMount() {
-    //make a call to get the email, first and last IF it already is coming from a referral link?
+    try {
+      const web3 = await getWeb3()
+      const accounts = await web3.eth.getAccounts()
+      if (accounts) {
+        this.setState((prevState) => ({
+          ...prevState,
+          accounts: accounts
+        }))
+      }
+    } catch (error) {
+      alert('In order to sign up please install and connect MetaMask')
+      this.props.history.goBack()
+    }
   }
 
   render() {
-    console.log(this.state, 'state -------------------')
     return (
       <Formik
         validationSchema={schema}
-        onSubmit={this.props.onSubmit}
+        onSubmit={(evt, state) => this.props.onSubmit(evt, this.state)}
         initialValues={{
           firstName: '',
           lastName: '',
           email: '',
           password: '',
           passwordConfirm: '',
-          imgUrl: ''
+          imgUrl: '',
+          pin: ''
         }}
       >
         {({
@@ -126,6 +146,22 @@ class SignUpForm extends Component {
                   isValid={touched.passwordConfirm && !errors.passwordConfirm}
                 />
               </Form.Group>
+              {!this.state.urlCheckForPin ? (
+                <Form.Group controlId="formBasicPasswordConfirm">
+                  <Form.Label>PIN</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="PIN from email"
+                    name="pin"
+                    value={values.pin}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    isValid={touched.pin && !errors.pin}
+                  />
+                </Form.Group>
+              ) : (
+                ''
+              )}
             </Form.Row>
             <Form.Row>
               <Form.Group as={Col} md="4" controlId="validationFormik104">
@@ -141,7 +177,6 @@ class SignUpForm extends Component {
                 />
               </Form.Group>
             </Form.Row>
-
             <Button type="submit">Submit form</Button>
           </Form>
         )}
@@ -159,11 +194,16 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    onSubmit(evt) {
-      const {firstName, lastName, email, password, imgUrl} = evt
-
-      console.log('event', evt)
-      dispatch(auth(firstName, lastName, email, password, imgUrl, 'signup'))
+    onSubmit(evt, state) {
+      console.log(evt)
+      const {firstName, lastName, email, password, imgUrl, pin} = evt
+      const ethPublicAddress = state.accounts[0]
+      dispatch(
+        authSignUp(
+          {ethPublicAddress, firstName, lastName, email, password, imgUrl, pin},
+          'signup'
+        )
+      )
     }
   }
 }

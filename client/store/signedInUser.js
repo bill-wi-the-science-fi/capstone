@@ -31,27 +31,48 @@ export const me = () => async (dispatch) => {
   }
 }
 
-export const auth = (
-  firstName,
-  lastName,
-  email,
-  password,
-  imgUrl,
-  method
-) => async (dispatch) => {
-  let res
-  try {
-    res = await axios.post(`/auth/${method}`, {
+export function authSignUp(userInfoObject, method) {
+  return async (dispatch) => {
+    const {
+      ethPublicAddress,
       firstName,
       lastName,
       email,
       password,
-      imgUrl
-    })
+      imgUrl,
+      pin
+    } = userInfoObject
+    let res
+    try {
+      // send to PIN route -> what to send???
+      res = await axios.post(`/auth/${method}`, {
+        ethPublicAddress,
+        firstName,
+        lastName,
+        email,
+        password,
+        imgUrl,
+        pin
+      })
+    } catch (authError) {
+      return dispatch(getUser({error: authError}))
+    }
+
+    try {
+      dispatch(getUser(res.data))
+      history.push('/home')
+    } catch (dispatchOrHistoryErr) {
+      console.error(dispatchOrHistoryErr)
+    }
+  }
+}
+export const auth = (email, password, method) => async (dispatch) => {
+  let res
+  try {
+    res = await axios.post(`/auth/${method}`, {email, password})
   } catch (authError) {
     return dispatch(getUser({error: authError}))
   }
-
   try {
     dispatch(getUser(res.data))
     history.push('/home')
