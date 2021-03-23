@@ -19,7 +19,6 @@ router.get('/', async (req, res, next) => {
 
 // Attached to the form for "sign up" new user.
 router.post('/', async (req, res, next) => {
-  console.log('\n --------🚀 \n router.post \n req.body', req.body)
   try {
     const {email, firstName, lastName, ethPublicAddress, password} = req.body
     let newUser = await User.findOrCreate({
