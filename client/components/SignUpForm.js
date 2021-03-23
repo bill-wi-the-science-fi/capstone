@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Button, Col, Form} from 'react-bootstrap'
-import {connect} from 'react-redux'
+import {connect, dispatch} from 'react-redux'
 import {Formik} from 'formik'
 import * as yup from 'yup'
 import {auth} from '../store'
@@ -31,19 +31,8 @@ const schema = yup.object().shape({
 })
 
 class SignUpForm extends Component {
-  constructor() {
-    super()
-    this.onSubmit = this.onSubmit.bind(this)
-  }
   async componentDidMount() {
     //make a call to get the email, first and last IF it already is coming from a referral link?
-  }
-
-  onSubmit(evt) {
-    // evt.preventDefault()
-    console.log('event target', evt)
-    dispatch(auth(evt))
-    //Sending different things?
   }
 
   render() {
@@ -51,7 +40,7 @@ class SignUpForm extends Component {
     return (
       <Formik
         validationSchema={schema}
-        onSubmit={this.onSubmit}
+        onSubmit={this.props.onSubmit}
         initialValues={{
           firstName: '',
           lastName: '',
@@ -169,7 +158,14 @@ const mapState = (state) => {
 }
 
 const mapDispatch = (dispatch) => {
-  return {}
+  return {
+    onSubmit(evt) {
+      const {firstName, lastName, email, password, imgUrl} = evt
+
+      console.log('event', evt)
+      dispatch(auth(firstName, lastName, email, password, imgUrl, 'signup'))
+    }
+  }
 }
 
 export default connect(mapState, mapDispatch)(SignUpForm)

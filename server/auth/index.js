@@ -21,6 +21,7 @@ router.post('/login', async (req, res, next) => {
 
 router.post('/signup', async (req, res, next) => {
   try {
+    console.log('signup route running')
     const {firstName, lastName, email, password, imgUrl} = req.body
     const user = await User.create({
       firstName,
