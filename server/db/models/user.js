@@ -104,6 +104,8 @@ const setSaltAndPassword = (user) => {
 }
 const setSignUpPin = (user) => {
   if (user.changed('signUpPin')) {
+    user.salt = User.generateSalt()
+
     user.signUpPin = User.encryptSignUpPin(user.signUpPin(), user.salt())
   }
 }

@@ -47,7 +47,12 @@ router.post('/', async (req, res, next) => {
     // Add first and last name to the nominee & set address
     // if nominee is signed up but does not have a public address available, use the nominator address
     if (userWasCreated) {
-      const signUpPin = Math.floor(100000 + Math.random() * 900000)
+      console.log('if user was created----working')
+      let signUpPin = Math.floor(100000 + Math.random() * 900000)
+      signUpPin = signUpPin.toString()
+
+      console.log('signuPpin math floor', typeof signUpPin)
+
       await nominee.update({
         firstName: firstName,
         lastName: lastName,
