@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Button, Col, Form} from 'react-bootstrap'
-import {connect, dispatch} from 'react-redux'
+import {connect} from 'react-redux'
 import {Formik} from 'formik'
 import * as yup from 'yup'
 import {auth} from '../store'
@@ -13,7 +13,20 @@ const schema = yup.object().shape({
   firstName: yup.string().required(),
   lastName: yup.string().required(),
   email: yup.string().email('Invalid email').required('Required'),
-  password: yup.string().required(),
+  password: yup
+    .string()
+    .required('Please enter your password')
+    .matches(
+      /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
+      'Password must contain at least 8 characters, one uppercase, one number and one special case character'
+    ),
+  passwordConfirm: yup
+    .string()
+    .required('Please confirm your password')
+    .when('password', {
+      is: (password) => !!(password && password.length > 0),
+      then: yup.string().oneOf([yup.ref('password')], "Password doesn't match")
+    }),
   imgUrl: yup.string()
 })
 
@@ -44,6 +57,7 @@ class SignUpForm extends Component {
           lastName: '',
           email: '',
           password: '',
+          passwordConfirm: '',
           imgUrl: ''
         }}
       >
@@ -109,6 +123,18 @@ class SignUpForm extends Component {
                   onBlur={handleBlur}
                   onChange={handleChange}
                   isValid={touched.password && !errors.password}
+                />
+              </Form.Group>
+              <Form.Group controlId="formBasicPasswordConfirm">
+                <Form.Label>Confirm Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Please re-enter"
+                  name="passwordConfirm"
+                  value={values.passwordConfirm}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  isValid={touched.passwordConfirm && !errors.passwordConfirm}
                 />
               </Form.Group>
             </Form.Row>
