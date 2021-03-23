@@ -39,8 +39,8 @@ export function authSignUp(userInfoObject, method) {
       lastName,
       email,
       password,
-      imgUrl,
-      pin
+      imgUrl
+      //pin
     } = userInfoObject
     let res
     try {
@@ -51,8 +51,8 @@ export function authSignUp(userInfoObject, method) {
         lastName,
         email,
         password,
-        imgUrl,
-        pin
+        imgUrl
+        //pin
       })
     } catch (authError) {
       return dispatch(getUser({error: authError}))

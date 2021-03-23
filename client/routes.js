@@ -29,8 +29,8 @@ class Routes extends Component {
         {/* Routes placed here are available to all visitors */}
         <Route exact path="/" component={HomeLanding} />
         <Route path="/login" component={Login} />
-        <Route exact path="/signup" component={Signup} />
-        <Route path="/signup/nominated" component={Signup} />
+        <Route path="/signup" component={Signup} />
+        {/* <Route path="/signup/nominated" component={Signup} /> */}
         <Route path="/nominate" component={NominateForm} />
         <Route path="/donate" component={DonateForm} />
         <Route exact path="/awards/:id" component={SingleAward} />
