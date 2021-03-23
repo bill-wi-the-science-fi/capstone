@@ -2,7 +2,12 @@ const sgMail = require('@sendgrid/mail')
 const axios = require('axios')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
-function sendEmail(recipientEmail, firstName, nominatorName, recipientUrl) {
+function sendEmail(
+  recipientEmail,
+  firstName,
+  nominatorName,
+  recipientUrl = 'www.google.com'
+) {
   const data = JSON.stringify({
     personalizations: [
       {
@@ -42,3 +47,5 @@ function sendEmail(recipientEmail, firstName, nominatorName, recipientUrl) {
       console.log(error)
     })
 }
+
+module.exports = sendEmail
