@@ -1,6 +1,7 @@
 const sgMail = require('@sendgrid/mail')
 const axios = require('axios')
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+const SENDGRID_API_KEY_SECRET = require('../../secrets')
+sgMail.setApiKey(SENDGRID_API_KEY_SECRET)
 
 const sendEmail = (
   recipientEmail,
@@ -34,7 +35,7 @@ const sendEmail = (
     method: 'post',
     url: 'https://api.sendgrid.com/v3/mail/send',
     headers: {
-      Authorization: `Bearer ${process.env.SENDGRID_API_KEY}`,
+      Authorization: `Bearer ${SENDGRID_API_KEY_SECRET}`,
       'Content-Type': 'application/json'
     },
     data: data
