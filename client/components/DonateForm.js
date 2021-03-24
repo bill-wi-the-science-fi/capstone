@@ -5,6 +5,7 @@ import {Formik} from 'formik'
 import * as yup from 'yup'
 import getWeb3 from '../common/getWeb3'
 import Nominate from '../contracts/Nominate.json'
+import {postTransaction} from '../store'
 
 // import {getSingleAward} from '../store'
 
@@ -27,9 +28,6 @@ function DonateForm(props) {
             const web3 = await getWeb3()
             const accounts = await web3.eth.getAccounts()
             if (accounts) {
-              console.log('accounts', accounts)
-              console.log(props.awardId)
-              console.log('evt', evt.donation)
               const networkId = await web3.eth.net.getId()
               //const deployedNetwork = Nominate.networks[networkId];
               const deployedNetwork = Nominate.networks[networkId]
@@ -37,23 +35,36 @@ function DonateForm(props) {
                 Nominate.abi,
                 deployedNetwork && deployedNetwork.address
               )
-
               try {
-                await contract.methods.donateFunds(props.awardId).send({
-                  from: accounts[0],
-                  value: web3.utils.toWei(evt.donation.toString(), 'ether')
-                })
+                const contractTxn = await contract.methods
+                  .donateFunds(props.awardId)
+                  .send({
+                    from: accounts[0],
+                    value: web3.utils.toWei(evt.donation.toString(), 'ether')
+                  })
+                // NEED TO PULL IN TRANSACTION HASH FROM SMART CONTRACT OUTPUT
+                // INVOKE THUNK THAT POSTS A NEW TXN TO DB
+                // SHOULD BE RUNNING POST BELOW IF MM TXN IS SUCCESSFUL
+                console.log('contractTxn---------------------', contractTxn)
+                const txnBody = {
+                  userId: props.signedInUser.id,
+                  awardId: props.awardId,
+                  trasnactionHash: null,
+                  amountEther: evt.donation,
+                  smartContractAddress: null
+                }
+                props.postTransaction(txnBody)
               } catch (error) {
                 console.log(error)
               }
             } else {
               alert(
-                'In order to donate, please connect at least 1 MetaMask account'
+                'In order to donate, please connect at least 1 MetaMask account on the Ropsten Network'
               )
             }
           } catch (error) {
             alert(
-              'In order to donate, please install Metamask and connect at least one account'
+              'In order to donate, please install Metamask and connect at least one account on the Ropsten Network'
             )
             console.log(error)
           }
@@ -107,7 +118,9 @@ const mapState = (state) => {
 }
 
 const mapDispatch = (dispatch) => {
-  return {}
+  return {
+    postTransaction: (txnData) => dispatch(postTransaction(txnData))
+  }
 }
 
 export default connect(mapState, mapDispatch)(DonateForm)

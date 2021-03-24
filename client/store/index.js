@@ -8,6 +8,7 @@ import awards from './awards'
 import singleAward from './singleAward'
 import nominate from './nominate'
 import contract from './contract'
+import transactions from './transactions'
 
 const reducer = combineReducers({
   signedInUser,
@@ -15,7 +16,8 @@ const reducer = combineReducers({
   awards, // array initialState // create award triggers after Nomination and lives here
   singleAward, // Object initialState
   nominate,
-  contract
+  contract,
+  transactions
 })
 const middleware = composeWithDevTools(
   applyMiddleware(thunkMiddleware, createLogger({collapsed: true}))
@@ -28,6 +30,7 @@ export * from './users'
 export * from './awards'
 export * from './singleAward'
 export * from './nominate'
+export * from './transactions'
 
 /*
 store =

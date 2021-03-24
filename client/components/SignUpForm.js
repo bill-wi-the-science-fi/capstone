@@ -50,7 +50,9 @@ class SignUpForm extends Component {
         }))
       }
     } catch (error) {
-      alert('In order to sign up please install and connect MetaMask')
+      alert(
+        'In order to sign up please install and connect MetaMask on the Ropsten Network'
+      )
       this.props.history.goBack()
     }
   }
