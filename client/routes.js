@@ -4,7 +4,7 @@ import {withRouter, Route, Switch} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import {
   Login,
-  Signup,
+  SignUpForm,
   HomeLanding,
   AllAwards,
   SingleAward,
@@ -29,10 +29,10 @@ class Routes extends Component {
         {/* Routes placed here are available to all visitors */}
         <Route exact path="/" component={HomeLanding} />
         <Route path="/login" component={Login} />
-        <Route path="/signup" component={Signup} />
+        <Route path="/signup" component={SignUpForm} />
         <Route path="/nominateLogin" component={Login} />
 
-        {/* <Route path="/signup/nominated" component={Signup} /> */}
+        {/* <Route path="/signup/nominated" component={SignUpForm} /> */}
         <Route path="/donate" component={DonateForm} />
         <Route exact path="/awards/:id" component={SingleAward} />
         <Route path="/awards" component={AllAwards} />

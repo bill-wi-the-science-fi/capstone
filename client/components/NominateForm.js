@@ -21,7 +21,6 @@ const schema = yup.object().shape({
   donationTotal: yup.number().required(),
   title: yup.string().required(),
   description: yup.string().required()
-
   // file: yup.mixed().required()
 })
 
@@ -36,7 +35,6 @@ class NominateForm extends Component {
       // Get network provider and web3 instance. -> web3 attached to state
       const web3 = await getWeb3()
       // check if window object has ethereum object provided -> MM
-
       // Use web3 to get the user's accounts.
       // promps user to select which accounts the website shoul have access to -> pick first one
       const accounts = await web3.eth.getAccounts()

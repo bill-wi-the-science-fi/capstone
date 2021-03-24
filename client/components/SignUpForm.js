@@ -3,7 +3,7 @@ import {Button, Col, Form} from 'react-bootstrap'
 import {connect} from 'react-redux'
 import {Formik} from 'formik'
 import * as yup from 'yup'
-import {authSignUp} from '../store'
+import {authSignUp, checkPin} from '../store'
 import getWeb3 from '../common/getWeb3'
 /**
  * COMPONENT
@@ -38,6 +38,7 @@ class SignUpForm extends Component {
       urlCheckForPin: this.props.match.path === '/signup',
       accounts: []
     }
+    this.onSubmit = this.onSubmit.bind(this)
   }
   async componentDidMount() {
     try {
@@ -49,17 +50,39 @@ class SignUpForm extends Component {
           accounts: accounts
         }))
       }
+      const params = new URLSearchParams(window.location.search)
+      if (params) {
+        const email = params.get('email')
+        console.log('\n --------🚀 \n componentDidMount \n email', email)
+        const pin = params.get('pin')
+        console.log('\n --------🚀 \n componentDidMount \n pin', pin)
+        // axios get with params
+        // resposne t / f ?
+        await checkPin({email, pin})
+        console.log(
+          '\n --------🚀 \n componentDidMount \n singleUser',
+          this.props.singleUser
+        )
+      }
     } catch (error) {
       alert('In order to sign up please install and connect MetaMask')
       this.props.history.goBack()
     }
   }
-
+  onSubmit(evt, state) {
+    // const {pin} = evt
+    const {firstName, lastName, email, password, imgUrl} = evt
+    const ethPublicAddress = state.accounts[0]
+    authSignUp(
+      {ethPublicAddress, firstName, lastName, email, password, imgUrl},
+      'signup'
+    )
+  }
   render() {
     return (
       <Formik
         validationSchema={schema}
-        onSubmit={(evt, state) => this.props.onSubmit(evt, this.state)}
+        onSubmit={(evt, state) => this.onSubmit(evt, state)}
         initialValues={{
           firstName: '',
           lastName: '',
@@ -189,22 +212,22 @@ class SignUpForm extends Component {
  * CONTAINER
  */
 const mapState = (state) => {
-  return {}
+  return {singleUser: state.singleUser}
 }
 
 const mapDispatch = (dispatch) => {
   return {
-    onSubmit(evt, state) {
-      // const {pin} = evt
-      const {firstName, lastName, email, password, imgUrl} = evt
-      const ethPublicAddress = state.accounts[0]
+    checkPin: (stuff) => dispatch(checkPin(stuff)),
+    authSignUp: (
+      {ethPublicAddress, firstName, lastName, email, password, imgUrl},
+      type
+    ) =>
       dispatch(
         authSignUp(
           {ethPublicAddress, firstName, lastName, email, password, imgUrl},
-          'signup'
+          type
         )
       )
-    }
   }
 }
 
