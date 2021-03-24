@@ -30,6 +30,8 @@ class Routes extends Component {
         <Route exact path="/" component={HomeLanding} />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
+        <Route path="/nominate" component={Login} />
+
         {/* <Route path="/signup/nominated" component={Signup} /> */}
         <Route path="/nominate" component={NominateForm} />
         <Route path="/donate" component={DonateForm} />

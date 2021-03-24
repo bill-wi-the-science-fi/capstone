@@ -38,6 +38,7 @@
   "author": "Fullstack Academy of Code",
   "license": "MIT",
   "dependencies": {
+    "@sendgrid/mail": "^7.4.2",
     "axios": "^0.19.0",
     "bootstrap": "^4.6.0",
     "compression": "^1.7.3",
