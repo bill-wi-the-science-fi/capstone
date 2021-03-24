@@ -30,16 +30,16 @@ class Routes extends Component {
         <Route exact path="/" component={HomeLanding} />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
-        <Route path="/nominate" component={Login} />
+        <Route path="/nominateLogin" component={Login} />
 
         {/* <Route path="/signup/nominated" component={Signup} /> */}
-        <Route path="/nominate" component={NominateForm} />
         <Route path="/donate" component={DonateForm} />
         <Route exact path="/awards/:id" component={SingleAward} />
         <Route path="/awards" component={AllAwards} />
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}
+            <Route path="/nominate" component={NominateForm} />
             <Route exact path="/" component={HomeLanding} />
             <Route path="/home" component={HomeLanding} />
           </Switch>

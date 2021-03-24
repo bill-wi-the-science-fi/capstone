@@ -12,6 +12,13 @@ const AuthForm = (props) => {
 
   return (
     <div>
+      {props.match.path === '/nominateLogin' ? (
+        <div className="container mt-4 ml-1">
+          <p>Please Login or Signup to nominate someone</p>
+        </div>
+      ) : (
+        <span></span>
+      )}
       <Form onSubmit={handleSubmit} name={name}>
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Email</Form.Label>
@@ -29,7 +36,7 @@ const AuthForm = (props) => {
         {error && error.response && <div> {error.response.data} </div>}
       </Form>
       <div className="container ml-0">
-        <a href="/auth/google">{displayName} with Google</a>
+        {/* <a href="/auth/google">{displayName} with Google</a> */}
       </div>
     </div>
   )

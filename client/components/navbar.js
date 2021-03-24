@@ -17,15 +17,21 @@ const NavbarBootstrap = ({handleClick, isLoggedIn}) => (
         <Nav.Link as={Link} to="/">
           Home
         </Nav.Link>
-        <Nav.Link as={Link} to="/nominate">
-          Nominate
-        </Nav.Link>
+
         {isLoggedIn ? (
-          <Nav.Link as={Link} to="/" onClick={handleClick}>
-            Logout
-          </Nav.Link>
+          <React.Fragment>
+            <Nav.Link as={Link} to="/nominate">
+              Nominate
+            </Nav.Link>
+            <Nav.Link as={Link} to="/" onClick={handleClick}>
+              Logout
+            </Nav.Link>
+          </React.Fragment>
         ) : (
           <React.Fragment>
+            <Nav.Link as={Link} to="/nominateLogin">
+              Nominate
+            </Nav.Link>
             <Nav.Link as={Link} to="/login">
               Login
             </Nav.Link>
