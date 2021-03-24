@@ -53,27 +53,21 @@ class SignUpForm extends Component {
       const params = new URLSearchParams(window.location.search)
       if (params) {
         const email = params.get('email')
-        console.log('\n --------🚀 \n componentDidMount \n email', email)
         const pin = params.get('pin')
-        console.log('\n --------🚀 \n componentDidMount \n pin', pin)
-        // axios get with params
-        // resposne t / f ?
-        await checkPin({email, pin})
-        console.log(
-          '\n --------🚀 \n componentDidMount \n singleUser',
-          this.props.singleUser
-        )
+        await this.props.checkPin({email, pin})
       }
     } catch (error) {
       alert('In order to sign up please install and connect MetaMask')
       this.props.history.goBack()
     }
   }
-  onSubmit(evt, state) {
+  onSubmit(evt) {
     // const {pin} = evt
+    console.log('submit', evt, this.state.accounts[0])
     const {firstName, lastName, email, password, imgUrl} = evt
-    const ethPublicAddress = state.accounts[0]
-    authSignUp(
+    const ethPublicAddress = this.state.accounts[0]
+
+    this.props.authSignUp(
       {ethPublicAddress, firstName, lastName, email, password, imgUrl},
       'signup'
     )
@@ -82,7 +76,10 @@ class SignUpForm extends Component {
     return (
       <Formik
         validationSchema={schema}
-        onSubmit={(evt, state) => this.onSubmit(evt, state)}
+        onSubmit={(evt) => {
+          console.log('so it works', evt)
+          return this.onSubmit(evt)
+        }}
         initialValues={{
           firstName: '',
           lastName: '',

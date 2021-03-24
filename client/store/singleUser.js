@@ -40,7 +40,6 @@ export const createUser = (email) => async (dispatch) => {
 }
 
 export const checkPin = (stuff) => async (dispatch) => {
-  console.log('\n --------🚀 \n checkPin \n stuff', stuff)
   try {
     // http://localhost:8080/signup/?email=cole2@email.com&pin=1234
     const res = await axios.put('/api/user', stuff)
@@ -59,7 +58,7 @@ export default function (state = singleUser, action) {
     case CREATE_NEW_USER:
       return action.createdUser
     case CHECK_PIN:
-      return action.checkPin
+      return action.checkedPin
     default:
       return state
   }
