@@ -12,8 +12,6 @@ const sendEmail = (
   const data = JSON.stringify({
     personalizations: [
       {
-        // to: [{email: 'vpatel2@binghamton.edu', name: 'John Doe'}],
-
         to: [{email: recipientEmail, name: firstName, recipientUrl}],
         subject: `You've been nominated by: ${nominatorName} to win an award`
       }
