@@ -55,7 +55,10 @@ router.post('/', async (req, res, next) => {
         pin: pin
       })
       //placeholder url until we create an identifier
-      sendEmail(email)
+      let UserPin = nominee.pin()
+      const inviteUrl = `http://localhost:8080/signup/?email=${email}&pin=${UserPin}`
+
+      sendEmail(email, firstName, nominator.firstName, inviteUrl)
       recipientAddress = nominator.ethPublicAddress
     } else {
       recipientAddress = nominee.ethPublicAddress

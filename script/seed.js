@@ -10,11 +10,15 @@ async function seed() {
   const users = await Promise.all([
     User.create({
       email: 'cody@email.com',
+      firstName: 'Alan',
+      lastName: 'Watson',
       password: '123',
       pin: '215019'
     }),
     User.create({
       email: 'murphy@email.com',
+      firstName: 'Alan',
+      lastName: 'Watson',
       password: '123',
       pin: '215019'
     }),
@@ -35,7 +39,9 @@ async function seed() {
 
   let cole = await User.findOrCreate({
     where: {
-      email: 'cole@email.com'
+      email: 'cole@email.com',
+      firstName: 'Alan',
+      lastName: 'Watson'
     }
   })
 

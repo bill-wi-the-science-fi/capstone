@@ -3,7 +3,7 @@ import axios from 'axios'
 /**
  * ACTION TYPES
  */
-const CREATE_NEW_USER = 'CREATE_NEW_USER'
+const CREATE_VERIFIED_USER = 'CREATE_VERIFIED_USER'
 const CHECK_PIN = 'CHECK_PIN'
 
 /**
@@ -15,9 +15,9 @@ const singleUser = {}
  * ACTION CREATORS
  */
 
-const _createUser = (createdUser) => ({
-  type: CREATE_NEW_USER,
-  createdUser
+const _createVerifiedUser = (createdVerifiedUser) => ({
+  type: CREATE_VERIFIED_USER,
+  createdVerifiedUser
 })
 
 const _checkPin = (checkedPin) => ({
@@ -29,15 +29,17 @@ const _checkPin = (checkedPin) => ({
  * THUNK CREATORS
  */
 
-export const createUser = (email) => async (dispatch) => {
+export const createVerifiedUser = (userInfo) => async (dispatch) => {
   try {
-    const res = await axios.post('/api/user', {email})
-    const createdUser = res.data
-    dispatch(_createUser(createdUser))
+    const res = await axios.put('/api/user/verified', userInfo)
+    const createdVerifiedUser = res.data
+    dispatch(_createVerifiedUser(createdVerifiedUser))
   } catch (err) {
     console.error(err)
   }
 }
+
+//if verified is true, then run a dispatch this instead of authme
 
 export const checkPin = (stuff) => async (dispatch) => {
   try {
@@ -55,8 +57,8 @@ export const checkPin = (stuff) => async (dispatch) => {
  */
 export default function (state = singleUser, action) {
   switch (action.type) {
-    case CREATE_NEW_USER:
-      return action.createdUser
+    case CREATE_VERIFIED_USER:
+      return action.createdVerifiedUser
     case CHECK_PIN:
       return action.checkedPin
     default:

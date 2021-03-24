@@ -3,7 +3,7 @@ import {Button, Col, Form} from 'react-bootstrap'
 import {connect} from 'react-redux'
 import {Formik} from 'formik'
 import * as yup from 'yup'
-import {authSignUp, checkPin} from '../store'
+import {authSignUp, checkPin, createVerifiedUser, auth} from '../store'
 import getWeb3 from '../common/getWeb3'
 /**
  * COMPONENT
@@ -61,23 +61,32 @@ class SignUpForm extends Component {
       this.props.history.goBack()
     }
   }
-  onSubmit(evt) {
+  async onSubmit(evt) {
     // const {pin} = evt
-    console.log('submit', evt, this.state.accounts[0])
     const {firstName, lastName, email, password, imgUrl} = evt
     const ethPublicAddress = this.state.accounts[0]
-
-    this.props.authSignUp(
-      {ethPublicAddress, firstName, lastName, email, password, imgUrl},
-      'signup'
-    )
+    if (this.props.singleUser.userHasPin) {
+      await this.props.createVerifiedUser({
+        ethPublicAddress,
+        firstName,
+        lastName,
+        email,
+        password,
+        imgUrl
+      })
+      await this.props.auth(email, password, 'login')
+    } else {
+      this.props.authSignUp(
+        {ethPublicAddress, firstName, lastName, email, password, imgUrl},
+        'signup'
+      )
+    }
   }
   render() {
     return (
       <Formik
         validationSchema={schema}
         onSubmit={(evt) => {
-          console.log('so it works', evt)
           return this.onSubmit(evt)
         }}
         initialValues={{
@@ -214,7 +223,11 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    checkPin: (stuff) => dispatch(checkPin(stuff)),
+    checkPin: (info) => dispatch(checkPin(info)),
+    createVerifiedUser: (info) => dispatch(createVerifiedUser(info)),
+    auth: (email, password, type) => {
+      dispatch(auth(email, password, type))
+    },
     authSignUp: (
       {ethPublicAddress, firstName, lastName, email, password, imgUrl},
       type
