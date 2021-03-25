@@ -9,17 +9,21 @@ async function seed() {
 
   const users = await Promise.all([
     User.create({
-      email: 'cody@email.com',
-      firstName: 'Alan',
-      lastName: 'Watson',
+      email: 'ATunaMelt@email.com',
+      firstName: 'Cole',
+      lastName: 'Kuntzman',
       password: '123',
+      ethPublicAddress: '0x76a992fdc12221DEade9b0c299C3deDde5414f7d',
+      imgUrl:
+        'https://www.pinclipart.com/picdir/middle/395-3956920_free-download-jake-the-dog-finn-the-human.png',
       pin: '215019'
     }),
     User.create({
-      email: 'murphy@email.com',
-      firstName: 'Alan',
-      lastName: 'Watson',
+      email: 'viral@aol.com',
+      firstName: 'Viral',
+      lastName: 'Patel',
       password: '123',
+      ethPublicAddress: '0x7Fe1759649DbAAB7ef53543C9896C12cf30883f7',
       pin: '215019'
     }),
     User.create({
@@ -31,21 +35,31 @@ async function seed() {
       imgUrl:
         'https://tisch.nyu.edu/content/dam/tisch/clive-davis-institute/alanwatson_crop.jpg',
       pin: '230419'
+    }),
+    User.create({
+      email: 'alpay@gmail.com',
+      firstName: 'Alpay',
+      lastName: 'Aldemir',
+      password: '123',
+      ethPublicAddress: '0x3AFAe04805bB556Ff14A4af4aa7875053D6C3948',
+      imgUrl:
+        'https://tisch.nyu.edu/content/dam/tisch/clive-davis-institute/alanwatson_crop.jpg',
+      pin: '230419'
     })
   ])
   const cody = users[0]
   const murphy = users[1]
   const alan = users[2]
 
-  let cole = await User.findOrCreate({
+  let test = await User.findOrCreate({
     where: {
-      email: 'cole@email.com',
-      firstName: 'Alan',
-      lastName: 'Watson'
+      email: 'test@email.com',
+      firstName: 'Test',
+      lastName: 'Tester'
     }
   })
 
-  cole = cole[0]
+  test = test[0]
 
   let alansTrx = await Transaction.findOrCreate({
     where: {
@@ -60,7 +74,7 @@ async function seed() {
   //setRecipient is BASICALLY nominate a user.
   await murphy.addRecipient(alan)
   await alan.addRecipient(murphy)
-  await alan.addRecipient(cole)
+  await alan.addRecipient(test)
 
   let throughRow = await Nomination.findOne({
     where: {
@@ -76,11 +90,11 @@ async function seed() {
   })
 
   let throughRow4 = await Nomination.findOne({
-    where: {userId: alan.id, recipientId: cole.id}
+    where: {userId: alan.id, recipientId: test.id}
   })
 
   let maybeAward = await throughRow.createAward({
-    title: 'coleaward',
+    title: 'testaward',
     donationLimit: 1000,
     donationTotal: 60
   })
