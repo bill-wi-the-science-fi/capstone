@@ -19,6 +19,7 @@ const schema = yup.object().shape({
   email: yup.string().email('Invalid email').required('Required'),
   category: yup.string().required(),
   donationTotal: yup.number().required(),
+  donationLimit: yup.number().required(),
   title: yup.string().required(),
   description: yup.string().required()
   // file: yup.mixed().required()
@@ -46,7 +47,6 @@ class NominateForm extends Component {
         Nominate.abi,
         deployedNetwork && deployedNetwork.address
       )
-      const balance = await instance.methods.balanceOfContract().call()
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
 
@@ -54,8 +54,7 @@ class NominateForm extends Component {
         ...state,
         web3,
         accounts,
-        contract: instance,
-        storageValue: web3.utils.fromWei(balance.toString(), 'ether')
+        contract: instance
       }))
     } catch (error) {
       // Catch any errors for any of the above operations.
@@ -80,10 +79,11 @@ class NominateForm extends Component {
         .send({
           from: accounts[0],
           gas: '3000000',
-          value: this.state.web3.utils.toWei(
-            amountOfDonation.toString(),
-            'ether'
-          )
+          value: amountOfDonation
+        })
+        .on('transactionHash', () => {
+          // similar behavior as an HTTP redirect
+          this.props.history.push('/')
         })
       // Update state with the result.
       //const balance = await contract.methods.balanceOfContract().call();
@@ -94,17 +94,20 @@ class NominateForm extends Component {
   }
 
   async onSubmit(formValues) {
-    console.log('formvalues', formValues)
     // formValues.preventDefault()
     formValues.nominatorId = this.props.signedInUser.id
-    await this.props.nominateUser(formValues)
-    console.log(
-      'before submitting',
-      this.props.nominate.awardId,
-      this.props.nominate.recipient,
-      formValues.donationTotal
+    formValues.donationTotal = this.state.web3.utils.toWei(
+      formValues.donationTotal.toString(),
+      'ether'
     )
-    await this.startAwardAndDonate(
+    formValues.donationLimit = this.state.web3.utils.toWei(
+      formValues.donationLimit.toString(),
+      'ether'
+    )
+
+    await this.props.nominateUser(formValues)
+
+    this.startAwardAndDonate(
       this.props.nominate.awardId,
       this.props.nominate.recipient,
       formValues.donationTotal
@@ -122,6 +125,7 @@ class NominateForm extends Component {
           email: '',
           category: '',
           donationTotal: '',
+          donationLimit: '',
           title: '',
           description: ''
           // file: null
@@ -203,6 +207,18 @@ class NominateForm extends Component {
                   onBlur={handleBlur}
                   onChange={handleChange}
                   isValid={touched.donationTotal && !errors.donationTotal}
+                />
+              </Form.Group>
+              <Form.Group as={Col} md="4" controlId="validationFormik106">
+                <Form.Label>Donation Limit</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Donation Limit"
+                  name="donationLimit"
+                  value={values.donationLimit}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  isValid={touched.donationLimit && !errors.donationLimit}
                 />
               </Form.Group>
               <Form.Group as={Col} md="4" controlId="validationFormik103">

@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {Button, Card} from 'react-bootstrap'
 import {connect} from 'react-redux'
 import {getSingleAward} from '../store'
+import {DonateForm} from '../components'
 
 /**
  * COMPONENT
@@ -28,7 +29,10 @@ class SingleAward extends Component {
               <Card.Body>
                 <Card.Title>{singleAward.award_title}</Card.Title>
                 <Card.Text>{singleAward.award_description}</Card.Text>
-                <Button variant="outline-secondary">Donate</Button>
+                <DonateForm
+                  awardId={`${singleAward.id}`}
+                  history={this.props.history}
+                />
               </Card.Body>
             </Card>
           </div>
@@ -41,6 +45,7 @@ class SingleAward extends Component {
 /**
  * CONTAINER
  */
+
 const mapState = (state) => {
   return {
     singleAward: state.singleAward
