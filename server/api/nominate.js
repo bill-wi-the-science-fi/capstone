@@ -47,26 +47,26 @@ router.post('/', async (req, res, next) => {
     // Add first and last name to the nominee & set address
     // if nominee is signed up but does not have a public address available, use the nominator address
     if (userWasCreated) {
-      console.log('if user was created----working')
       let pin = Math.floor(100000 + Math.random() * 900000)
       pin = pin.toString()
-
-      console.log('signuPpin math floor', typeof pin)
-
       await nominee.update({
         firstName: firstName,
         lastName: lastName,
         pin: pin
       })
       //placeholder url until we create an identifier
-      sendEmail(email, firstName, nominator.firstName)
+      let UserPin = nominee.pin()
+      const inviteUrl = `http://localhost:8080/signup/?email=${email}&pin=${UserPin}`
+
+      sendEmail(email, firstName, nominator.firstName, inviteUrl)
       recipientAddress = nominator.ethPublicAddress
     } else {
       recipientAddress = nominee.ethPublicAddress
     }
     // Send award and recipient to our reducer.
     const result = {
-      awardId: newAward.id,
+      // WORKAROUND UNITL WE WIPE ETH CONTRACT
+      awardId: newAward.id + 10,
       recipient: recipientAddress
     }
     res.json(result)

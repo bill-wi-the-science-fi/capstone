@@ -3,7 +3,7 @@ import {Button, Col, Form} from 'react-bootstrap'
 import {connect} from 'react-redux'
 import {Formik} from 'formik'
 import * as yup from 'yup'
-import {authSignUp} from '../store'
+import {authSignUp, checkPin, createVerifiedUser, auth} from '../store'
 import getWeb3 from '../common/getWeb3'
 /**
  * COMPONENT
@@ -38,6 +38,7 @@ class SignUpForm extends Component {
       urlCheckForPin: this.props.match.path === '/signup',
       accounts: []
     }
+    this.onSubmit = this.onSubmit.bind(this)
   }
   async componentDidMount() {
     try {
@@ -49,6 +50,12 @@ class SignUpForm extends Component {
           accounts: accounts
         }))
       }
+      const params = new URLSearchParams(window.location.search)
+      if (params) {
+        const email = params.get('email')
+        const pin = params.get('pin')
+        await this.props.checkPin({email, pin})
+      }
     } catch (error) {
       alert(
         'In order to sign up please install and connect MetaMask on the Ropsten Network'
@@ -56,12 +63,34 @@ class SignUpForm extends Component {
       this.props.history.goBack()
     }
   }
-
+  async onSubmit(evt) {
+    // const {pin} = evt
+    const {firstName, lastName, email, password, imgUrl} = evt
+    const ethPublicAddress = this.state.accounts[0]
+    if (this.props.singleUser.userHasPin) {
+      await this.props.createVerifiedUser({
+        ethPublicAddress,
+        firstName,
+        lastName,
+        email,
+        password,
+        imgUrl
+      })
+      await this.props.auth(email, password, 'login')
+    } else {
+      this.props.authSignUp(
+        {ethPublicAddress, firstName, lastName, email, password, imgUrl},
+        'signup'
+      )
+    }
+  }
   render() {
     return (
       <Formik
         validationSchema={schema}
-        onSubmit={(evt, state) => this.props.onSubmit(evt, this.state)}
+        onSubmit={(evt) => {
+          return this.onSubmit(evt)
+        }}
         initialValues={{
           firstName: '',
           lastName: '',
@@ -191,22 +220,26 @@ class SignUpForm extends Component {
  * CONTAINER
  */
 const mapState = (state) => {
-  return {}
+  return {singleUser: state.singleUser}
 }
 
 const mapDispatch = (dispatch) => {
   return {
-    onSubmit(evt, state) {
-      // const {pin} = evt
-      const {firstName, lastName, email, password, imgUrl} = evt
-      const ethPublicAddress = state.accounts[0]
+    checkPin: (info) => dispatch(checkPin(info)),
+    createVerifiedUser: (info) => dispatch(createVerifiedUser(info)),
+    auth: (email, password, type) => {
+      dispatch(auth(email, password, type))
+    },
+    authSignUp: (
+      {ethPublicAddress, firstName, lastName, email, password, imgUrl},
+      type
+    ) =>
       dispatch(
         authSignUp(
           {ethPublicAddress, firstName, lastName, email, password, imgUrl},
-          'signup'
+          type
         )
       )
-    }
   }
 }
 
