@@ -43,6 +43,7 @@ function DonateForm(props) {
                     value: web3.utils.toWei(evt.donation.toString(), 'ether')
                   })
                 // NEED TO PULL IN TRANSACTION HASH FROM SMART CONTRACT OUTPUT
+                // REMOVE PATCHY LOGIC FROM THUNK
                 // INVOKE THUNK THAT POSTS A NEW TXN TO DB
                 // SHOULD BE RUNNING POST BELOW IF MM TXN IS SUCCESSFUL
                 console.log('contractTxn---------------------', contractTxn)

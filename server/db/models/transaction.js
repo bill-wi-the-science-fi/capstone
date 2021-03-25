@@ -14,7 +14,7 @@ const Transaction = db.define('transaction', {
   },
   amountEther: {
     type: Sequelize.INTEGER,
-    unique: true,
+    unique: false,
     allowNull: false
   }
 })

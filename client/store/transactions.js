@@ -45,7 +45,7 @@ export const postTransaction = (txnData) => {
       } = txnData
       let txnHash = transactionHash
         ? transactionHash
-        : '0x05cbd37d856b8a5fb78799c023c132d8feace6d319e1c7d5391bb36fce86a59f'
+        : Math.random() * 100 + Math.random() * 1000
       let scAddress = smartContractAddress
         ? smartContractAddress
         : '0x3afae04805bb556ff14a4af4aa7875053d6c3948'
