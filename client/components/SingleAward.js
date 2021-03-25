@@ -29,8 +29,16 @@ class SingleAward extends Component {
               <Card.Body>
                 <Card.Title>{singleAward.award_title}</Card.Title>
                 <Card.Text>{singleAward.award_description}</Card.Text>
+                <Card.Text>
+                  Awarded to: {singleAward.recipient_firstName}{' '}
+                  {singleAward.recipient_lastName}
+                </Card.Text>
+                <Card.Text>
+                  Nominated by: {singleAward.giver_firstName}{' '}
+                  {singleAward.giver_lastName}
+                </Card.Text>
                 <DonateForm
-                  awardId={`${singleAward.id}`}
+                  awardId={`${singleAward.award_id}`}
                   history={this.props.history}
                 />
               </Card.Body>
