@@ -95,7 +95,7 @@ async function seed() {
 
   let maybeAward = await throughRow.createAward({
     title: 'testaward',
-    donationLimit: 1000,
+    donationLimit: '10000000000000000000000000000000000',
     donationTotal: 60
   })
   let maybeAward2 = await throughRow2.createAward({
@@ -105,17 +105,17 @@ async function seed() {
   })
   let maybeAward3 = await throughRow.createAward({
     title: 'test',
-    donationLimit: 1000,
+    donationLimit: '10000000000000000000000000000000000',
     donationTotal: 40
   })
   let maybeAward4 = await throughRow3.createAward({
     title: 'test 2',
-    donationLimit: 1000,
+    donationLimit: '10000000000000000000000000000000000',
     donationTotal: 30
   })
   let maybeAward5 = await throughRow4.createAward({
     title: 'test Guest',
-    donationLimit: 1000,
+    donationLimit: '10000000000000000000000000000000000',
     donationTotal: 20
   })
   await alansTrx.setAward(maybeAward4)
