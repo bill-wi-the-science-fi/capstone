@@ -29,7 +29,7 @@ class SingleAward extends Component {
               <Card.Body>
                 <Card.Title>{singleAward.title}</Card.Title>
                 <Card.Text>{singleAward.description}</Card.Text>
-                <DonateForm />
+                <DonateForm awardId={`${singleAward.id}`} />
               </Card.Body>
             </Card>
           </div>
@@ -42,6 +42,7 @@ class SingleAward extends Component {
 /**
  * CONTAINER
  */
+
 const mapState = (state) => {
   return {
     singleAward: state.singleAward

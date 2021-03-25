@@ -24,6 +24,7 @@ function DonateForm(props) {
       onSubmit={
         //if !metamask get MM
         async (evt) => {
+          const donationAmount = evt.donation.toString()
           try {
             const web3 = await getWeb3()
             const accounts = await web3.eth.getAccounts()
@@ -40,38 +41,46 @@ function DonateForm(props) {
                   .donateFunds(props.awardId)
                   .send({
                     from: accounts[0],
-                    value: web3.utils.toWei(evt.donation.toString(), 'ether')
+                    value: web3.utils.toWei(donationAmount, 'ether')
                   })
+                //console.log('contractTxn---------------------', contractTxn)
+
                 // NEED TO PULL IN TRANSACTION HASH FROM SMART CONTRACT OUTPUT
                 // REMOVE PATCHY LOGIC FROM THUNK
                 // INVOKE THUNK THAT POSTS A NEW TXN TO DB
                 // SHOULD BE RUNNING POST BELOW IF MM TXN IS SUCCESSFUL
-                console.log('contractTxn---------------------', contractTxn)
-                const txnBody = {
-                  userId: props.signedInUser.id,
-                  awardId: props.awardId,
-                  trasnactionHash: null,
-                  amountEther: evt.donation,
-                  smartContractAddress: null
+                if (contractTxn.status) {
+                  const txnBody = {
+                    userId: props.signedInUser.id,
+                    awardId: props.awardId,
+                    transactionHash: contractTxn.transactionHash,
+                    amountEther: evt.donation,
+                    smartContractAddress: contractTxn.to
+                  }
+                  props.postTransaction(txnBody)
+                } else {
+                  // eslint-disable-next-line no-alert
+                  alert(
+                    `Transaction was not able to settle on the blockchain. Please refer to MetaMask for more information on transaction with hash ${contractTxn.transactionHash}`
+                  )
                 }
-                props.postTransaction(txnBody)
               } catch (error) {
                 console.log(error)
               }
             } else {
+              // eslint-disable-next-line no-alert
               alert(
                 'In order to donate, please connect at least 1 MetaMask account on the Ropsten Network'
               )
             }
           } catch (error) {
+            // eslint-disable-next-line no-alert
             alert(
               'In order to donate, please install Metamask and connect at least one account on the Ropsten Network'
             )
             console.log(error)
           }
         }
-
-        //if metamask... execute
       }
       initialValues={{
         donation: 0
@@ -114,7 +123,8 @@ function DonateForm(props) {
  */
 const mapState = (state) => {
   return {
-    signedInUser: state.signedInUser
+    signedInUser: state.signedInUser,
+    previousTransaction: state.transactions.previousTransaction
   }
 }
 

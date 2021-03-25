@@ -38,7 +38,7 @@ class AllAwards extends Component {
                   >
                     More Info
                   </Button>
-                  <DonateForm awardId={`${award.id}`} />
+                  {/* <DonateForm awardId={`${award.id}`} /> */}
                 </Card.Body>
               </Card>
             </div>

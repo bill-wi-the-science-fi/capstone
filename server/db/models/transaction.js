@@ -13,7 +13,7 @@ const Transaction = db.define('transaction', {
     allowNull: false
   },
   amountEther: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.FLOAT,
     unique: false,
     allowNull: false
   }

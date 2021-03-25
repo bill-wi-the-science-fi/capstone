@@ -5,16 +5,18 @@ module.exports = router
 //base path: /api/transactions
 router.post('/', async (req, res, next) => {
   try {
-    console.log('transaction api route -------------', req.body)
-    const {userId, awardId, txnHash, amountEther, scAddress} = req.body
-    console.log(txnHash)
-    console.log(scAddress)
-    //res.json(req)
+    const {
+      userId,
+      awardId,
+      transactionHash,
+      amountEther,
+      smartContractAddress
+    } = req.body
     // findOrCreate transaction
     const txn = await Transaction.create({
-      transactionHash: txnHash,
-      smartContractAddress: scAddress,
-      amountEther: amountEther
+      transactionHash,
+      smartContractAddress,
+      amountEther
     })
     // find award -> txn.setAward(awardInst)
     const award = await Award.findByPk(awardId)

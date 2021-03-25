@@ -5,11 +5,6 @@ const GET_ALL_TRANSACTIONS = 'GET_ALL_TRANSACTIONS'
 const POST_TRANSACTION = 'POST_TRANSACTION'
 
 /**
- * INITIAL STATE
- */
-const allTransactions = {}
-
-/**
  * ACTION CREATORS
  */
 
@@ -43,28 +38,40 @@ export const postTransaction = (txnData) => {
         amountEther,
         smartContractAddress
       } = txnData
-      let txnHash = transactionHash
-        ? transactionHash
-        : Math.random() * 100 + Math.random() * 1000
-      let scAddress = smartContractAddress
-        ? smartContractAddress
-        : '0x3afae04805bb556ff14a4af4aa7875053d6c3948'
-      let body = {userId, awardId, txnHash, amountEther, scAddress}
+      let body = {
+        userId,
+        awardId,
+        transactionHash,
+        amountEther,
+        smartContractAddress
+      }
       const transaction = (await axios.post('/api/transactions', body)).data
-      // be consistent with initial state (check what axios returns)
       dispatch(_postTransaction(transaction))
     } catch (error) {
       console.log(error)
     }
   }
 }
+
+/**
+ * INITIAL STATE
+ */
+const allTransactions = {
+  previousTransaction: {},
+  allTransactions: []
+}
+
 /**
  * REDUCER
  */
 export default function (state = allTransactions, action) {
   switch (action.type) {
     case POST_TRANSACTION:
-      return action.transactions
+      if (action.transaction) {
+        return {...state, previousTransaction: action.transaction}
+      } else {
+        return state
+      }
     default:
       return state
   }
