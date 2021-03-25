@@ -29,7 +29,10 @@ class SingleAward extends Component {
               <Card.Body>
                 <Card.Title>{singleAward.title}</Card.Title>
                 <Card.Text>{singleAward.description}</Card.Text>
-                <DonateForm awardId={`${singleAward.id}`} />
+                <DonateForm
+                  awardId={`${singleAward.id}`}
+                  history={this.props.history}
+                />
               </Card.Body>
             </Card>
           </div>
