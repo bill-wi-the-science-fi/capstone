@@ -21,7 +21,6 @@ const schema = yup.object().shape({
   donationTotal: yup.number().required(),
   title: yup.string().required(),
   description: yup.string().required()
-
   // file: yup.mixed().required()
 })
 
@@ -36,7 +35,6 @@ class NominateForm extends Component {
       // Get network provider and web3 instance. -> web3 attached to state
       const web3 = await getWeb3()
       // check if window object has ethereum object provided -> MM
-
       // Use web3 to get the user's accounts.
       // promps user to select which accounts the website shoul have access to -> pick first one
       const accounts = await web3.eth.getAccounts()
@@ -87,6 +85,10 @@ class NominateForm extends Component {
             'ether'
           )
         })
+        .on('transactionHash', () => {
+          // similar behavior as an HTTP redirect
+          this.props.history.push('/')
+        })
       // Update state with the result.
       //const balance = await contract.methods.balanceOfContract().call();
       //this.setState({ storageValue: balance });
@@ -96,17 +98,11 @@ class NominateForm extends Component {
   }
 
   async onSubmit(formValues) {
-    console.log('formvalues', formValues)
     // formValues.preventDefault()
     formValues.nominatorId = this.props.signedInUser.id
     await this.props.nominateUser(formValues)
-    console.log(
-      'before submitting',
-      this.props.nominate.awardId,
-      this.props.nominate.recipient,
-      formValues.donationTotal
-    )
-    await this.startAwardAndDonate(
+
+    this.startAwardAndDonate(
       this.props.nominate.awardId,
       this.props.nominate.recipient,
       formValues.donationTotal
