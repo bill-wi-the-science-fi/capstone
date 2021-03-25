@@ -85,6 +85,10 @@ class NominateForm extends Component {
             'ether'
           )
         })
+        .on('transactionHash', () => {
+          // similar behavior as an HTTP redirect
+          this.props.history.push('/')
+        })
       // Update state with the result.
       //const balance = await contract.methods.balanceOfContract().call();
       //this.setState({ storageValue: balance });
@@ -94,17 +98,11 @@ class NominateForm extends Component {
   }
 
   async onSubmit(formValues) {
-    console.log('formvalues', formValues)
     // formValues.preventDefault()
     formValues.nominatorId = this.props.signedInUser.id
     await this.props.nominateUser(formValues)
-    console.log(
-      'before submitting',
-      this.props.nominate.awardId,
-      this.props.nominate.recipient,
-      formValues.donationTotal
-    )
-    await this.startAwardAndDonate(
+
+    this.startAwardAndDonate(
       this.props.nominate.awardId,
       this.props.nominate.recipient,
       formValues.donationTotal
