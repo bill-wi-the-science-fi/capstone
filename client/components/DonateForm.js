@@ -57,7 +57,7 @@ function DonateForm(props) {
                     userId: props.signedInUser.id,
                     awardId: props.awardId,
                     transactionHash: contractTxn.transactionHash,
-                    amountEther: evt.donation,
+                    amountEther: web3.utils.toWei(donationAmount, 'ether'),
                     smartContractAddress: contractTxn.to
                   }
                   props.postTransaction(txnBody)

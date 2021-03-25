@@ -4,6 +4,7 @@ const {User, Nomination, Award, Transaction} = require('../db/models')
 module.exports = router
 //base path: /api/transactions
 router.post('/', async (req, res, next) => {
+  console.log('in transactions', req.body)
   try {
     const {
       userId,
