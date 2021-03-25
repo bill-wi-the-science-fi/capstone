@@ -29,8 +29,8 @@ class AllAwards extends Component {
                 <Card.Img variant="top" src={award.imageUrl} />
                 <Card.Body>
                   <Card.Title>{award.title}</Card.Title>
-                  <Card.Text>{award.description}</Card.Text>
-                  <Button variant="outline-secondary">Donate</Button>
+                  <Card.Text>Awarded to: {award.description}</Card.Text>
+                  {/* <Button variant="outline-secondary">Donate</Button> */}
                   <Button
                     as={Link}
                     to={`awards/${award.id}`}

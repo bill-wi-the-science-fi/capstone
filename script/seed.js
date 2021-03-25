@@ -94,9 +94,12 @@ async function seed() {
   })
 
   let maybeAward = await throughRow.createAward({
-    title: 'testaward',
+    title: 'The best trash-picker-upper',
     donationLimit: 1000,
-    donationTotal: 60
+    donationTotal: 60,
+    imageUrl:
+      'https://www.confidenceiatry.com/wp-content/uploads/2020/07/Good-Deeds-1-scaled.jpg',
+    description: 'Picked up the most trash of any human ever'
   })
   let maybeAward2 = await throughRow2.createAward({
     title: 'alanAward',
