@@ -6,6 +6,7 @@ router.use('/user', require('./user'))
 
 router.use('/awards', require('./awards'))
 router.use('/nominate', require('./nominate'))
+router.use('/transactions', require('./transactions'))
 
 router.use((req, res, next) => {
   const error = new Error('Not Found')
