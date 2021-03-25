@@ -43,8 +43,11 @@ function DonateForm(props) {
                     from: accounts[0],
                     value: web3.utils.toWei(donationAmount, 'ether')
                   })
+                  .on('transactionHash', () => {
+                    // similar behavior as an HTTP redirect
+                    props.history.push('/awards')
+                  })
                 //console.log('contractTxn---------------------', contractTxn)
-
                 // NEED TO PULL IN TRANSACTION HASH FROM SMART CONTRACT OUTPUT
                 // REMOVE PATCHY LOGIC FROM THUNK
                 // INVOKE THUNK THAT POSTS A NEW TXN TO DB
