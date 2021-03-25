@@ -1,8 +1,12 @@
 import React from 'react'
-import {Button, Col, Form, InputGroup} from 'react-bootstrap'
+import {Button, Col, Form} from 'react-bootstrap'
 import {connect} from 'react-redux'
 import {Formik} from 'formik'
 import * as yup from 'yup'
+import getWeb3 from '../common/getWeb3'
+import Nominate from '../contracts/Nominate.json'
+import {postTransaction} from '../store'
+
 // import {getSingleAward} from '../store'
 
 /**
@@ -10,18 +14,76 @@ import * as yup from 'yup'
  */
 
 const schema = yup.object().shape({
-  donation: yup.number().required(),
-  donations: yup.number().required()
+  donation: yup.number().min(0).required()
 })
 
-function DonateForm() {
+function DonateForm(props) {
   return (
     <Formik
       validationSchema={schema}
-      onSubmit={console.log}
+      onSubmit={
+        //if !metamask get MM
+        async (evt) => {
+          const donationAmount = evt.donation.toString()
+          try {
+            const web3 = await getWeb3()
+            const accounts = await web3.eth.getAccounts()
+            if (accounts) {
+              const networkId = await web3.eth.net.getId()
+              //const deployedNetwork = Nominate.networks[networkId];
+              const deployedNetwork = Nominate.networks[networkId]
+              const contract = new web3.eth.Contract(
+                Nominate.abi,
+                deployedNetwork && deployedNetwork.address
+              )
+              try {
+                const contractTxn = await contract.methods
+                  .donateFunds(props.awardId)
+                  .send({
+                    from: accounts[0],
+                    value: web3.utils.toWei(donationAmount, 'ether')
+                  })
+                //console.log('contractTxn---------------------', contractTxn)
+
+                // NEED TO PULL IN TRANSACTION HASH FROM SMART CONTRACT OUTPUT
+                // REMOVE PATCHY LOGIC FROM THUNK
+                // INVOKE THUNK THAT POSTS A NEW TXN TO DB
+                // SHOULD BE RUNNING POST BELOW IF MM TXN IS SUCCESSFUL
+                if (contractTxn.status) {
+                  const txnBody = {
+                    userId: props.signedInUser.id,
+                    awardId: props.awardId,
+                    transactionHash: contractTxn.transactionHash,
+                    amountEther: evt.donation,
+                    smartContractAddress: contractTxn.to
+                  }
+                  props.postTransaction(txnBody)
+                } else {
+                  // eslint-disable-next-line no-alert
+                  alert(
+                    `Transaction was not able to settle on the blockchain. Please refer to MetaMask for more information on transaction with hash ${contractTxn.transactionHash}`
+                  )
+                }
+              } catch (error) {
+                console.log(error)
+              }
+            } else {
+              // eslint-disable-next-line no-alert
+              alert(
+                'In order to donate, please connect at least 1 MetaMask account on the Ropsten Network'
+              )
+            }
+          } catch (error) {
+            // eslint-disable-next-line no-alert
+            alert(
+              'In order to donate, please install Metamask and connect at least one account on the Ropsten Network'
+            )
+            console.log(error)
+          }
+        }
+      }
       initialValues={{
-        donation: 0,
-        donations: 0
+        donation: 0
       }}
     >
       {({
@@ -34,11 +96,12 @@ function DonateForm() {
         errors
       }) => (
         <Form noValidate onSubmit={handleSubmit}>
-          <Form.Group as={Col} md="1.5" controlId="validationFormik101">
-            <Form.Label>Donation</Form.Label>
+          <Form.Group as={Col} md="7" controlId="validationFormik101">
+            <Form.Label>Donate to this Award</Form.Label>
             <Form.Control
               type="number"
-              placeholder="Please Donate!"
+              min="0"
+              placeholder="Donate in Ether"
               name="donation"
               value={values.donation}
               onBlur={handleBlur}
@@ -46,19 +109,9 @@ function DonateForm() {
               isValid={touched.donation && !errors.donation}
             />
           </Form.Group>
-          <Form.Group as={Col} md="1.5" controlId="validationFormik1012">
-            <Form.Label>Donations</Form.Label>
-            <Form.Control
-              type="number"
-              placeholder="Please Donates!"
-              name="donations"
-              value={values.donations}
-              onBlur={handleBlur}
-              onChange={handleChange}
-              isValid={touched.donations && !errors.donations}
-            />
-          </Form.Group>
-          <Button type="submit">Donate</Button>
+          <Button variant="outline-success" type="submit">
+            Donate
+          </Button>
         </Form>
       )}
     </Formik>
@@ -70,12 +123,15 @@ function DonateForm() {
  */
 const mapState = (state) => {
   return {
-    signedInUser: state.signedInUser
+    signedInUser: state.signedInUser,
+    previousTransaction: state.transactions.previousTransaction
   }
 }
 
 const mapDispatch = (dispatch) => {
-  return {}
+  return {
+    postTransaction: (txnData) => dispatch(postTransaction(txnData))
+  }
 }
 
 export default connect(mapState, mapDispatch)(DonateForm)

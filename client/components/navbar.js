@@ -6,7 +6,7 @@ import {Navbar, Nav, Form, FormControl, Button} from 'react-bootstrap'
 import {logout} from '../store'
 
 const NavbarBootstrap = ({handleClick, isLoggedIn}) => (
-  <Navbar collapseOnSelect expand="md" bg="light" variant="light">
+  <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
     <Navbar.Brand as={Link} to="/">
       Boilermaker
     </Navbar.Brand>
@@ -16,6 +16,9 @@ const NavbarBootstrap = ({handleClick, isLoggedIn}) => (
       <Nav className="mr-auto">
         <Nav.Link as={Link} to="/">
           Home
+        </Nav.Link>
+        <Nav.Link as={Link} to="/awards">
+          View Awards
         </Nav.Link>
 
         {isLoggedIn ? (
