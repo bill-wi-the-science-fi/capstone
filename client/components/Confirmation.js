@@ -27,13 +27,6 @@ export const Confirmation = (props) => {
                   <Card.Text>{award.award_description}</Card.Text>
                 </Card.Body>
               </Card>
-              <Card border="success" style={{width: '26rem'}}>
-                <Card.Img variant="top" src={award.award_imageUrl} />
-                <Card.Body>
-                  <Card.Title>{award.award_title}</Card.Title>
-                  <Card.Text>{award.award_description}</Card.Text>
-                </Card.Body>
-              </Card>
               Here is your hash:
               <a href={`https://ropsten.etherscan.io/tx/${hash}`}> {hash}.</a>
               Click on the link to monitor the status of your transaction on the
@@ -50,6 +43,13 @@ export const Confirmation = (props) => {
           <span>
             Your donation has been approved!!! Thank you for your donation and
             continue to browse some other extraordinary people on our website.
+            <Card border="success" style={{width: '26rem'}}>
+              <Card.Img variant="top" src={award.award_imageUrl} />
+              <Card.Body>
+                <Card.Title>{award.award_title}</Card.Title>
+                <Card.Text>{award.award_description}</Card.Text>
+              </Card.Body>
+            </Card>
           </span>
         </div>
       )
