@@ -4,6 +4,7 @@ import axios from 'axios'
 const GET_ALL_TRANSACTIONS = 'GET_ALL_TRANSACTIONS'
 const POST_TRANSACTION = 'POST_TRANSACTION'
 const NEW_TRANSACTION = 'NEW_TRANSACTION'
+const CLEAR_TRANSACTION = 'CLEAR_TRANSACTION'
 
 /**
  * ACTION CREATORS
@@ -20,6 +21,10 @@ const _postTransaction = (transaction) => ({
 export const newTransaction = (transaction) => ({
   type: NEW_TRANSACTION,
   transaction
+})
+
+export const clearTransaction = () => ({
+  type: CLEAR_TRANSACTION
 })
 
 /**
@@ -81,6 +86,8 @@ export default function (state = allTransactions, action) {
       }
     case NEW_TRANSACTION:
       return {...state, pendingTransaction: action.transaction}
+    case CLEAR_TRANSACTION:
+      return allTransactions
     default:
       return state
   }
