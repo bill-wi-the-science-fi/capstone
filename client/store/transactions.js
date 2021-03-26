@@ -3,6 +3,7 @@ import axios from 'axios'
  */
 const GET_ALL_TRANSACTIONS = 'GET_ALL_TRANSACTIONS'
 const POST_TRANSACTION = 'POST_TRANSACTION'
+const NEW_TRANSACTION = 'NEW_TRANSACTION'
 
 /**
  * ACTION CREATORS
@@ -16,6 +17,11 @@ const _postTransaction = (transaction) => ({
   type: POST_TRANSACTION,
   transaction
 })
+export const newTransaction = (transaction) => ({
+  type: NEW_TRANSACTION,
+  transaction
+})
+
 /**
  * THUNK CREATORS
  */
@@ -58,7 +64,8 @@ export const postTransaction = (txnData) => {
  */
 const allTransactions = {
   previousTransaction: {},
-  allTransactions: []
+  allTransactions: [],
+  pendingTransaction: {}
 }
 
 /**
@@ -72,6 +79,8 @@ export default function (state = allTransactions, action) {
       } else {
         return state
       }
+    case NEW_TRANSACTION:
+      return {...state, pendingTransaction: action.transaction}
     default:
       return state
   }

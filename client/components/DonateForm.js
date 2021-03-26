@@ -5,7 +5,7 @@ import {Formik} from 'formik'
 import * as yup from 'yup'
 import getWeb3 from '../common/getWeb3'
 import Nominate from '../contracts/Nominate.json'
-import {postTransaction} from '../store'
+import {postTransaction, newTransaction} from '../store'
 
 // import {getSingleAward} from '../store'
 
@@ -43,9 +43,12 @@ function DonateForm(props) {
                     from: accounts[0],
                     value: web3.utils.toWei(donationAmount, 'ether')
                   })
-                  .on('transactionHash', () => {
-                    // similar behavior as an HTTP redirect
-                    props.history.push('/awards')
+                  .on('transactionHash', (hash) => {
+                    //sending hash from pending transaction into state
+                    props.newTransaction({hash: hash, award: props.awardInfo})
+
+                    //sending user to a confirmation page with pending transaction
+                    props.history.push('/confirmation')
                   })
                 //console.log('contractTxn---------------------', contractTxn)
                 // NEED TO PULL IN TRANSACTION HASH FROM SMART CONTRACT OUTPUT
@@ -133,7 +136,8 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    postTransaction: (txnData) => dispatch(postTransaction(txnData))
+    postTransaction: (txnData) => dispatch(postTransaction(txnData)),
+    newTransaction: (hash) => dispatch(newTransaction(hash))
   }
 }
 

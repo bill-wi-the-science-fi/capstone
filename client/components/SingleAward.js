@@ -43,6 +43,7 @@ class SingleAward extends Component {
               <DonateForm
                 awardId={`${singleAward.award_id}`}
                 history={this.props.history}
+                awardInfo={singleAward}
               />
             </div>
             <Card.Text className="text-right">
