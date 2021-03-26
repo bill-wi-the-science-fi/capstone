@@ -8,9 +8,8 @@ import {logout} from '../store'
 const NavbarBootstrap = ({handleClick, isLoggedIn}) => (
   <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
     <Navbar.Brand as={Link} to="/">
-      Boilermaker
+      Pay it forward
     </Navbar.Brand>
-
     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
     <Navbar.Collapse id="responsive-navbar-nav">
       <Nav className="mr-auto">
@@ -18,9 +17,8 @@ const NavbarBootstrap = ({handleClick, isLoggedIn}) => (
           Home
         </Nav.Link>
         <Nav.Link as={Link} to="/awards">
-          View Awards
+          All Awards
         </Nav.Link>
-
         {isLoggedIn ? (
           <React.Fragment>
             <Nav.Link as={Link} to="/nominate">
