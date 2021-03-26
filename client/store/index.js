@@ -11,7 +11,6 @@ import contract from './contract'
 import transactions from './transactions'
 import singleUser from './singleUser'
 
-
 const reducer = combineReducers({
   signedInUser,
   users, // array initial State // Nomiation lives here

@@ -94,29 +94,44 @@ async function seed() {
   })
 
   let maybeAward = await throughRow.createAward({
-    title: 'testaward',
+    title: 'The best trash-picker-upper',
+    imageUrl:
+      'https://www.confidenceiatry.com/wp-content/uploads/2020/07/Good-Deeds-1-scaled.jpg',
+    description: 'Picked up the most trash of any human ever',
     donationLimit: '10000000000000000000000000000000000',
     donationTotal: 60
   })
   let maybeAward2 = await throughRow2.createAward({
-    title: 'alanAward',
-    donationLimit: 1000,
-    donationTotal: 50
+    title: 'The Do-Gooder extraordinaire (Who also Dances)',
+    imageUrl:
+      'https://www.glossycover.com/wp-content/uploads/2016/07/Ballroom-dancing-1068x1068.jpg',
+    description: 'Teaching the world how to dance thier way into good deeds',
+    donationLimit: '10000000000000000000000000000000000',
+    donationTotal: 60
   })
   let maybeAward3 = await throughRow.createAward({
-    title: 'test',
+    title: 'Viral is so awesome, he gets two awards',
+    imageUrl:
+      'https://www.imperiumsnow.com/upload/1-udpvcpu7sqlvxgy15zgxrq.jpeg',
+    description:
+      'If you know Viral, you know he just deserves this second one...',
     donationLimit: '10000000000000000000000000000000000',
-    donationTotal: 40
+    donationTotal: 60
   })
   let maybeAward4 = await throughRow3.createAward({
-    title: 'test 2',
+    title: 'You know what, he gets a third',
+    imageUrl:
+      'https://3.bp.blogspot.com/_1lDbkPOXDuY/TKKyRrNp0CI/AAAAAAAAC04/OXBTDZcaMag/s1600/DSC06246.JPG',
+    description: 'Obviously this is for testing... or he really that great?',
     donationLimit: '10000000000000000000000000000000000',
-    donationTotal: 30
+    donationTotal: 60
   })
   let maybeAward5 = await throughRow4.createAward({
-    title: 'test Guest',
+    title: 'So... is this a dog or a Hyena',
+    description:
+      'We have an unresolved group debate on what this animal actully was... Vote "Dog" with 2 ETH or Vote "Hyena" with 1 ETH',
     donationLimit: '10000000000000000000000000000000000',
-    donationTotal: 20
+    donationTotal: 60
   })
   await alansTrx.setAward(maybeAward4)
   await alansTrx.setUser(alan)

@@ -16,7 +16,7 @@ class SingleAward extends Component {
   render() {
     const {singleAward} = this.props
 
-    if (!singleAward.id) {
+    if (!singleAward.award_id) {
       return <h2> Loading award... </h2>
     }
 
@@ -25,12 +25,20 @@ class SingleAward extends Component {
         <div className="row flex-wrap">
           <div className="col-lg-8 p-3">
             <Card border="success" style={{width: '26rem'}}>
-              <Card.Img variant="top" src={singleAward.imageUrl} />
+              <Card.Img variant="top" src={singleAward.award_imageUrl} />
               <Card.Body>
-                <Card.Title>{singleAward.title}</Card.Title>
-                <Card.Text>{singleAward.description}</Card.Text>
+                <Card.Title>{singleAward.award_title}</Card.Title>
+                <Card.Text>{singleAward.award_description}</Card.Text>
+                <Card.Text>
+                  Awarded to: {singleAward.recipient_firstName}{' '}
+                  {singleAward.recipient_lastName}
+                </Card.Text>
+                <Card.Text>
+                  Nominated by: {singleAward.giver_firstName}{' '}
+                  {singleAward.giver_lastName}
+                </Card.Text>
                 <DonateForm
-                  awardId={`${singleAward.id}`}
+                  awardId={`${singleAward.award_id}`}
                   history={this.props.history}
                 />
               </Card.Body>
