@@ -94,47 +94,44 @@ async function seed() {
   })
 
   let maybeAward = await throughRow.createAward({
-
     title: 'The best trash-picker-upper',
     imageUrl:
       'https://www.confidenceiatry.com/wp-content/uploads/2020/07/Good-Deeds-1-scaled.jpg',
     description: 'Picked up the most trash of any human ever',
-    donationLimit: '10000000000000000000000000000000000',
-    donationTotal: 60
+    donationLimit: '7000000000000000000',
+    donationTotal: '200000000000000000'
   })
   let maybeAward2 = await throughRow2.createAward({
     title: 'The Do-Gooder extraordinaire (Who also Dances)',
     imageUrl:
       'https://www.glossycover.com/wp-content/uploads/2016/07/Ballroom-dancing-1068x1068.jpg',
     description: 'Teaching the world how to dance thier way into good deeds',
-    donationLimit: '10000000000000000000000000000000000',
-    donationTotal: 60
+    donationLimit: '7000000000000000000',
+    donationTotal: '2000000000000000000'
   })
   let maybeAward3 = await throughRow.createAward({
-
     title: 'Viral is so awesome, he gets two awards',
     imageUrl:
       'https://www.imperiumsnow.com/upload/1-udpvcpu7sqlvxgy15zgxrq.jpeg',
     description:
       'If you know Viral, you know he just deserves this second one...',
-    donationLimit: '10000000000000000000000000000000000',
-    donationTotal: 60
+    donationLimit: '7000000000000000000',
+    donationTotal: '100000000000000000'
   })
   let maybeAward4 = await throughRow3.createAward({
     title: 'You know what, he gets a third',
     imageUrl:
       'https://3.bp.blogspot.com/_1lDbkPOXDuY/TKKyRrNp0CI/AAAAAAAAC04/OXBTDZcaMag/s1600/DSC06246.JPG',
     description: 'Obviously this is for testing... or he really that great?',
-    donationLimit: '10000000000000000000000000000000000',
-    donationTotal: 60
+    donationLimit: '7000000000000000000',
+    donationTotal: '500000000000000000'
   })
   let maybeAward5 = await throughRow4.createAward({
     title: 'So... is this a dog or a Hyena',
     description:
       'We have an unresolved group debate on what this animal actully was... Vote "Dog" with 2 ETH or Vote "Hyena" with 1 ETH',
-    donationLimit: '10000000000000000000000000000000000',
-    donationTotal: 60
-
+    donationLimit: '7000000000000000000',
+    donationTotal: '1000000000000000000'
   })
   await alansTrx.setAward(maybeAward4)
   await alansTrx.setUser(alan)

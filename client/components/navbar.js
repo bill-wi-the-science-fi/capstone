@@ -8,7 +8,7 @@ import {logout} from '../store'
 const NavbarBootstrap = ({handleClick, isLoggedIn}) => (
   <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
     <Navbar.Brand as={Link} to="/">
-      Pay it forward
+      Pay Eth Forward
     </Navbar.Brand>
     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
     <Navbar.Collapse id="responsive-navbar-nav">
