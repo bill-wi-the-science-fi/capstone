@@ -94,6 +94,7 @@ async function seed() {
   })
 
   let maybeAward = await throughRow.createAward({
+
     title: 'The best trash-picker-upper',
     imageUrl:
       'https://www.confidenceiatry.com/wp-content/uploads/2020/07/Good-Deeds-1-scaled.jpg',
@@ -110,6 +111,7 @@ async function seed() {
     donationTotal: 60
   })
   let maybeAward3 = await throughRow.createAward({
+
     title: 'Viral is so awesome, he gets two awards',
     imageUrl:
       'https://www.imperiumsnow.com/upload/1-udpvcpu7sqlvxgy15zgxrq.jpeg',
@@ -132,6 +134,7 @@ async function seed() {
       'We have an unresolved group debate on what this animal actully was... Vote "Dog" with 2 ETH or Vote "Hyena" with 1 ETH',
     donationLimit: '10000000000000000000000000000000000',
     donationTotal: 60
+
   })
   await alansTrx.setAward(maybeAward4)
   await alansTrx.setUser(alan)
