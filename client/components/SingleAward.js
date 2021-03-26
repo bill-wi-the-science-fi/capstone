@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Card} from 'react-bootstrap'
 import {connect} from 'react-redux'
-import {getSingleAward} from '../store'
+import {getSingleAward, clearTransaction} from '../store'
 import {DonateForm} from '../components'
 import Web3 from 'web3'
 
@@ -14,6 +14,7 @@ const web3 = new Web3()
 class SingleAward extends Component {
   componentDidMount() {
     this.props.getSingleAward(this.props.match.params.id)
+    this.props.clearTransaction()
   }
 
   render() {
@@ -72,7 +73,8 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    getSingleAward: (id) => dispatch(getSingleAward(id))
+    getSingleAward: (id) => dispatch(getSingleAward(id)),
+    clearTransaction: () => dispatch(clearTransaction())
   }
 }
 
