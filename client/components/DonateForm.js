@@ -112,7 +112,7 @@ function DonateForm(props) {
               isValid={touched.donation && !errors.donation}
             />
           </Form.Group>
-          <Button variant="outline-success" type="submit">
+          <Button className="m-2" variant="outline-success" type="submit">
             Donate
           </Button>
         </Form>

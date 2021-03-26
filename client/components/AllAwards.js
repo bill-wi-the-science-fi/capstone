@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import {Button, Card} from 'react-bootstrap'
 import {connect} from 'react-redux'
 import {getAllAwards} from '../store'
-import {DonateForm} from '../components'
 import {Link} from 'react-router-dom'
 
 /**
