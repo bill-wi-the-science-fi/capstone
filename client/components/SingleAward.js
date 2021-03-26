@@ -40,6 +40,7 @@ class SingleAward extends Component {
                 <DonateForm
                   awardId={`${singleAward.award_id}`}
                   history={this.props.history}
+                  awardInfo={singleAward}
                 />
               </Card.Body>
             </Card>
