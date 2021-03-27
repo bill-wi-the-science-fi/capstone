@@ -47,4 +47,5 @@ const sendEmail = (
       console.log(error)
     })
 }
+
 module.exports = sendEmail
