@@ -43,7 +43,6 @@ function DonateForm(props) {
                 deployedNetwork && deployedNetwork.address
               )
               try {
-                console.log(props.amountETH.toString())
                 const contractTxn = await contract.methods
                   .donateFunds(props.awardId)
                   .send({
@@ -129,8 +128,7 @@ function DonateForm(props) {
 const mapState = (state) => {
   return {
     signedInUser: state.signedInUser,
-    previousTransaction: state.transactions.previousTransaction,
-    amountETH: state.transactions.amountETH
+    previousTransaction: state.transactions.previousTransaction
   }
 }
 

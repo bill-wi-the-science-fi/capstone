@@ -7,7 +7,7 @@ import {fetchWeb3AndContract} from '../store/contract'
 // import {getSingleAward} from '../store'
 import getWeb3 from '../common/getWeb3'
 import Nominate from '../contracts/Nominate.json'
-import {nominateUser} from '../store'
+import {nominateUser, getPriceConversion} from '../store'
 
 /**
  * COMPONENT
@@ -96,22 +96,37 @@ class NominateForm extends Component {
   async onSubmit(formValues) {
     // formValues.preventDefault()
     formValues.nominatorId = this.props.signedInUser.id
-    formValues.donationTotal = this.state.web3.utils.toWei(
-      formValues.donationTotal.toString(),
-      'ether'
-    )
-    formValues.donationLimit = this.state.web3.utils.toWei(
-      formValues.donationLimit.toString(),
-      'ether'
-    )
-
-    await this.props.nominateUser(formValues)
-
-    this.startAwardAndDonate(
-      this.props.nominate.awardId,
-      this.props.nominate.recipient,
-      formValues.donationTotal
-    )
+    const donationAmountUSD = +formValues.donationTotal
+    const donationLimitUSD = +formValues.donationLimit
+    try {
+      const donationAmountETH = (
+        await this.props.getPriceConversion(donationAmountUSD)
+      ).toString()
+      const donationLimitETH = (
+        await this.props.getPriceConversion(donationLimitUSD)
+      ).toString()
+      const formData = {
+        ...formValues,
+        donationTotal: this.state.web3.utils.toWei(donationAmountETH, 'ether'),
+        donationLimit: this.state.web3.utils.toWei(donationLimitETH, 'ether')
+      }
+      // formValues.donationTotal = this.state.web3.utils.toWei(
+      //   donationAmountETH,
+      //   'ether'
+      // )
+      // formValues.donationLimit = this.state.web3.utils.toWei(
+      //   donationLimitETH,
+      //   'ether'
+      // )
+      await this.props.nominateUser(formData)
+      this.startAwardAndDonate(
+        this.props.nominate.awardId,
+        this.props.nominate.recipient,
+        formData.donationTotal
+      )
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   render() {
@@ -198,7 +213,7 @@ class NominateForm extends Component {
                 />
               </Form.Group>
               <Form.Group as={Col} md="4" controlId="validationFormik105">
-                <Form.Label>Donation</Form.Label>
+                <Form.Label>Donation ($USD)</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Donation"
@@ -210,7 +225,7 @@ class NominateForm extends Component {
                 />
               </Form.Group>
               <Form.Group as={Col} md="4" controlId="validationFormik106">
-                <Form.Label>Donation Limit</Form.Label>
+                <Form.Label>Donation Limit ($USD)</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Donation Limit"
@@ -273,7 +288,9 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     fetchWeb3AndContract: () => dispatch(fetchWeb3AndContract()),
-    nominateUser: (formData) => dispatch(nominateUser(formData))
+    nominateUser: (formData) => dispatch(nominateUser(formData)),
+    getPriceConversion: (donationAmountUSD) =>
+      dispatch(getPriceConversion(donationAmountUSD))
   }
 }
 
