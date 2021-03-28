@@ -7,7 +7,12 @@ import {fetchWeb3AndContract} from '../store/contract'
 // import {getSingleAward} from '../store'
 import getWeb3 from '../common/getWeb3'
 import Nominate from '../contracts/Nominate.json'
-import {nominateUser} from '../store'
+import {
+  nominateUser,
+  postTransaction,
+  newTransaction,
+  clearTransaction
+} from '../store'
 
 /**
  * COMPONENT
@@ -32,6 +37,7 @@ class NominateForm extends Component {
     this.startAwardAndDonate = this.startAwardAndDonate.bind(this)
   }
   async componentDidMount() {
+    this.props.clearTransaction()
     try {
       // Get network provider and web3 instance. -> web3 attached to state
       const web3 = await getWeb3()
@@ -68,8 +74,9 @@ class NominateForm extends Component {
 
   startAwardAndDonate = async (awardId, recipientAddress, amountOfDonation) => {
     try {
-      const {accounts, contract} = this.state
-      await contract.methods
+      const {accounts, contract, web3} = this.state
+
+      const contractTxn = await contract.methods
         .startAwardAndDonate(
           awardId,
           recipientAddress
@@ -81,10 +88,31 @@ class NominateForm extends Component {
           gas: '3000000',
           value: amountOfDonation
         })
-        .on('transactionHash', () => {
+        .on('transactionHash', async (hash) => {
+          await this.props.newTransaction({
+            hash: hash,
+            award: awardId
+          })
+
           // similar behavior as an HTTP redirect
-          this.props.history.push('/')
+          this.props.history.push('/confirmation')
         })
+
+      if (contractTxn.status) {
+        const txnBody = {
+          userId: this.props.signedInUser.id,
+          awardId: awardId,
+          transactionHash: contractTxn.transactionHash,
+          amountEther: amountOfDonation,
+          smartContractAddress: contractTxn.to
+        }
+        this.props.postTransaction(txnBody)
+      } else {
+        // eslint-disable-next-line no-alert
+        alert(
+          `Transaction was not able to settle on the blockchain. Please refer to MetaMask for more information on transaction with hash ${contractTxn.transactionHash}`
+        )
+      }
       // Update state with the result.
       //const balance = await contract.methods.balanceOfContract().call();
       //this.setState({ storageValue: balance });
@@ -273,7 +301,10 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     fetchWeb3AndContract: () => dispatch(fetchWeb3AndContract()),
-    nominateUser: (formData) => dispatch(nominateUser(formData))
+    nominateUser: (formData) => dispatch(nominateUser(formData)),
+    postTransaction: (formData) => dispatch(postTransaction(formData)),
+    newTransaction: (formData) => dispatch(newTransaction(formData)),
+    clearTransaction: () => dispatch(clearTransaction())
   }
 }
 

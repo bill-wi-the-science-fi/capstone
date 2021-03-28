@@ -7,7 +7,7 @@ module.exports = router
 router.post('/', async (req, res, next) => {
   console.log('in transactions', req.body)
   try {
-    const {
+    let {
       userId,
       awardId,
       transactionHash,
@@ -20,6 +20,11 @@ router.post('/', async (req, res, next) => {
       smartContractAddress,
       amountEther
     })
+
+    if (awardId > 100) {
+      awardId = awardId - 100
+    }
+
     // find award -> txn.setAward(awardInst)
     const award = await Award.findByPk(awardId)
 

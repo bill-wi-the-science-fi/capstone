@@ -34,14 +34,14 @@ router.post('/', async (req, res, next) => {
     let throughRow = await Nomination.findOne({
       where: {userId: nominator.id, recipientId: nominee.id}
     })
-
+    //since donation is pending, donationtotal is set to zero, when transaction is accepted on blockchain,donationtotal will update
     const newAward = await throughRow.createAward({
       title: title,
       category: category,
       description: description,
       imgUrl: imgUrl,
       donationLimit: donationLimit,
-      donationTotal: donationTotal
+      donationTotal: '0'
     })
 
     // Add first and last name to the nominee & set address
@@ -66,7 +66,7 @@ router.post('/', async (req, res, next) => {
     // Send award and recipient to our reducer.
     const result = {
       // WORKAROUND UNITL WE WIPE ETH CONTRACT
-      awardId: newAward.id + 10,
+      awardId: newAward.id + 100,
       recipient: recipientAddress
     }
     res.json(result)
