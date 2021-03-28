@@ -3,6 +3,7 @@ import axios from 'axios'
  */
 const GET_ALL_TRANSACTIONS = 'GET_ALL_TRANSACTIONS'
 const POST_TRANSACTION = 'POST_TRANSACTION'
+const CONVERT_USD_ETH = 'CONVERT_USD_ETH'
 
 /**
  * ACTION CREATORS
@@ -16,6 +17,10 @@ const _postTransaction = (transaction) => ({
   type: POST_TRANSACTION,
   transaction
 })
+const _getpriceConversion = (amountETH) => ({
+  type: CONVERT_USD_ETH,
+  amountETH
+})
 /**
  * THUNK CREATORS
  */
@@ -27,7 +32,6 @@ const _postTransaction = (transaction) => ({
 //     console.error(err)
 //   }
 // }
-
 export const postTransaction = (txnData) => {
   return async (dispatch) => {
     try {
@@ -52,13 +56,31 @@ export const postTransaction = (txnData) => {
     }
   }
 }
-
+export const getPriceConversion = (amountUSD) => {
+  return async (dispatch) => {
+    try {
+      console.log(amountUSD, typeof amountUSD)
+      amountUSD = amountUSD.toFixed(2)
+      const ethPerUsd = (
+        await axios.get(
+          'https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=ETH'
+        )
+      ).data
+      const amountETH = ethPerUsd.ETH * amountUSD
+      dispatch(_getpriceConversion(amountETH))
+      return amountETH
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
 /**
  * INITIAL STATE
  */
 const allTransactions = {
   previousTransaction: {},
-  allTransactions: []
+  allTransactions: [],
+  amountETH: 0
 }
 
 /**
@@ -72,6 +94,8 @@ export default function (state = allTransactions, action) {
       } else {
         return state
       }
+    case CONVERT_USD_ETH:
+      return {...state, amountETH: action.amountETH}
     default:
       return state
   }
