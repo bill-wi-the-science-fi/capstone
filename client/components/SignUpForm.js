@@ -36,7 +36,8 @@ class SignUpForm extends Component {
     super(props)
     this.state = {
       urlCheckForPin: this.props.match.path === '/signup',
-      accounts: []
+      accounts: [],
+      pin: ''
     }
     this.onSubmit = this.onSubmit.bind(this)
   }
@@ -54,6 +55,7 @@ class SignUpForm extends Component {
       if (params) {
         const email = params.get('email')
         const pin = params.get('pin')
+        this.setState({pin})
         await this.props.checkPin({email, pin})
       }
     } catch (error) {
@@ -74,7 +76,8 @@ class SignUpForm extends Component {
         lastName,
         email,
         password,
-        imgUrl
+        imgUrl,
+        pin: this.state.pin
       })
       await this.props.auth(email, password, 'login')
     } else {
