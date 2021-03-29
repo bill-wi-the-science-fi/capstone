@@ -11,10 +11,13 @@ const Award = db.define('award', {
     type: Sequelize.ENUM(
       'Open-Source',
       'Community',
-      'Behind the scenes',
-      'Health and wellness',
+      'Lifetime of Awesome',
+      'Health and Wellness',
       'Volunteer',
-      'Animals'
+      'Animals',
+      'Heroic Act',
+      'Enviornment',
+      'Activism'
     ),
     unique: false,
     defaultValue: 'Community'

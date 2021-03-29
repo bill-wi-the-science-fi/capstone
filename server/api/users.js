@@ -18,6 +18,7 @@ router.get('/', async (req, res, next) => {
 })
 
 // Attached to the form for "sign up" new user.
+// need to add logged in middleware for protection.
 router.post('/', async (req, res, next) => {
   try {
     const {email, firstName, lastName, ethPublicAddress, password} = req.body

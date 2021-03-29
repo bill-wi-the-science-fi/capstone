@@ -6,6 +6,7 @@ module.exports = router
 
 // nominateUser thunk
 // this will be the route attatched to the "nominate" form on the front end
+// Will need Logged in route protection
 router.post('/', async (req, res, next) => {
   try {
     const {
