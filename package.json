@@ -43,6 +43,7 @@
     "bootstrap": "^4.6.0",
     "compression": "^1.7.3",
     "connect-session-sequelize": "^6.0.0",
+    "defender-relay-client": "^1.5.0",
     "express": "^4.16.4",
     "express-session": "^1.15.1",
     "formik": "^2.2.6",
