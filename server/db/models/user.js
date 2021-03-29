@@ -56,7 +56,7 @@ const User = db.define('user', {
   ethPublicAddress: {
     type: Sequelize.STRING,
     unique: false,
-    defaultValue: '0x76a992fdc12221DEade9b0c299C3deDde5414f7d'
+    defaultValue: null
   },
   imgUrl: {
     type: Sequelize.STRING,

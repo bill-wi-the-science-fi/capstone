@@ -35,6 +35,12 @@ export const Intro = () => {
                 {` check out this article.`}
               </a>
             </p>
+            <p>
+              To install MetaMask,
+              <a href="https://metamask.io/download.html">
+                {` check out their website.`}
+              </a>
+            </p>
           </div>
           <div className="col-md-3 flex">
             <Image

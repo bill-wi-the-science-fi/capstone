@@ -45,6 +45,8 @@ function DonateForm(props) {
                 deployedNetwork && deployedNetwork.address
               )
               try {
+                //if trying to donate to an award created on smart contract, use
+                //.donateFunds(parseFloat(props.awardId) + number added to award id)
                 const contractTxn = await contract.methods
                   .donateFunds(props.awardId)
                   .send({

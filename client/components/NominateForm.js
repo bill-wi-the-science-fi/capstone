@@ -14,7 +14,7 @@ import {
   clearTransaction
 } from '../store'
 
-const regEx = /^\d+(?:\.\d{0,2})$/
+const regEx = /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/
 
 const schema = yup.object().shape({
   firstName: yup.string().required(),
@@ -83,9 +83,15 @@ class NominateForm extends Component {
     }
   }
 
-  startAwardAndDonate = async (awardId, recipientAddress, amountOfDonation) => {
+  startAwardAndDonate = async (
+    awardId,
+    recipientAddress,
+    amountOfDonation,
+    recipientEmail
+  ) => {
     try {
       const {accounts, contract, web3} = this.state
+      console.log('recipientemail', recipientEmail)
 
       const contractTxn = await contract.methods
         .startAwardAndDonate(
@@ -108,14 +114,14 @@ class NominateForm extends Component {
           // similar behavior as an HTTP redirect
           this.props.history.push('/confirmation')
         })
-
       if (contractTxn.status) {
         const txnBody = {
           userId: this.props.signedInUser.id,
           awardId: awardId,
           transactionHash: contractTxn.transactionHash,
           amountEther: amountOfDonation,
-          smartContractAddress: contractTxn.to
+          smartContractAddress: contractTxn.to,
+          recipientEmail: recipientEmail
         }
         this.props.postTransaction(txnBody)
       } else {
@@ -159,11 +165,13 @@ class NominateForm extends Component {
       //   donationLimitETH,
       //   'ether'
       // )
+      console.log('formValues', formValues, formValues.email)
       await this.props.nominateUser(formData)
       this.startAwardAndDonate(
         this.props.nominate.awardId,
         this.props.nominate.recipient,
-        formData.donationTotal
+        formData.donationTotal,
+        formValues.email
       )
     } catch (error) {
       console.log(error)
@@ -281,7 +289,8 @@ class NominateForm extends Component {
                   isValid={
                     touched.donationLimit &&
                     !errors.donationLimit &&
-                    values.donationLimit > values.donationTotal &&
+                    Number(values.donationLimit) >
+                      Number(values.donationTotal) &&
                     regEx.test(values.donationLimit)
                   }
                 />

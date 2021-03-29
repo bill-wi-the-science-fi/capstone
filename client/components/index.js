@@ -15,5 +15,6 @@ export {default as DonateForm} from './DonateForm'
 export {default as SignUpForm} from './SignUpForm'
 export {default as Confirmation} from './Confirmation'
 export {default as Intro} from './Intro'
+export {default as UserAwards} from './UserAwards'
 
 export {Login} from './auth-form'

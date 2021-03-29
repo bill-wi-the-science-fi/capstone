@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Button, Card} from 'react-bootstrap'
 import {connect} from 'react-redux'
-import {getAllAwards} from '../store'
+import {getAllUserAwards} from '../store'
 import {Link} from 'react-router-dom'
 import ReactPaginate from 'react-paginate'
 
@@ -23,7 +23,6 @@ class AllAwards extends Component {
   }
 
   pagination() {
-    console.log('t', this.props)
     const {perPage, startAwardIndex} = this.state
     //data for awards to display on page
     const awards = this.props.awards.slice(
@@ -57,7 +56,9 @@ class AllAwards extends Component {
   }
 
   async componentDidMount() {
-    await this.props.getAllAwards()
+    console.log(Date())
+    await this.props.getAllUserAwards(this.props.signedInUser.id)
+
     this.pagination()
   }
 
@@ -117,13 +118,14 @@ class AllAwards extends Component {
  */
 const mapState = (state) => {
   return {
-    awards: state.awards.allAwards
+    awards: state.awards.userAwards,
+    signedInUser: state.signedInUser
   }
 }
 
 const mapDispatch = (dispatch) => {
   return {
-    getAllAwards: () => dispatch(getAllAwards())
+    getAllUserAwards: (id) => dispatch(getAllUserAwards(id))
   }
 }
 
