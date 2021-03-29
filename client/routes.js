@@ -9,7 +9,8 @@ import {
   AllAwards,
   SingleAward,
   NominateForm,
-  DonateForm
+  Intro,
+  Confirmation
 } from './components'
 import {me} from './store'
 
@@ -32,10 +33,16 @@ class Routes extends Component {
         <Route path="/signup" component={SignUpForm} />
         <Route path="/nominateLogin" component={Login} />
 
-        {/* <Route path="/signup/nominated" component={SignUpForm} /> */}
-        <Route path="/donate" component={DonateForm} />
+        {
+          /* <Route path="/signup/nominated" component={SignUpForm} /> */
+          // can we remove donate path}
+        }
+
+        {/* <Route path="/donate" component={DonateForm} /> */}
+        <Route path="/confirmation" component={Confirmation} />
         <Route exact path="/awards/:id" component={SingleAward} />
         <Route path="/awards" component={AllAwards} />
+        <Route path="/intro" component={Intro} />
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}

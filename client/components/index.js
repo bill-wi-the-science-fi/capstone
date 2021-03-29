@@ -13,5 +13,7 @@ export {default as SingleAward} from './SingleAward'
 export {default as NominateForm} from './NominateForm'
 export {default as DonateForm} from './DonateForm'
 export {default as SignUpForm} from './SignUpForm'
+export {default as Confirmation} from './Confirmation'
+export {default as Intro} from './Intro'
 
 export {Login} from './auth-form'

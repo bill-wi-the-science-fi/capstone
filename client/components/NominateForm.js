@@ -4,34 +4,51 @@ import {connect} from 'react-redux'
 import {Formik} from 'formik'
 import * as yup from 'yup'
 import {fetchWeb3AndContract} from '../store/contract'
-// import {getSingleAward} from '../store'
 import getWeb3 from '../common/getWeb3'
 import Nominate from '../contracts/Nominate.json'
-import {nominateUser, getPriceConversion} from '../store'
+import {
+  nominateUser,
+  getPriceConversion,
+  postTransaction,
+  newTransaction,
+  clearTransaction
+} from '../store'
 
-/**
- * COMPONENT
- */
+const regEx = /^\d+(?:\.\d{0,2})$/
 
 const schema = yup.object().shape({
   firstName: yup.string().required(),
   lastName: yup.string().required(),
   email: yup.string().email('Invalid email').required('Required'),
-  category: yup.string().required(),
+  category: yup
+    .string()
+    .oneOf([
+      'Open-Source',
+      'Community',
+      'Lifetime of Awesome',
+      'Health and Wellness',
+      'Volunteer',
+      'Animals',
+      'Heroic Act',
+      'Enviornment',
+      'Activism'
+    ])
+    .required(),
   donationTotal: yup.number().required(),
   donationLimit: yup.number().required(),
   title: yup.string().required(),
   description: yup.string().required()
-  // file: yup.mixed().required()
 })
 
 class NominateForm extends Component {
   constructor() {
     super()
+
     this.onSubmit = this.onSubmit.bind(this)
     this.startAwardAndDonate = this.startAwardAndDonate.bind(this)
   }
   async componentDidMount() {
+    this.props.clearTransaction()
     try {
       // Get network provider and web3 instance. -> web3 attached to state
       const web3 = await getWeb3()
@@ -68,8 +85,9 @@ class NominateForm extends Component {
 
   startAwardAndDonate = async (awardId, recipientAddress, amountOfDonation) => {
     try {
-      const {accounts, contract} = this.state
-      await contract.methods
+      const {accounts, contract, web3} = this.state
+
+      const contractTxn = await contract.methods
         .startAwardAndDonate(
           awardId,
           recipientAddress
@@ -81,10 +99,31 @@ class NominateForm extends Component {
           gas: '3000000',
           value: amountOfDonation
         })
-        .on('transactionHash', () => {
+        .on('transactionHash', async (hash) => {
+          await this.props.newTransaction({
+            hash: hash,
+            award: awardId
+          })
+
           // similar behavior as an HTTP redirect
-          this.props.history.push('/')
+          this.props.history.push('/confirmation')
         })
+
+      if (contractTxn.status) {
+        const txnBody = {
+          userId: this.props.signedInUser.id,
+          awardId: awardId,
+          transactionHash: contractTxn.transactionHash,
+          amountEther: amountOfDonation,
+          smartContractAddress: contractTxn.to
+        }
+        this.props.postTransaction(txnBody)
+      } else {
+        // eslint-disable-next-line no-alert
+        alert(
+          `Transaction was not able to settle on the blockchain. Please refer to MetaMask for more information on transaction with hash ${contractTxn.transactionHash}`
+        )
+      }
       // Update state with the result.
       //const balance = await contract.methods.balanceOfContract().call();
       //this.setState({ storageValue: balance });
@@ -94,7 +133,9 @@ class NominateForm extends Component {
   }
 
   async onSubmit(formValues) {
-    // formValues.preventDefault()
+    console.log('submitted')
+    formValues.category = this.state.category
+
     formValues.nominatorId = this.props.signedInUser.id
     const donationAmountUSD = +formValues.donationTotal
     const donationLimitUSD = +formValues.donationLimit
@@ -221,7 +262,11 @@ class NominateForm extends Component {
                   value={values.donationTotal}
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  isValid={touched.donationTotal && !errors.donationTotal}
+                  isValid={
+                    touched.donationTotal &&
+                    !errors.donationTotal &&
+                    regEx.test(values.donationTotal)
+                  }
                 />
               </Form.Group>
               <Form.Group as={Col} md="4" controlId="validationFormik106">
@@ -233,7 +278,12 @@ class NominateForm extends Component {
                   value={values.donationLimit}
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  isValid={touched.donationLimit && !errors.donationLimit}
+                  isValid={
+                    touched.donationLimit &&
+                    !errors.donationLimit &&
+                    values.donationLimit > values.donationTotal &&
+                    regEx.test(values.donationLimit)
+                  }
                 />
               </Form.Group>
               <Form.Group as={Col} md="4" controlId="validationFormik103">
@@ -250,17 +300,33 @@ class NominateForm extends Component {
                   isValid={touched.description && !errors.description}
                 />
               </Form.Group>
-              <Form.Group as={Col} md="4" controlId="validationFormik105">
+              <Form.Group controlId="SelectCategory">
                 <Form.Label>Category</Form.Label>
                 <Form.Control
-                  type="text"
-                  placeholder="Category"
-                  name="category"
+                  as="select"
                   value={values.category}
-                  onBlur={handleBlur}
+                  name="category"
+                  placeholder="Category"
                   onChange={handleChange}
-                  isValid={touched.category && !errors.category}
-                />
+                  isValid={!!touched.values}
+                >
+                  <option value={undefined} defaultValue>
+                    Select a Category
+                  </option>
+                  <option value="Open-Source">Open-Source</option>
+                  <option value="Community">Community</option>
+                  <option value="Lifetime of Awesome">
+                    Lifetime of Awesome
+                  </option>
+                  <option value="Health and Wellness">
+                    Health and Wellness
+                  </option>
+                  <option value="Volunteer">Volunteer</option>
+                  <option value="Animals">Animals</option>
+                  <option value="Heroic Act">Heroic Act</option>
+                  <option value="Enviornment">Enviornment</option>
+                  <option value="Activism">Activism</option>
+                </Form.Control>
               </Form.Group>
             </Form.Row>
 
@@ -272,9 +338,6 @@ class NominateForm extends Component {
   }
 }
 
-/**
- * CONTAINER
- */
 const mapState = (state) => {
   return {
     signedInUser: state.signedInUser,
@@ -290,7 +353,10 @@ const mapDispatch = (dispatch) => {
     fetchWeb3AndContract: () => dispatch(fetchWeb3AndContract()),
     nominateUser: (formData) => dispatch(nominateUser(formData)),
     getPriceConversion: (donationAmountUSD) =>
-      dispatch(getPriceConversion(donationAmountUSD))
+      dispatch(getPriceConversion(donationAmountUSD)),
+    postTransaction: (formData) => dispatch(postTransaction(formData)),
+    newTransaction: (formData) => dispatch(newTransaction(formData)),
+    clearTransaction: () => dispatch(clearTransaction())
   }
 }
 

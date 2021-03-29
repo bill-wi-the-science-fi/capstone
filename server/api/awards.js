@@ -42,6 +42,7 @@ router.get('/:awardId', async (req, res, next) => {
 })
 
 // edit award
+// Will need route protection
 
 // router.put('/', async (req, res, next) => {
 //   try {

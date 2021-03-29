@@ -4,6 +4,8 @@ import axios from 'axios'
 const GET_ALL_TRANSACTIONS = 'GET_ALL_TRANSACTIONS'
 const POST_TRANSACTION = 'POST_TRANSACTION'
 const CONVERT_USD_ETH = 'CONVERT_USD_ETH'
+const NEW_TRANSACTION = 'NEW_TRANSACTION'
+const CLEAR_TRANSACTION = 'CLEAR_TRANSACTION'
 
 /**
  * ACTION CREATORS
@@ -21,6 +23,14 @@ const _getpriceConversion = (amountETH) => ({
   type: CONVERT_USD_ETH,
   amountETH
 })
+export const newTransaction = (transaction) => ({
+  type: NEW_TRANSACTION,
+  transaction
+})
+export const clearTransaction = () => ({
+  type: CLEAR_TRANSACTION
+})
+
 /**
  * THUNK CREATORS
  */
@@ -80,7 +90,8 @@ export const getPriceConversion = (amountUSD) => {
 const allTransactions = {
   previousTransaction: {},
   allTransactions: [],
-  amountETH: 0
+  amountETH: 0,
+  pendingTransaction: {}
 }
 
 /**
@@ -96,6 +107,10 @@ export default function (state = allTransactions, action) {
       }
     case CONVERT_USD_ETH:
       return {...state, amountETH: action.amountETH}
+    case NEW_TRANSACTION:
+      return {...state, pendingTransaction: action.transaction}
+    case CLEAR_TRANSACTION:
+      return allTransactions
     default:
       return state
   }

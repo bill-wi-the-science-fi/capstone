@@ -5,13 +5,15 @@ import {Formik} from 'formik'
 import * as yup from 'yup'
 import getWeb3 from '../common/getWeb3'
 import Nominate from '../contracts/Nominate.json'
-import {postTransaction, getPriceConversion} from '../store'
+import {postTransaction, newTransaction, getPriceConversion} from '../store'
 
 // import {getSingleAward} from '../store'
 
 /**
  * COMPONENT
  */
+
+const regEx = /^\d+(?:\.\d{0,2})$/
 
 const schema = yup.object().shape({
   donation: yup.number().min(0).required()
@@ -49,9 +51,12 @@ function DonateForm(props) {
                     from: accounts[0],
                     value: web3.utils.toWei(amountETH, 'ether')
                   })
-                  .on('transactionHash', () => {
-                    // similar behavior as an HTTP redirect
-                    props.history.push('/awards')
+                  .on('transactionHash', (hash) => {
+                    //sending hash from pending transaction into state
+                    props.newTransaction({hash: hash, award: props.awardInfo})
+
+                    //sending user to a confirmation page with pending transaction
+                    props.history.push('/confirmation')
                   })
                 if (contractTxn.status) {
                   const txnBody = {
@@ -110,10 +115,14 @@ function DonateForm(props) {
               value={values.donation}
               onBlur={handleBlur}
               onChange={handleChange}
-              isValid={touched.donation && !errors.donation}
+              isValid={
+                touched.donation &&
+                !errors.donation &&
+                regEx.test(values.donation)
+              }
             />
           </Form.Group>
-          <Button variant="outline-success" type="submit">
+          <Button className="m-2" variant="outline-success" type="submit">
             Donate
           </Button>
         </Form>
@@ -136,7 +145,8 @@ const mapDispatch = (dispatch) => {
   return {
     postTransaction: (txnData) => dispatch(postTransaction(txnData)),
     getPriceConversion: (donationAmountUSD) =>
-      dispatch(getPriceConversion(donationAmountUSD))
+      dispatch(getPriceConversion(donationAmountUSD)),
+    newTransaction: (hash) => dispatch(newTransaction(hash))
   }
 }
 

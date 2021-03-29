@@ -4,6 +4,7 @@ module.exports = router
 
 // Attached to the form for "sign up" and returns True or false based on them being verified.
 
+//Not sure about this route's security... might need to create an error below
 router.put('/', async (req, res, next) => {
   try {
     const {email, pin} = req.body
@@ -22,6 +23,8 @@ router.put('/', async (req, res, next) => {
     next(err)
   }
 })
+
+//needs protection?? when is this used in the process?
 router.put('/verified', async (req, res, next) => {
   try {
     const {

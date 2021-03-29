@@ -1,16 +1,20 @@
 import React, {Component} from 'react'
-import {Button, Card} from 'react-bootstrap'
+import {Card} from 'react-bootstrap'
 import {connect} from 'react-redux'
-import {getSingleAward} from '../store'
+import {getSingleAward, clearTransaction} from '../store'
 import {DonateForm} from '../components'
+import Web3 from 'web3'
 
 /**
  * COMPONENT
  */
 
+const web3 = new Web3()
+
 class SingleAward extends Component {
   componentDidMount() {
     this.props.getSingleAward(this.props.match.params.id)
+    this.props.clearTransaction()
   }
 
   render() {
@@ -22,29 +26,36 @@ class SingleAward extends Component {
 
     return (
       <div className="container">
-        <div className="row flex-wrap">
-          <div className="col-lg-8 p-3">
-            <Card border="success" style={{width: '26rem'}}>
-              <Card.Img variant="top" src={singleAward.award_imageUrl} />
-              <Card.Body>
-                <Card.Title>{singleAward.award_title}</Card.Title>
-                <Card.Text>{singleAward.award_description}</Card.Text>
-                <Card.Text>
-                  Awarded to: {singleAward.recipient_firstName}{' '}
-                  {singleAward.recipient_lastName}
-                </Card.Text>
-                <Card.Text>
-                  Nominated by: {singleAward.giver_firstName}{' '}
-                  {singleAward.giver_lastName}
-                </Card.Text>
-                <DonateForm
-                  awardId={`${singleAward.award_id}`}
-                  history={this.props.history}
-                />
-              </Card.Body>
-            </Card>
-          </div>
-        </div>
+        <Card className="m-3" border="success" style={{width: '60vw'}}>
+          <Card.Img variant="top" src={singleAward.award_imageUrl} />
+          <Card.Body>
+            <Card.Title>{singleAward.award_title}</Card.Title>
+            <Card.Text>{singleAward.award_description}</Card.Text>
+
+            <Card.Text>
+              Awarded to: {singleAward.recipient_firstName}{' '}
+              {singleAward.recipient_lastName}
+            </Card.Text>
+            <Card.Text>
+              Nominated by: {singleAward.giver_firstName}{' '}
+              {singleAward.giver_lastName}
+            </Card.Text>
+            <div className="container mb-4 text-center">
+              <DonateForm
+                awardId={`${singleAward.award_id}`}
+                history={this.props.history}
+                awardInfo={singleAward}
+              />
+            </div>
+            <Card.Text className="text-right">
+              Amount donated:{' '}
+              {web3.utils.fromWei(singleAward.award_donationTotal, 'ether')}
+              {' ETH with a limit of '}
+              {web3.utils.fromWei(singleAward.award_donationLimit, 'ether')}
+              {' ETH'}
+            </Card.Text>
+          </Card.Body>
+        </Card>
       </div>
     )
   }
@@ -62,7 +73,8 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    getSingleAward: (id) => dispatch(getSingleAward(id))
+    getSingleAward: (id) => dispatch(getSingleAward(id)),
+    clearTransaction: () => dispatch(clearTransaction())
   }
 }
 
