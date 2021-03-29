@@ -4,6 +4,7 @@ import axios from 'axios'
  * ACTION TYPES
  */
 const GET_SINGLE_AWARD = 'GET_SINGLE_AWARD'
+
 // const AWARD_DONATION = 'AWARD_DONATION'
 
 function flattenObj(obj, parent, res = {}) {

@@ -21,6 +21,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       lastName,
       donationTotal
     } = req.body
+    let openOrClosed = 'closed'
     let recipientAddress
     // find or create the NOMINEE
     let [nominee, userWasCreated] = await User.findOrCreate({
@@ -36,14 +37,17 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       where: {userId: nominator.id, recipientId: nominee.id}
     })
     //since donation is pending, donationtotal is set to zero, when transaction is accepted on blockchain,donationtotal will update
-    const newAward = await throughRow.createAward({
+
+    const awardInfoToCreate = {
       title: title,
       category: category,
       description: description,
       imgUrl: imgUrl,
       donationLimit: donationLimit,
       donationTotal: '0'
-    })
+    }
+
+    const newAward = await throughRow.createAward(awardInfoToCreate)
 
     // Add first and last name to the nominee & set address
     // if nominee is signed up but does not have a public address available, use the nominator address
