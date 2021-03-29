@@ -73,7 +73,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     // Send award and recipient to our reducer.
     const result = {
       // WORKAROUND UNITL WE WIPE ETH CONTRACT
-      awardId: newAward.id + 100,
+      awardId: newAward.id + 200,
       recipient: recipientAddress
     }
     res.json(result)

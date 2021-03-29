@@ -8,7 +8,6 @@ module.exports = router
 //Will need logged in route protection plus more???
 
 router.post('/', isLoggedIn, async (req, res, next) => {
-  console.log('in transactions', req.body)
   try {
     let {
       userId,
@@ -22,11 +21,11 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     const txn = await Transaction.create({
       transactionHash,
       smartContractAddress,
-      amountEther
+      amountWei: amountEther
     })
-
+    //based on trying to donate to seed data (award<100) or a newly created award
     if (awardId > 100) {
-      awardId = awardId - 100
+      awardId = awardId - 200
     }
 
     // find award -> txn.setAward(awardInst)
@@ -43,9 +42,9 @@ router.post('/', isLoggedIn, async (req, res, next) => {
 
     // if it's there, that means its a new award donation, and the smart contract is established, so we can move it's status to pending.
     if (!recipient.ethPublicAddress) {
-      updatesToAward[open] = 'pending'
+      updatesToAward.open = 'pending'
     } else {
-      updatesToAward[open] = 'open'
+      updatesToAward.open = 'open'
     }
 
     //We need to figure out

@@ -50,14 +50,16 @@ export const postTransaction = (txnData) => {
         awardId,
         transactionHash,
         amountEther,
-        smartContractAddress
+        smartContractAddress,
+        recipientEmail
       } = txnData
       let body = {
         userId,
         awardId,
         transactionHash,
         amountEther,
-        smartContractAddress
+        smartContractAddress,
+        recipientEmail
       }
       const transaction = (await axios.post('/api/transactions', body)).data
       dispatch(_postTransaction(transaction))
@@ -69,7 +71,6 @@ export const postTransaction = (txnData) => {
 export const getPriceConversion = (amountUSD) => {
   return async (dispatch) => {
     try {
-      console.log(amountUSD, typeof amountUSD)
       amountUSD = amountUSD.toFixed(2)
       const ethPerUsd = (
         await axios.get(
