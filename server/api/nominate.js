@@ -38,19 +38,13 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     })
     //since donation is pending, donationtotal is set to zero, when transaction is accepted on blockchain,donationtotal will update
 
-    //If it's a verified account, set it to open strait away. Otherwise it needs to be validated.
-    if (nominee.ethPublicAddress) {
-      openOrClosed = 'open'
-    }
-    //declaring to allow info changes based on if a user has a verified account.
     const awardInfoToCreate = {
       title: title,
       category: category,
       description: description,
       imgUrl: imgUrl,
       donationLimit: donationLimit,
-      donationTotal: '0',
-      open: openOrClosed
+      donationTotal: '0'
     }
 
     const newAward = await throughRow.createAward(awardInfoToCreate)

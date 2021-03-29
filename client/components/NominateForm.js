@@ -83,7 +83,12 @@ class NominateForm extends Component {
     }
   }
 
-  startAwardAndDonate = async (awardId, recipientAddress, amountOfDonation) => {
+  startAwardAndDonate = async (
+    awardId,
+    recipientAddress,
+    amountOfDonation,
+    recipientEmail
+  ) => {
     try {
       const {accounts, contract, web3} = this.state
 
@@ -115,7 +120,8 @@ class NominateForm extends Component {
           awardId: awardId,
           transactionHash: contractTxn.transactionHash,
           amountEther: amountOfDonation,
-          smartContractAddress: contractTxn.to
+          smartContractAddress: contractTxn.to,
+          recipientEmail: recipientEmail
         }
         this.props.postTransaction(txnBody)
       } else {
@@ -163,7 +169,8 @@ class NominateForm extends Component {
       this.startAwardAndDonate(
         this.props.nominate.awardId,
         this.props.nominate.recipient,
-        formData.donationTotal
+        formData.donationTotal,
+        formValues.email
       )
     } catch (error) {
       console.log(error)

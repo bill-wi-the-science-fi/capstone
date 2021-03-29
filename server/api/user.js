@@ -24,7 +24,6 @@ router.put('/', async (req, res, next) => {
   }
 })
 
-//needs protection?? when is this used in the process?
 router.put('/verified', async (req, res, next) => {
   try {
     const {
