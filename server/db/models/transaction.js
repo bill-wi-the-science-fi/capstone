@@ -12,7 +12,7 @@ const Transaction = db.define('transaction', {
     unique: false,
     allowNull: false
   },
-  amountWei: {
+  amountEther: {
     type: Sequelize.FLOAT,
     unique: false,
     allowNull: false
