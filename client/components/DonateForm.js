@@ -5,7 +5,7 @@ import {Formik} from 'formik'
 import * as yup from 'yup'
 import getWeb3 from '../common/getWeb3'
 import Nominate from '../contracts/Nominate.json'
-import {postTransaction, newTransaction} from '../store'
+import {postTransaction, newTransaction, getPriceConversion} from '../store'
 
 // import {getSingleAward} from '../store'
 
@@ -20,14 +20,20 @@ const schema = yup.object().shape({
 })
 
 function DonateForm(props) {
+  console.log(props, 're-rendering')
   return (
     <Formik
       validationSchema={schema}
       onSubmit={
         //if !metamask get MM
         async (evt) => {
-          const donationAmount = evt.donation.toString()
+          // donation amount entered in dollars
+          const donationAmountUSD = evt.donation
           try {
+            // convert to ether and then to string so that meta mask receives proper amount in ETH for user to sign off on
+            const amountETH = (
+              await props.getPriceConversion(donationAmountUSD)
+            ).toString()
             const web3 = await getWeb3()
             const accounts = await web3.eth.getAccounts()
             if (accounts) {
@@ -43,7 +49,7 @@ function DonateForm(props) {
                   .donateFunds(props.awardId)
                   .send({
                     from: accounts[0],
-                    value: web3.utils.toWei(donationAmount, 'ether')
+                    value: web3.utils.toWei(amountETH, 'ether')
                   })
                   .on('transactionHash', (hash) => {
                     //sending hash from pending transaction into state
@@ -52,17 +58,12 @@ function DonateForm(props) {
                     //sending user to a confirmation page with pending transaction
                     props.history.push('/confirmation')
                   })
-                //console.log('contractTxn---------------------', contractTxn)
-                // NEED TO PULL IN TRANSACTION HASH FROM SMART CONTRACT OUTPUT
-                // REMOVE PATCHY LOGIC FROM THUNK
-                // INVOKE THUNK THAT POSTS A NEW TXN TO DB
-                // SHOULD BE RUNNING POST BELOW IF MM TXN IS SUCCESSFUL
                 if (contractTxn.status) {
                   const txnBody = {
                     userId: props.signedInUser.id,
                     awardId: props.awardId,
                     transactionHash: contractTxn.transactionHash,
-                    amountEther: web3.utils.toWei(donationAmount, 'ether'),
+                    amountEther: web3.utils.toWei(amountETH, 'ether'),
                     smartContractAddress: contractTxn.to
                   }
                   props.postTransaction(txnBody)
@@ -105,7 +106,7 @@ function DonateForm(props) {
       }) => (
         <Form noValidate onSubmit={handleSubmit}>
           <Form.Group as={Col} md="7" controlId="validationFormik101">
-            <Form.Label>Donate to this Award</Form.Label>
+            <Form.Label>Donate to this Award ($USD)</Form.Label>
             <Form.Control
               type="number"
               min="0"
@@ -143,6 +144,8 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     postTransaction: (txnData) => dispatch(postTransaction(txnData)),
+    getPriceConversion: (donationAmountUSD) =>
+      dispatch(getPriceConversion(donationAmountUSD)),
     newTransaction: (hash) => dispatch(newTransaction(hash))
   }
 }

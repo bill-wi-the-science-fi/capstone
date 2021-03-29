@@ -3,6 +3,7 @@ import axios from 'axios'
  */
 const GET_ALL_TRANSACTIONS = 'GET_ALL_TRANSACTIONS'
 const POST_TRANSACTION = 'POST_TRANSACTION'
+const CONVERT_USD_ETH = 'CONVERT_USD_ETH'
 const NEW_TRANSACTION = 'NEW_TRANSACTION'
 const CLEAR_TRANSACTION = 'CLEAR_TRANSACTION'
 
@@ -18,11 +19,14 @@ const _postTransaction = (transaction) => ({
   type: POST_TRANSACTION,
   transaction
 })
+const _getpriceConversion = (amountETH) => ({
+  type: CONVERT_USD_ETH,
+  amountETH
+})
 export const newTransaction = (transaction) => ({
   type: NEW_TRANSACTION,
   transaction
 })
-
 export const clearTransaction = () => ({
   type: CLEAR_TRANSACTION
 })
@@ -38,7 +42,6 @@ export const clearTransaction = () => ({
 //     console.error(err)
 //   }
 // }
-
 export const postTransaction = (txnData) => {
   return async (dispatch) => {
     try {
@@ -63,13 +66,31 @@ export const postTransaction = (txnData) => {
     }
   }
 }
-
+export const getPriceConversion = (amountUSD) => {
+  return async (dispatch) => {
+    try {
+      console.log(amountUSD, typeof amountUSD)
+      amountUSD = amountUSD.toFixed(2)
+      const ethPerUsd = (
+        await axios.get(
+          'https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=ETH'
+        )
+      ).data
+      const amountETH = ethPerUsd.ETH * amountUSD
+      dispatch(_getpriceConversion(amountETH))
+      return amountETH
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
 /**
  * INITIAL STATE
  */
 const allTransactions = {
   previousTransaction: {},
   allTransactions: [],
+  amountETH: 0,
   pendingTransaction: {}
 }
 
@@ -84,6 +105,8 @@ export default function (state = allTransactions, action) {
       } else {
         return state
       }
+    case CONVERT_USD_ETH:
+      return {...state, amountETH: action.amountETH}
     case NEW_TRANSACTION:
       return {...state, pendingTransaction: action.transaction}
     case CLEAR_TRANSACTION:
