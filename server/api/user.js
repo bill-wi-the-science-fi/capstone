@@ -36,11 +36,6 @@ router.put('/', async (req, res, next) => {
 })
 
 // needs protection?? when is this used in the process?
-// ----------------------------------------------------------------------
-// ***retrieve awardId -> user.setAward???
-// how to pull awards associated to user???
-// update award from pending to open
-// pass in awardId to relayer call
 router.put('/verified', async (req, res, next) => {
   try {
     const {
@@ -75,19 +70,21 @@ router.put('/verified', async (req, res, next) => {
       }
     })
     let pairIds = nominations.map((pair) => pair.id)
-    let awards = (
-      await Award.findAll({
-        where: {
-          pairId: {
-            [Sequelize.Op.in]: pairIds
-          }
+    let awardInstances = await Award.findAll({
+      where: {
+        pairId: {
+          [Sequelize.Op.in]: pairIds
         }
-      })
-    ).map((awardInstance) => awardInstance.id)
-    console.log(awards, 'awards--------------------')
+      }
+    })
+    for (let i = 0; i < awardInstances.length; i++) {
+      if (awardInstances[i].open === 'pending') {
+        await awardInstances[i].update({open: 'open'})
+      }
+    }
+    const awards = awardInstances.map((awardInstance) => awardInstance.id)
     // optimization: create method in smart contract to accept a list of award ids for a given recipient
     if (awards.length > 0) {
-      console.log('calls to SC to be made')
       const provider = new DefenderRelayProvider(credentials, {speed: 'fast'})
       const web3 = new Web3(provider)
       const from = relayerAddress
@@ -97,12 +94,10 @@ router.put('/verified', async (req, res, next) => {
         {from}
       )
       for (let awardId of awards) {
-        console.log('setRecipient for awardId', awardId)
         contract.methods.setRecipient(awardId, ethPublicAddress).send()
       }
     }
     res.json(user)
-
     // const {email, pin} = req.body
     // let verified = await User.findOne({
     //   where: {
