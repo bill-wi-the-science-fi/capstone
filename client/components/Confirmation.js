@@ -7,10 +7,11 @@ import {connect} from 'react-redux'
  */
 
 export const Confirmation = (props) => {
+  console.log('help', props)
   const {previousTransaction, pendingTransaction} = props.transactions
   const {hash, award} = pendingTransaction
 
-  if (award && Object.keys(award).length) {
+  if (award && Object.keys(pendingTransaction).length) {
     if (!Object.keys(previousTransaction).length) {
       return (
         <div className="container-fluid text-center">
