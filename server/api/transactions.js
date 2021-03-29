@@ -8,7 +8,6 @@ module.exports = router
 //Will need logged in route protection plus more???
 
 router.post('/', isLoggedIn, async (req, res, next) => {
-  console.log('in transactions', req.body)
   try {
     let {
       userId,
@@ -21,11 +20,11 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     const txn = await Transaction.create({
       transactionHash,
       smartContractAddress,
-      amountEther
+      amountWei: amountEther
     })
-
+    //based on trying to donate to seed data (award<100) or a newly created award
     if (awardId > 100) {
-      awardId = awardId - 100
+      awardId = awardId - 200
     }
 
     // find award -> txn.setAward(awardInst)

@@ -69,7 +69,6 @@ export const postTransaction = (txnData) => {
 export const getPriceConversion = (amountUSD) => {
   return async (dispatch) => {
     try {
-      console.log(amountUSD, typeof amountUSD)
       amountUSD = amountUSD.toFixed(2)
       const ethPerUsd = (
         await axios.get(
