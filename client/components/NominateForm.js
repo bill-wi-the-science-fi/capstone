@@ -13,6 +13,8 @@ import {
   clearTransaction
 } from '../store'
 
+const regEx = /^\d+(?:\.\d{0,2})$/
+
 const schema = yup.object().shape({
   firstName: yup.string().required(),
   lastName: yup.string().required(),
@@ -23,7 +25,7 @@ const schema = yup.object().shape({
       'Open-Source',
       'Community',
       'Lifetime of Awesome',
-      'Health and wellness',
+      'Health and Wellness',
       'Volunteer',
       'Animals',
       'Heroic Act',
@@ -244,7 +246,11 @@ class NominateForm extends Component {
                   value={values.donationTotal}
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  isValid={touched.donationTotal && !errors.donationTotal}
+                  isValid={
+                    touched.donationTotal &&
+                    !errors.donationTotal &&
+                    regEx.test(values.donationTotal)
+                  }
                 />
               </Form.Group>
               <Form.Group as={Col} md="4" controlId="validationFormik106">
@@ -259,7 +265,8 @@ class NominateForm extends Component {
                   isValid={
                     touched.donationLimit &&
                     !errors.donationLimit &&
-                    values.donationLimit > values.donationTotal
+                    values.donationLimit > values.donationTotal &&
+                    regEx.test(values.donationLimit)
                   }
                 />
               </Form.Group>

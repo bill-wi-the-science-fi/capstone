@@ -13,6 +13,8 @@ import {postTransaction, newTransaction} from '../store'
  * COMPONENT
  */
 
+const regEx = /^\d+(?:\.\d{0,2})$/
+
 const schema = yup.object().shape({
   donation: yup.number().min(0).required()
 })
@@ -112,7 +114,11 @@ function DonateForm(props) {
               value={values.donation}
               onBlur={handleBlur}
               onChange={handleChange}
-              isValid={touched.donation && !errors.donation}
+              isValid={
+                touched.donation &&
+                !errors.donation &&
+                regEx.test(values.donation)
+              }
             />
           </Form.Group>
           <Button className="m-2" variant="outline-success" type="submit">
