@@ -1,12 +1,13 @@
 const router = require('express').Router()
 const {User, Nomination, Award, Transaction} = require('../db/models')
+const {isLoggedIn, checkAwardRelation} = require('./securityMiddleware')
 const web3 = require('web3')
 
 module.exports = router
 //base path: /api/transactions
 //Will need logged in route protection plus more???
 
-router.post('/', async (req, res, next) => {
+router.post('/', isLoggedIn, async (req, res, next) => {
   console.log('in transactions', req.body)
   try {
     let {

@@ -33,11 +33,13 @@ router.put('/verified', async (req, res, next) => {
       lastName,
       email,
       password,
-      imgUrl
+      imgUrl,
+      pin
     } = req.body
     let user = await User.findOne({
       where: {
-        email: email
+        email: email,
+        pin: pin
       }
     })
 

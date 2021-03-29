@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const {Award, Nomination, User} = require('../db/models')
+const {checkAwardRelation} = require('./securityMiddleware')
 module.exports = router
 
 // get all awards
@@ -42,9 +43,8 @@ router.get('/:awardId', async (req, res, next) => {
 })
 
 // edit award
-// Will need route protection
 
-// router.put('/', async (req, res, next) => {
+// router.put('/', checkAwardRelation, async (req, res, next) => {
 //   try {
 //     let {nominatorUserID, nomineeEmail} = req.body
 //     const nominee = User.findOne({where: {email: nomineeEmail}})
