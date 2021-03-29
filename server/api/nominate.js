@@ -61,6 +61,8 @@ router.post('/', isLoggedIn, async (req, res, next) => {
 
       sendEmail(email, firstName, nominator.firstName, inviteUrl)
       recipientAddress = nominator.ethPublicAddress
+    } else if (nominee.ethPublicAddress === null) {
+      recipientAddress = nominator.ethPublicAddress
     } else {
       recipientAddress = nominee.ethPublicAddress
     }

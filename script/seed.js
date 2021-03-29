@@ -66,7 +66,7 @@ async function seed() {
       transactionHash:
         '0x05cbd37d856b8a5fb78799c023c132d8feace6d319e1c7d5391bb36fce86a59f',
       smartContractAddress: '0x60f80121c31a0d46b5279700f9df786054aa5ee5',
-      amountEther: 1000
+      amountWei: 1000
     }
   })
   alansTrx = alansTrx[0]
