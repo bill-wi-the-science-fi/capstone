@@ -4,7 +4,7 @@ const {User, Nomination, Award} = require('../db/models')
 module.exports = router
 
 const relayerAddress = '0x7714e9182799ce2f92b26e70c9cd55cd1b3c1d38'
-const nominateContractAddress = '0x8a7C5A404ce3e7bAeFb03d4A97cD738AD8912CCc'
+const nominateContractAddress = '0x3AFAe04805bB556Ff14A4af4aa7875053D6C3948'
 const Web3 = require('web3')
 const {DefenderRelayProvider} = require('defender-relay-client/lib/web3')
 // PUT SECRET IS SECRETS.JS FILE (PROCESS_ENV)
