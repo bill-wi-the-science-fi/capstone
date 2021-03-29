@@ -76,7 +76,8 @@ export const getPriceConversion = (amountUSD) => {
           'https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=ETH'
         )
       ).data
-      const amountETH = ethPerUsd.ETH * amountUSD
+      const amountETH = (ethPerUsd.ETH * amountUSD).toFixed(8)
+
       dispatch(_getpriceConversion(amountETH))
       return amountETH
     } catch (error) {

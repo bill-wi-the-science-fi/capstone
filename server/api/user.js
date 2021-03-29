@@ -24,7 +24,6 @@ router.put('/', async (req, res, next) => {
   }
 })
 
-//needs protection?? when is this used in the process?
 router.put('/verified', async (req, res, next) => {
   try {
     const {
@@ -33,11 +32,13 @@ router.put('/verified', async (req, res, next) => {
       lastName,
       email,
       password,
-      imgUrl
+      imgUrl,
+      pin
     } = req.body
     let user = await User.findOne({
       where: {
-        email: email
+        email: email,
+        pin: pin
       }
     })
 
@@ -50,22 +51,13 @@ router.put('/verified', async (req, res, next) => {
         imgUrl
       })
     }
+
     user = await User.findOne({
       where: {email: email},
       attributes: ['email', 'firstName', 'lastName', 'imgUrl']
     })
 
     res.json(user)
-    // const {email, pin} = req.body
-    // let verified = await User.findOne({
-    //   where: {
-    //     email: email,
-    //     pin: pin
-    //   }
-    // })
-    // const userVerified = {userHasPin: false}
-    // if (verified) userVerified.userHasPin = true
-    // res.json(userVerified)
   } catch (err) {
     next(err)
   }
