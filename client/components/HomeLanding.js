@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Carousel, Jumbotron, Button, Card} from 'react-bootstrap'
+import {Carousel, Jumbotron, Button, Card, Image} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
 import {getAllAwards} from '../store'
 import {connect} from 'react-redux'
@@ -85,8 +85,8 @@ class HomeLanding extends Component {
         ) : (
           <div className="container mt-4">
             <div className="row flex-wrap">
-              <div className="col-lg-4 mb-3">
-                <Card border="success" style={{width: '18rem'}}>
+              <div className="col-md-4 mb-3">
+                <Card border="success" style={{width: 'vw20'}}>
                   <Card.Img variant="top" src={card1.imageUrl} />
                   <Card.Body>
                     <Card.Title>{card1.title}</Card.Title>
@@ -101,8 +101,8 @@ class HomeLanding extends Component {
                   </Card.Body>
                 </Card>
               </div>
-              <div className="col-lg-4 mb-3">
-                <Card border="success" style={{width: '18rem'}}>
+              <div className="col-md-4 mb-3">
+                <Card border="success" style={{width: 'vw20'}}>
                   <Card.Img variant="top" src={card2.imageUrl} />
                   <Card.Body>
                     <Card.Title>{card2.title}</Card.Title>
@@ -117,8 +117,8 @@ class HomeLanding extends Component {
                   </Card.Body>
                 </Card>
               </div>
-              <div className="col-lg-4 mb-3">
-                <Card border="success" style={{width: '18rem'}}>
+              <div className="col-md-4 mb-3">
+                <Card border="success" style={{width: 'vw20'}}>
                   <Card.Img variant="top" src={card3.imageUrl} />
                   <Card.Body>
                     <Card.Title>{card3.title}</Card.Title>
@@ -136,6 +136,34 @@ class HomeLanding extends Component {
             </div>
           </div>
         )}
+        <div className="container-fluid pr-0 pl-0">
+          <div className="row no-gutters flex-wrap">
+            <div className="col-md-7">
+              <Jumbotron className="mb-0">
+                <h1>Your first gift of crypto...</h1>
+                <p className="mt-3">
+                  We understand the world of crypto is realativly new.
+                </p>
+                <p>
+                  Learn why you may have recieved ETH, why that is, and how to
+                  get started!
+                </p>
+                <p>
+                  <Button as={Link} to="/intro" variant="success">
+                    Learn more
+                  </Button>
+                </p>
+              </Jumbotron>
+            </div>
+            <div className="col-md-5">
+              <Image
+                src="https://i.pinimg.com/564x/93/f6/d6/93f6d6cc10039a46c5ada9fede57585d.jpg"
+                rounded
+              />
+            </div>
+          </div>
+        </div>
+        <div className="footer"></div>
       </div>
     )
   }

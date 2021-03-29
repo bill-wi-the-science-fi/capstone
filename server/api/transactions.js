@@ -4,6 +4,8 @@ const web3 = require('web3')
 
 module.exports = router
 //base path: /api/transactions
+//Will need logged in route protection plus more???
+
 router.post('/', async (req, res, next) => {
   console.log('in transactions', req.body)
   try {
