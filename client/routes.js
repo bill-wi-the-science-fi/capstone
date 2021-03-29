@@ -10,7 +10,8 @@ import {
   SingleAward,
   NominateForm,
   Intro,
-  Confirmation
+  Confirmation,
+  UserAwards
 } from './components'
 import {me} from './store'
 
@@ -49,6 +50,7 @@ class Routes extends Component {
             <Route path="/nominate" component={NominateForm} />
             <Route exact path="/" component={HomeLanding} />
             <Route path="/home" component={HomeLanding} />
+            <Route path="/user" component={UserAwards} />
           </Switch>
         )}
         {/* Displays our Login component as a fallback - change this to homepage*/}

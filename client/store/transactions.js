@@ -50,14 +50,16 @@ export const postTransaction = (txnData) => {
         awardId,
         transactionHash,
         amountEther,
-        smartContractAddress
+        smartContractAddress,
+        recipientEmail
       } = txnData
       let body = {
         userId,
         awardId,
         transactionHash,
         amountEther,
-        smartContractAddress
+        smartContractAddress,
+        recipientEmail
       }
       const transaction = (await axios.post('/api/transactions', body)).data
       dispatch(_postTransaction(transaction))

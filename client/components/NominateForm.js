@@ -91,6 +91,7 @@ class NominateForm extends Component {
   ) => {
     try {
       const {accounts, contract, web3} = this.state
+      console.log('recipientemail', recipientEmail)
 
       const contractTxn = await contract.methods
         .startAwardAndDonate(
@@ -113,7 +114,6 @@ class NominateForm extends Component {
           // similar behavior as an HTTP redirect
           this.props.history.push('/confirmation')
         })
-
       if (contractTxn.status) {
         const txnBody = {
           userId: this.props.signedInUser.id,
@@ -165,6 +165,7 @@ class NominateForm extends Component {
       //   donationLimitETH,
       //   'ether'
       // )
+      console.log('formValues', formValues, formValues.email)
       await this.props.nominateUser(formData)
       this.startAwardAndDonate(
         this.props.nominate.awardId,

@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const {Award, Nomination, User} = require('../db/models')
 const {checkAwardRelation} = require('./securityMiddleware')
+const {Op} = require('sequelize')
 module.exports = router
 
 // get all awards
@@ -37,6 +38,34 @@ router.get('/:awardId', async (req, res, next) => {
       recipient: recipientOfAward
     }
     res.json(sendBack)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/userawards/:id', async (req, res, next) => {
+  try {
+    const pairIdArray = await Nomination.findAll({
+      where: {recipientId: req.params.id}
+    })
+    let pairIds = pairIdArray.map((element) => element.dataValues.id)
+
+    const awards = await Award.findAll({
+      where: {
+        pairId: {
+          [Op.or]: pairIds
+        }
+      }
+    })
+
+    // const results = await Nomination.findAll({
+    //   where: {recipientId: req.params.id},
+    //   include: {
+    //     model: Award
+    //   }
+    // })
+
+    res.json(awards)
   } catch (err) {
     next(err)
   }

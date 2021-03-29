@@ -42,9 +42,9 @@ router.post('/', isLoggedIn, async (req, res, next) => {
 
     // if it's there, that means its a new award donation, and the smart contract is established, so we can move it's status to pending.
     if (!recipient.ethPublicAddress) {
-      updatesToAward[open] = 'pending'
+      updatesToAward.open = 'pending'
     } else {
-      updatesToAward[open] = 'open'
+      updatesToAward.open = 'open'
     }
 
     //We need to figure out
