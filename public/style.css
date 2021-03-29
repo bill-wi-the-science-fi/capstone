@@ -19,3 +19,27 @@ form div {
   margin: 1em;
   display: inline-block;
 }
+
+.col-md-5 {
+  position: relative;
+  height: 100%;
+}
+
+.footer {
+  background: rgb(3, 11, 1);
+  background: linear-gradient(
+    0deg,
+    rgba(24, 73, 12, 1) 0%,
+    rgba(236, 236, 236, 1) 80%
+  );
+
+  height: 160px;
+}
+
+[class*='row no-gutters flex-wrap'] {
+  background-color: #e9ecef;
+}
+
+.about-img {
+  width: 13rem;
+}

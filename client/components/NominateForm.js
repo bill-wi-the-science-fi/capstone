@@ -17,10 +17,13 @@ const schema = yup.object().shape({
     .oneOf([
       'Open-Source',
       'Community',
-      'Behind the scenes',
+      'Lifetime of Awesome',
       'Health and wellness',
       'Volunteer',
-      'Animals'
+      'Animals',
+      'Heroic Act',
+      'Enviornment',
+      'Activism'
     ])
     .required(),
   donationTotal: yup.number().required(),
@@ -225,7 +228,11 @@ class NominateForm extends Component {
                   value={values.donationLimit}
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  isValid={touched.donationLimit && !errors.donationLimit}
+                  isValid={
+                    touched.donationLimit &&
+                    !errors.donationLimit &&
+                    values.donationLimit > values.donationTotal
+                  }
                 />
               </Form.Group>
               <Form.Group as={Col} md="4" controlId="validationFormik103">
@@ -257,12 +264,17 @@ class NominateForm extends Component {
                   </option>
                   <option value="Open-Source">Open-Source</option>
                   <option value="Community">Community</option>
-                  <option value="Behind the scenes">Behind the scenes</option>
+                  <option value="Lifetime of Awesome">
+                    Lifetime of Awesome
+                  </option>
                   <option value="Health and Wellness">
-                    Health and wellness
+                    Health and Wellness
                   </option>
                   <option value="Volunteer">Volunteer</option>
-                  <option value="animals">Animals</option>
+                  <option value="Animals">Animals</option>
+                  <option value="Heroic Act">Heroic Act</option>
+                  <option value="Enviornment">Enviornment</option>
+                  <option value="Activism">Activism</option>
                 </Form.Control>
               </Form.Group>
             </Form.Row>
