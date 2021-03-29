@@ -20,7 +20,6 @@ form div {
   display: inline-block;
 }
 
-
 .col-md-5 {
   position: relative;
   height: 100%;
@@ -43,6 +42,7 @@ form div {
 
 .about-img {
   width: 13rem;
+}
 
 .pagination {
   margin: 15px auto;
