@@ -7,7 +7,7 @@ module.exports = router
 //base path: /api/transactions
 //Will need logged in route protection plus more???
 
-router.post('/', isLoggedIn, async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   try {
     let {
       userId,
