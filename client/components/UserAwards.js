@@ -1,15 +1,18 @@
 import React, {Component} from 'react'
 import {Button, Card} from 'react-bootstrap'
 import {connect} from 'react-redux'
-import {getAllUserAwards} from '../store'
+import {getAllUserAwards, updateUserAward} from '../store'
+import getWeb3 from '../common/getWeb3'
 import {Link} from 'react-router-dom'
+import Nominate from '../contracts/Nominate.json'
+
 import ReactPaginate from 'react-paginate'
 
 /**
  * COMPONENT
  */
 
-class AllAwards extends Component {
+class UserAwards extends Component {
   constructor() {
     super()
     this.state = {
@@ -20,11 +23,34 @@ class AllAwards extends Component {
     }
     this.pagination = this.pagination.bind(this)
     this.handlePageClick = this.handlePageClick.bind(this)
+    this.withdraw = this.withdraw.bind(this)
+  }
+
+  //only contracts that are expired and not withdrawn will have this function
+  async withdraw(e) {
+    try {
+      e.persist()
+      //invoking contract method that payouts
+      const contractTxn = await this.state.contract.methods
+        .expireAward(e.target.value)
+        .send({
+          from: this.state.accounts[0],
+          value: 0
+        })
+      //if transaction is accepted, we will update db award status
+      if (contractTxn.status) {
+        await this.props.updateUserAward({id: e.target.value, open: 'closed'})
+        this.props.history.push('/user')
+      }
+      //if transaction works, change db award status to closed
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   pagination() {
     const {perPage, startAwardIndex} = this.state
-    //data for awards to display on page
+    // awards to display on page
     const awards = this.props.awards.slice(
       startAwardIndex,
       startAwardIndex + perPage
@@ -35,6 +61,7 @@ class AllAwards extends Component {
       pageCount: Math.ceil(this.props.awards.length / state.perPage)
     }))
   }
+
   //when user clicks on next, previous, or a page buttton
   handlePageClick = (e) => {
     //page that is selected and the new starting point in the index of data
@@ -56,10 +83,32 @@ class AllAwards extends Component {
   }
 
   async componentDidMount() {
-    console.log(Date())
-    await this.props.getAllUserAwards(this.props.signedInUser.id)
+    try {
+      //creates a web3 instance with metamask
+      const web3 = await getWeb3()
 
-    this.pagination()
+      //grabs account information (public address)
+      const accounts = await web3.eth.getAccounts()
+      if (accounts) {
+        //grabs network information that smart contract is on
+        const networkId = await web3.eth.net.getId()
+        //const deployedNetwork = Nominate.networks[networkId];
+        const deployedNetwork = Nominate.networks[networkId]
+        //create a contract instance
+        const contract = new web3.eth.Contract(
+          Nominate.abi,
+          deployedNetwork && deployedNetwork.address
+        )
+        this.setState({contract, accounts})
+      }
+      //grab all awards for a user, active, pending, or closed
+      await this.props.getAllUserAwards(this.props.signedInUser.id)
+
+      //paginate page
+      this.pagination()
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   render() {
@@ -68,7 +117,7 @@ class AllAwards extends Component {
     if (!awards.length) {
       return <h2> Loading awards... </h2>
     }
-
+    const date = new Date()
     return (
       <div className="container">
         <div className="row flex-wrap">
@@ -80,13 +129,21 @@ class AllAwards extends Component {
                   <Card.Title>{award.title}</Card.Title>
                   <Card.Text>{award.description}</Card.Text>
                   {/* <Button variant="outline-secondary">Donate</Button> */}
-                  <Button
-                    as={Link}
-                    to={`awards/${award.id}`}
-                    variant="success ml-2"
-                  >
-                    More Info
-                  </Button>
+                  {date > new Date(award.timeConstraint).getTime() &&
+                  award.open === 'open' ? (
+                    <Button
+                      type="button"
+                      value={award.id}
+                      onClick={(e) => this.withdraw(e)}
+                    >
+                      Withdraw
+                    </Button>
+                  ) : date > new Date(award.timeConstraint).getTime() ? (
+                    <div> Award Accepted </div>
+                  ) : (
+                    <div>Award Pending</div>
+                  )}
+
                   {/* <DonateForm awardId={`${award.id}`} /> */}
                 </Card.Body>
               </Card>
@@ -125,8 +182,9 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    getAllUserAwards: (id) => dispatch(getAllUserAwards(id))
+    getAllUserAwards: (id) => dispatch(getAllUserAwards(id)),
+    updateUserAward: (info) => dispatch(updateUserAward(info))
   }
 }
 
-export default connect(mapState, mapDispatch)(AllAwards)
+export default connect(mapState, mapDispatch)(UserAwards)

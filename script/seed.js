@@ -99,7 +99,8 @@ async function seed() {
       'https://www.confidenceiatry.com/wp-content/uploads/2020/07/Good-Deeds-1-scaled.jpg',
     description: 'Picked up the most trash of any human ever',
     donationLimit: '7000000000000000000',
-    donationTotal: '200000000000000000'
+    donationTotal: '200000000000000000',
+    timeConstraint: Date.now()
   })
   let maybeAward2 = await throughRow2.createAward({
     title: 'The Do-Gooder extraordinaire (Who also Dances)',
