@@ -48,7 +48,7 @@ function DonateForm(props) {
                 //if trying to donate to an award created on smart contract, use
                 //.donateFunds(parseFloat(props.awardId) + number added to award id)
                 const contractTxn = await contract.methods
-                  .donateFunds(parseFloat(props.awardId) + 240)
+                  .donateFunds(props.awardId)
                   .send({
                     from: accounts[0],
                     value: web3.utils.toWei(amountETH, 'ether')
@@ -63,7 +63,7 @@ function DonateForm(props) {
                 if (contractTxn.status) {
                   const txnBody = {
                     userId: props.signedInUser.id,
-                    awardId: parseFloat(props.awardId) + 240,
+                    awardId: props.awardId,
                     transactionHash: contractTxn.transactionHash,
                     amountWei: web3.utils.toWei(amountETH, 'ether'),
                     smartContractAddress: contractTxn.to,

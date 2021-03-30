@@ -24,9 +24,9 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       amountWei
     })
     //based on trying to donate to seed data (award<100) or a newly created award
-    if (awardId > 100) {
-      awardId = awardId - 240
-    }
+    // if (awardId > 100) {
+    // awardId = awardId
+    // }
 
     // find award -> txn.setAward(awardInst)
     const award = await Award.findByPk(awardId)
