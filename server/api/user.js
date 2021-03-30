@@ -129,7 +129,6 @@ router.get('/:id', isLoggedIn, async (req, res, next) => {
   }
 })
 
-//why is this here?
 const abiNominate = [
   {
     inputs: [],

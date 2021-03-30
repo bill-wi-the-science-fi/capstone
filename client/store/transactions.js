@@ -49,7 +49,7 @@ export const postTransaction = (txnData) => {
         userId,
         awardId,
         transactionHash,
-        amountEther,
+        amountWei,
         smartContractAddress,
         recipientEmail
       } = txnData
@@ -57,7 +57,7 @@ export const postTransaction = (txnData) => {
         userId,
         awardId,
         transactionHash,
-        amountEther,
+        amountWei,
         smartContractAddress,
         recipientEmail
       }

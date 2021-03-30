@@ -91,7 +91,6 @@ class NominateForm extends Component {
   ) => {
     try {
       const {accounts, contract, web3} = this.state
-      console.log('recipientemail', recipientEmail)
 
       const contractTxn = await contract.methods
         .startAwardAndDonate(
@@ -119,7 +118,7 @@ class NominateForm extends Component {
           userId: this.props.signedInUser.id,
           awardId: awardId,
           transactionHash: contractTxn.transactionHash,
-          amountEther: amountOfDonation,
+          amountWei: amountOfDonation,
           smartContractAddress: contractTxn.to,
           recipientEmail: recipientEmail
         }
@@ -165,7 +164,6 @@ class NominateForm extends Component {
       //   donationLimitETH,
       //   'ether'
       // )
-      console.log('formValues', formValues, formValues.email)
       await this.props.nominateUser(formData)
       this.startAwardAndDonate(
         this.props.nominate.awardId,
