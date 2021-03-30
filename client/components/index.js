@@ -16,5 +16,6 @@ export {default as SignUpForm} from './SignUpForm'
 export {default as Confirmation} from './Confirmation'
 export {default as Intro} from './Intro'
 export {default as UserAwards} from './UserAwards'
+export {default as EditAwards} from './EditAwards'
 
 export {Login} from './auth-form'

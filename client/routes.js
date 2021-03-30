@@ -9,6 +9,7 @@ import {
   AllAwards,
   SingleAward,
   NominateForm,
+  EditAwards,
   Intro,
   Confirmation,
   UserAwards
@@ -48,6 +49,7 @@ class Routes extends Component {
           <Switch>
             {/* Routes placed here are only available after logging in */}
             <Route path="/nominate" component={NominateForm} />
+            <Route exact path="/user/awards/:id/edit" component={EditAwards} />
             <Route exact path="/" component={HomeLanding} />
             <Route path="/home" component={HomeLanding} />
             <Route path="/user" component={UserAwards} />
