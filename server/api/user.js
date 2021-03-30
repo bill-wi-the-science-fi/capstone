@@ -1,6 +1,8 @@
 const router = require('express').Router()
+const {User, Award, Nomination} = require('../db/models')
+const {Op} = require('sequelize')
+const {isLoggedIn} = require('./securityMiddleware')
 const Sequelize = require('sequelize')
-const {User, Nomination, Award} = require('../db/models')
 module.exports = router
 
 const relayerAddress = '0x7714e9182799ce2f92b26e70c9cd55cd1b3c1d38'
@@ -14,8 +16,6 @@ const credentials = {
   apiSecret: 'yUL1zuDV9zYrdX5ka51XiqqwCb4CgVZTM8BaDsRKM1TUiPFrjkhYP1ev239UNdKi'
 }
 // Attached to the form for "sign up" and returns True or false based on them being verified.
-
-//Not sure about this route's security... might need to create an error below
 router.put('/', async (req, res, next) => {
   try {
     const {email, pin} = req.body
@@ -35,7 +35,7 @@ router.put('/', async (req, res, next) => {
   }
 })
 
-// needs protection?? when is this used in the process?
+//if the link for user signup is verified, find user and update information
 router.put('/verified', async (req, res, next) => {
   try {
     const {
@@ -62,7 +62,7 @@ router.put('/verified', async (req, res, next) => {
         imgUrl
       })
     }
-
+    //sending back limited information
     user = await User.findOne({
       where: {email: email, pin: pin},
       attributes: ['id', 'email', 'firstName', 'lastName', 'imgUrl']
@@ -106,6 +106,30 @@ router.put('/verified', async (req, res, next) => {
   }
 })
 
+//grab user awards based on user id on the user page
+router.get('/:id', isLoggedIn, async (req, res, next) => {
+  try {
+    const pairIdArray = await Nomination.findAll({
+      where: {recipientId: req.params.id}
+    })
+    let pairIds = pairIdArray.map((element) => element.dataValues.id)
+
+    const awards = await Award.findAll({
+      where: {
+        pairId: {
+          [Op.or]: pairIds
+        }
+      },
+      order: [['id', 'DESC']]
+    })
+
+    res.json(awards)
+  } catch (err) {
+    next(err)
+  }
+})
+
+//why is this here?
 const abiNominate = [
   {
     inputs: [],

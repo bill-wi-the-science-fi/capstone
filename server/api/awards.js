@@ -43,29 +43,18 @@ router.get('/:awardId', async (req, res, next) => {
   }
 })
 
-router.get('/userawards/:id', async (req, res, next) => {
+//change status of an open award to close after withdrawal of funds or donation reaches max limit
+router.put('/:id', checkAwardRelation, async (req, res, next) => {
+  const {open} = req.body
   try {
-    const pairIdArray = await Nomination.findAll({
-      where: {recipientId: req.params.id}
-    })
-    let pairIds = pairIdArray.map((element) => element.dataValues.id)
-
-    const awards = await Award.findAll({
-      where: {
-        pairId: {
-          [Op.or]: pairIds
-        }
-      }
+    let {id} = req.params
+    const singleAward = await Award.findOne({
+      where: {id: id}
     })
 
-    // const results = await Nomination.findAll({
-    //   where: {recipientId: req.params.id},
-    //   include: {
-    //     model: Award
-    //   }
-    // })
+    let result = await singleAward.update({open: open})
 
-    res.json(awards)
+    res.json(result)
   } catch (err) {
     next(err)
   }
