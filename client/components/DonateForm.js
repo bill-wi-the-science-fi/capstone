@@ -65,8 +65,9 @@ function DonateForm(props) {
                     userId: props.signedInUser.id,
                     awardId: props.awardId,
                     transactionHash: contractTxn.transactionHash,
-                    amountEther: web3.utils.toWei(amountETH, 'ether'),
-                    smartContractAddress: contractTxn.to
+                    amountWei: web3.utils.toWei(amountETH, 'ether'),
+                    smartContractAddress: contractTxn.to,
+                    recipientEmail: props.awardInfo.recipient_email
                   }
                   props.postTransaction(txnBody)
                 } else {
