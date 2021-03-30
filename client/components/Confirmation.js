@@ -35,12 +35,15 @@ export const Confirmation = (props) => {
               <Card.Body>
                 <Card.Title>
                   Here is your hash:
-                  <a href={`https://ropsten.etherscan.io/tx/${hash}`}>
-                    {' '}
+                  <a
+                    href={`https://ropsten.etherscan.io/tx/${hash}`}
+                    target="_blank"
+                    rel="noreferror"
+                  >
                     {hash}.
                   </a>
                   Click on the link to monitor the status of your transaction on
-                  the blockchain. The page will automatically refresh upon the
+                  the blockchain. This page will automatically refresh upon the
                   donation being confirmed on the blockchain! Continue to look
                   at some other wonderful people at the time.
                 </Card.Title>

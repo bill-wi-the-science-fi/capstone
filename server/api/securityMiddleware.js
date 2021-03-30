@@ -16,7 +16,7 @@ const checkAwardRelation = async (req, res, next) => {
         id: awardID
       }
     })
-    const pair = Nomination.findAll({
+    const pair = await Nomination.findAll({
       where: {
         id: award.pairId
       }
