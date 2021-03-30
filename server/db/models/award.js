@@ -43,7 +43,7 @@ const Award = db.define('award', {
     type: Sequelize.DATE,
     unique: false,
     allowNull: true,
-    defaultValue: Date.now()
+    defaultValue: Date.now() + 12096e5
   },
   donationLimit: {
     type: Sequelize.STRING,
