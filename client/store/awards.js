@@ -44,7 +44,6 @@ export const getAllUserAwards = (id) => async (dispatch) => {
 }
 export const withdrawAward = (id) => async (dispatch) => {
   try {
-    console.log('id ------------------------------------', id)
     const res = await axios.put(`/api/awards/${id.id}/withdraw`, id) //figure out that later
     dispatch(_withdrawAward(res.data))
   } catch (err) {

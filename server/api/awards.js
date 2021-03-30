@@ -55,7 +55,7 @@ router.put('/:id/withdraw', checkAwardRelation, async (req, res, next) => {
     })
     // make call to SC to expireAward
     const contract = buildContract()
-    const txn = await contract.methods.expireAward(parseFloat(id) + 1200).send()
+    const txn = await contract.methods.expireAward(id).send()
     if (txn.status) {
       let result = await singleAward.update({open: open})
       res.json(result)
