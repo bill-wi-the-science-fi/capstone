@@ -73,7 +73,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     // Send award and recipient to our reducer.
     const result = {
       // WORKAROUND UNITL WE WIPE ETH CONTRACT db is not synced with smart contract
-      awardId: newAward.id + 200,
+      awardId: newAward.id + 240,
       recipient: recipientAddress
     }
     res.json(result)

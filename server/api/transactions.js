@@ -13,7 +13,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       userId,
       awardId,
       transactionHash,
-      amountEther,
+      amountWei,
       smartContractAddress,
       recipientEmail
     } = req.body
@@ -21,11 +21,11 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     const txn = await Transaction.create({
       transactionHash,
       smartContractAddress,
-      amountWei: amountEther
+      amountWei
     })
     //based on trying to donate to seed data (award<100) or a newly created award
     if (awardId > 100) {
-      awardId = awardId - 200
+      awardId = awardId - 240
     }
 
     // find award -> txn.setAward(awardInst)
@@ -50,10 +50,13 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     //We need to figure out
 
     //update amount award instance property of donationTotal with the current donation
-    award.donatationTotal = web3.utils
-      .toBN(amountEther)
+    let newDonationTotal = web3.utils
+      .toBN(amountWei)
       .add(web3.utils.toBN(award.donationTotal))
       .toString()
+    updatesToAward.donationTotal = newDonationTotal
+    console.log('helop', newDonationTotal, 'wei', amountWei, updatesToAward)
+
     await award.update(updatesToAward)
 
     txn.setAward(award)
