@@ -80,6 +80,9 @@ router.put('/verified', async (req, res, next) => {
         }
       }
     })
+    // change status for awards associated with new user from pending to open
+    // pending = placeholder user account set up but user not verified yet (no donations)
+    // open = able to accept donations
     for (let i = 0; i < awardInstances.length; i++) {
       if (awardInstances[i].open === 'pending') {
         await awardInstances[i].update({open: 'open'})
