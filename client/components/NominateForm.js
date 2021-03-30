@@ -93,12 +93,7 @@ class NominateForm extends Component {
       const {accounts, contract, web3} = this.state
 
       const contractTxn = await contract.methods
-        .startAwardAndDonate(
-          awardId,
-          recipientAddress
-            ? recipientAddress
-            : '0x76c4a4d9a0B949f22A82CB165a169691559028C3'
-        )
+        .startAwardAndDonate(awardId, recipientAddress)
         .send({
           from: accounts[0],
           gas: '3000000',
