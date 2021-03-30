@@ -24,9 +24,9 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       amountWei
     })
     //based on trying to donate to seed data (award<100) or a newly created award
-    // if (awardId > 100) {
-    // awardId = awardId
-    // }
+    if (awardId > 100) {
+      awardId = awardId - 1200
+    }
 
     // find award -> txn.setAward(awardInst)
     const award = await Award.findByPk(awardId)
@@ -55,7 +55,6 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       .add(web3.utils.toBN(award.donationTotal))
       .toString()
     updatesToAward.donationTotal = newDonationTotal
-    console.log('helop', newDonationTotal, 'wei', amountWei, updatesToAward)
 
     await award.update(updatesToAward)
 

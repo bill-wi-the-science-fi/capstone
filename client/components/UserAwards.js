@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Button, Card} from 'react-bootstrap'
 import {connect} from 'react-redux'
-import {getAllUserAwards, updateUserAward} from '../store'
+import {getAllUserAwards, withdrawAward} from '../store'
 import getWeb3 from '../common/getWeb3'
 import {Link} from 'react-router-dom'
 import Nominate from '../contracts/Nominate.json'
@@ -31,17 +31,17 @@ class UserAwards extends Component {
     try {
       e.persist()
       //invoking contract method that payouts
-      const contractTxn = await this.state.contract.methods
-        .expireAward(e.target.value)
-        .send({
-          from: this.state.accounts[0],
-          value: 0
-        })
+      // const contractTxn = await this.state.contract.methods
+      //   .expireAward(e.target.value)
+      //   .send({
+      //     from: this.state.accounts[0],
+      //     value: 0
+      //   })
       //if transaction is accepted, we will update db award status
-      if (contractTxn.status) {
-        await this.props.updateUserAward({id: e.target.value, open: 'closed'})
-        this.props.history.push('/user')
-      }
+      console.log('e.target ----------------------------', e.target)
+      await this.props.withdrawAward({id: e.target.value, open: 'closed'})
+      //this.props.history.push('/user')
+
       //if transaction works, change db award status to closed
     } catch (error) {
       console.log(error)
@@ -183,7 +183,7 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     getAllUserAwards: (id) => dispatch(getAllUserAwards(id)),
-    updateUserAward: (info) => dispatch(updateUserAward(info))
+    withdrawAward: (info) => dispatch(withdrawAward(info))
   }
 }
 

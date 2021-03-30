@@ -1,3 +1,5 @@
+const {Award, Nomination, User} = require('../db/models')
+
 const isLoggedIn = (req, res, next) => {
   if (req.user) {
     next()
@@ -16,7 +18,7 @@ const checkAwardRelation = async (req, res, next) => {
         id: awardID
       }
     })
-    const pair = await Nomination.findAll({
+    const pair = await Nomination.findOne({
       where: {
         id: award.pairId
       }
