@@ -1,4 +1,4 @@
-const {Award, Nomination, User} = require('../db/models')
+const {Award, Nomination} = require('../db/models')
 
 const isLoggedIn = (req, res, next) => {
   if (req.user) {

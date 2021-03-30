@@ -67,6 +67,29 @@ router.put('/:id/withdraw', checkAwardRelation, async (req, res, next) => {
   }
 })
 
+router.put('/:id/edit', async (req, res, next) => {
+  const {firstName, lastName, category, title, description, imageUrl} = req.body
+
+  try {
+    let {id} = req.params
+    const singleAward = await Award.findOne({
+      where: {id: id}
+    })
+    let result = await singleAward.update({
+      firstName,
+      lastName,
+      category,
+      title,
+      description,
+      imageUrl
+    })
+
+    res.json(result)
+  } catch (err) {
+    next(err)
+  }
+})
+
 // edit award
 
 // router.put('/', checkAwardRelation, async (req, res, next) => {

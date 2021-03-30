@@ -134,7 +134,6 @@ class NominateForm extends Component {
 
   async onSubmit(formValues) {
     console.log('submitted')
-    formValues.category = this.state.category
 
     formValues.nominatorId = this.props.signedInUser.id
     const donationAmountUSD = +formValues.donationTotal

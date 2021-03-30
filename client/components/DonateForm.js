@@ -13,7 +13,7 @@ import {postTransaction, newTransaction, getPriceConversion} from '../store'
  * COMPONENT
  */
 
-const regEx = /^\d+(?:\.\d{0,2})$/
+const regEx = /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/
 
 const schema = yup.object().shape({
   donation: yup.number().min(0).required()
