@@ -13,9 +13,9 @@ class HomeLanding extends Component {
   }
 
   render() {
-    const card1 = this.props.awards[0]
-    const card2 = this.props.awards[1]
-    const card3 = this.props.awards[2]
+    const card1 = this.props.awards.allAwards[0]
+    const card2 = this.props.awards.allAwards[1]
+    const card3 = this.props.awards.allAwards[2]
 
     return (
       <div>
@@ -80,7 +80,7 @@ class HomeLanding extends Component {
             </div>
           </div>
         </div>
-        {!this.props.awards[0] ? (
+        {!this.props.awards.allAwards[0] ? (
           <div>Getting the best award nominees...</div>
         ) : (
           <div className="container mt-4">
