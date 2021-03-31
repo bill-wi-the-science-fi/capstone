@@ -83,11 +83,7 @@ router.put('/verified', async (req, res, next) => {
     // optimization: create method in smart contract to accept a list of award ids for a given recipient
     if (awards.length > 0) {
       const contract = buildContract()
-      for (let awardId of awards) {
-        contract.methods
-          .setRecipient(parseFloat(awardId), ethPublicAddress)
-          .send()
-      }
+      contract.methods.setRecipients(awards, ethPublicAddress).send()
     }
     res.json(user)
   } catch (err) {

@@ -4,7 +4,6 @@ const {checkAwardRelation} = require('./securityMiddleware')
 const {Op} = require('sequelize')
 module.exports = router
 const buildContract = require('./Relayer/relayerToContract')
-const abiNominate = require('./Relayer/abi')
 
 // get all awards
 router.get('/', async (req, res, next) => {
