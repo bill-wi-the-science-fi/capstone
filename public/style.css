@@ -62,6 +62,7 @@ form div {
 }
 .award-card-container {
   display: flex;
+  max-height: 500px;
   justify-content: center;
 }
 .award-card {
