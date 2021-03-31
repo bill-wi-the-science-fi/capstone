@@ -72,10 +72,14 @@ class AllAwards extends Component {
       <div className="container">
         <div className="row flex-wrap">
           {awards.map((award) => (
-            <div className="col-lg-6 p-3" key={award.id}>
+            <div className="col-lg-6 p-3 award-card-container" key={award.id}>
               <Card border="success" style={{width: '26rem'}}>
-                <Card.Img variant="top" src={award.imageUrl} />
-                <Card.Body>
+                <Card.Img
+                  variant="top"
+                  src={award.imageUrl}
+                  className="award-image"
+                />
+                <Card.Body className="d-flex flex-column">
                   <Card.Title>{award.title}</Card.Title>
                   <Card.Text>{award.description}</Card.Text>
                   {/* <Button variant="outline-secondary">Donate</Button> */}
@@ -83,6 +87,7 @@ class AllAwards extends Component {
                     as={Link}
                     to={`awards/${award.id}`}
                     variant="success ml-2"
+                    className="mt-auto"
                   >
                     More Info
                   </Button>
