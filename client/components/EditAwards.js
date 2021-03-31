@@ -51,8 +51,21 @@ class EditAwards extends Component {
   }
 
   render() {
-    console.log('render', this.props.singleAward)
-    if (this.props.singleAward && this.props.singleAward.recipient_firstName) {
+    console.log('keys', Object.keys(this.props.singleAward) === 0)
+    if (
+      Object.keys(this.props.singleAward).length === 0 &&
+      Object.keys(this.props.signedInUser).length === 0
+    ) {
+      return <div>Loading</div>
+    } else if (
+      this.props.match.params.userId != this.props.signedInUser.id ||
+      this.props.singleAward.recipient_id != this.props.signedInUser.id
+    ) {
+      return <div>User access Denied</div>
+    } else if (
+      this.props.singleAward &&
+      this.props.singleAward.recipient_firstName
+    ) {
       const {
         recipient_firstName,
         recipient_lastName,
@@ -185,8 +198,6 @@ class EditAwards extends Component {
           )}
         </Formik>
       )
-    } else {
-      return <div>Loading</div>
     }
   }
 }
