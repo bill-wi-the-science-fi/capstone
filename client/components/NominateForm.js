@@ -34,8 +34,8 @@ const schema = yup.object().shape({
       'Activism'
     ])
     .required(),
-  donationTotal: yup.number().required(),
-  donationLimit: yup.number().required(),
+  donationTotal: yup.number().required().positive(),
+  donationLimit: yup.number().required().positive(),
   title: yup.string().required(),
   description: yup.string().required()
 })
@@ -311,7 +311,7 @@ class NominateForm extends Component {
                   name="category"
                   placeholder="Category"
                   onChange={handleChange}
-                  isValid={!!touched.values}
+                  isValid={!!touched.category}
                 >
                   <option value={undefined} defaultValue>
                     Select a Category
@@ -333,7 +333,15 @@ class NominateForm extends Component {
               </Form.Group>
             </Form.Row>
 
-            <Button type="submit">Submit form</Button>
+            <Button
+              disabled={
+                !regEx.test(values.donationLimit) ||
+                !regEx.test(values.donationTotal)
+              }
+              type="submit"
+            >
+              Submit form
+            </Button>
           </Form>
         )}
       </Formik>

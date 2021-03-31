@@ -38,7 +38,7 @@ export const Confirmation = (props) => {
                   <a
                     href={`https://ropsten.etherscan.io/tx/${hash}`}
                     target="_blank"
-                    rel="noreferror"
+                    rel="noreferror noreferrer"
                   >
                     {hash}.
                   </a>
