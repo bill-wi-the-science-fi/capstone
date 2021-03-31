@@ -11,7 +11,8 @@ const WITHDRAW_USER_AWARD = 'WITHDRAW_USER_AWARD'
  */
 const awardslist = {
   allAwards: [],
-  userAwards: []
+  userAwards: [],
+  loading: true
 }
 
 /**
@@ -59,9 +60,7 @@ export default function (state = awardslist, action) {
     case GET_ALL_AWARDS:
       return {...state, allAwards: action.awards}
     case GET_ALL_USER_AWARDS:
-      return {...state, userAwards: action.awards}
-
-    //this action type needs to be tested
+      return {...state, userAwards: action.awards, loading: false}
     case WITHDRAW_USER_AWARD:
       return {
         ...state,

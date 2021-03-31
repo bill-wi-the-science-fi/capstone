@@ -49,10 +49,14 @@ class Routes extends Component {
           <Switch>
             {/* Routes placed here are only available after logging in */}
             <Route path="/nominate" component={NominateForm} />
-            <Route exact path="/user/awards/:id/edit" component={EditAwards} />
+            <Route
+              exact
+              path="/user/:userId/awards/:id/edit"
+              component={EditAwards}
+            />
             <Route exact path="/" component={HomeLanding} />
             <Route path="/home" component={HomeLanding} />
-            <Route path="/user" component={UserAwards} />
+            <Route path="/user/:id" component={UserAwards} />
           </Switch>
         )}
         {/* Displays our Login component as a fallback - change this to homepage*/}

@@ -66,7 +66,7 @@ router.put('/:id/withdraw', checkAwardRelation, async (req, res, next) => {
   }
 })
 
-router.put('/:id/edit', async (req, res, next) => {
+router.put('/:id/edit', checkAwardRelation, async (req, res, next) => {
   const {firstName, lastName, category, title, description, imageUrl} = req.body
 
   try {

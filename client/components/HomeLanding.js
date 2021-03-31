@@ -9,6 +9,7 @@ import {connect} from 'react-redux'
  */
 class HomeLanding extends Component {
   componentDidMount() {
+    console.log('homelandoing')
     this.props.getAllAwards()
   }
 
