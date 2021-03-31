@@ -78,7 +78,7 @@ class AllAwards extends Component {
                 <Card.Body>
                   <Card.Title>{award.title}</Card.Title>
                   <Card.Text>{award.description}</Card.Text>
-                  {/* <Button variant="outline-secondary">Donate</Button> */}
+
                   <Button
                     as={Link}
                     to={`awards/${award.id}`}
@@ -86,7 +86,6 @@ class AllAwards extends Component {
                   >
                     More Info
                   </Button>
-                  {/* <DonateForm awardId={`${award.id}`} /> */}
                 </Card.Body>
               </Card>
             </div>

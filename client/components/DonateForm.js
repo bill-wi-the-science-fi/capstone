@@ -95,7 +95,7 @@ function DonateForm(props) {
         }
       }
       initialValues={{
-        donation: 0
+        donation: ''
       }}
     >
       {({
@@ -108,12 +108,12 @@ function DonateForm(props) {
         errors
       }) => (
         <Form noValidate onSubmit={handleSubmit}>
-          <Form.Group as={Col} md="7" controlId="validationFormik101">
+          <Form.Group as={Col} md="7 ml-0 pl-0" controlId="validationFormik101">
             <Form.Label>Donate to this Award ($USD)</Form.Label>
             <Form.Control
               type="number"
               min="0"
-              placeholder="Donate in Ether"
+              placeholder="0.00"
               name="donation"
               value={values.donation}
               onBlur={handleBlur}
@@ -125,7 +125,11 @@ function DonateForm(props) {
               }
             />
           </Form.Group>
-          <Button className="m-2" variant="outline-success" type="submit">
+          <Button
+            disabled={!regEx.test(values.donation)}
+            variant="outline-success"
+            type="submit"
+          >
             Donate
           </Button>
         </Form>
