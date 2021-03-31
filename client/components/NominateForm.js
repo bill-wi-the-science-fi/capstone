@@ -87,13 +87,14 @@ class NominateForm extends Component {
     awardId,
     recipientAddress,
     amountOfDonation,
-    recipientEmail
+    recipientEmail,
+    donationLimit
   ) => {
     try {
       const {accounts, contract, web3} = this.state
 
       const contractTxn = await contract.methods
-        .startAwardAndDonate(awardId, recipientAddress)
+        .startAwardAndDonate(awardId, recipientAddress, donationLimit)
         .send({
           from: accounts[0],
           gas: '3000000',
@@ -163,7 +164,8 @@ class NominateForm extends Component {
         this.props.nominate.awardId,
         this.props.nominate.recipient,
         formData.donationTotal,
-        formValues.email
+        formValues.email,
+        formData.donationLimit
       )
     } catch (error) {
       console.log(error)
