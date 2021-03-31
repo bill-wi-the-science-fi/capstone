@@ -97,7 +97,9 @@ const createApp = () => {
 
 const cron = require('node-cron')
 const Nominate = require('../client/contracts/Nominate.json')
+
 const Web3 = require('web3')
+
 const {infuraUrl, contractAddress} = require('../secrets')
 // let infuraUrl = 'wss://ropsten.infura.io/ws/v3/8cb1eb8e6e60464a8c51222f37dc5a98'
 // let contractAddress = '0xd5cb8F7F6362B4D1C75489926Ae95312dDE56014'
@@ -132,12 +134,12 @@ const initListener = async () => {
   myContract.events
     .allEvents()
     .on('data', (event) => {
+      // add to db
       console.log('smart contract event logged \n \n', event, '\n\n')
     })
     .on('error', console.error)
 }
 let contractListner = initListener()
-
 /* const getEthAmount = async () => {
   const web3 = new Web3(infuraUrl)
   const networkId = await web3.eth.net.getId()
@@ -147,7 +149,6 @@ let contractListner = initListener()
   )
 }
  */
-
 /* var contract = new Contract(
   Nominate.abi,
   '0x3AFAe04805bB556Ff14A4af4aa7875053D6C3948'
