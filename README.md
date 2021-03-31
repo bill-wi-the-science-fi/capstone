@@ -14,3 +14,6 @@ humanitiarians, enviornmentalists, and do-gooders around the world.
 Our front end allows beginners to easily get started with crypto wallets through Metamask, while our 
 smart contract allows for this all to happen automatically.
 
+
+
+
