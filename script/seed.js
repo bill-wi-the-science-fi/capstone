@@ -66,7 +66,7 @@ async function seed() {
       transactionHash:
         '0x05cbd37d856b8a5fb78799c023c132d8feace6d319e1c7d5391bb36fce86a59f',
       smartContractAddress: '0x60f80121c31a0d46b5279700f9df786054aa5ee5',
-      amountEther: 1000
+      amountWei: 1000
     }
   })
   alansTrx = alansTrx[0]
@@ -99,7 +99,8 @@ async function seed() {
       'https://www.confidenceiatry.com/wp-content/uploads/2020/07/Good-Deeds-1-scaled.jpg',
     description: 'Picked up the most trash of any human ever',
     donationLimit: '7000000000000000000',
-    donationTotal: '200000000000000000'
+    donationTotal: '200000000000000000',
+    timeConstraint: Date.now()
   })
   let maybeAward2 = await throughRow2.createAward({
     title: 'The Do-Gooder extraordinaire (Who also Dances)',

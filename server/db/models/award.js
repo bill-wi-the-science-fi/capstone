@@ -23,9 +23,9 @@ const Award = db.define('award', {
     defaultValue: 'Community'
   },
   open: {
-    type: Sequelize.ENUM('open', 'closed'),
+    type: Sequelize.ENUM('open', 'pending', 'closed'),
     allowNull: false,
-    defaultValue: 'open'
+    defaultValue: 'closed'
   },
   description: {
     type: Sequelize.TEXT,
@@ -43,7 +43,7 @@ const Award = db.define('award', {
     type: Sequelize.DATE,
     unique: false,
     allowNull: true,
-    defaultValue: Date.now()
+    defaultValue: Date.now() + 12096e5
   },
   donationLimit: {
     type: Sequelize.STRING,

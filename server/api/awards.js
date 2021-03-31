@@ -1,6 +1,10 @@
 const router = require('express').Router()
 const {Award, Nomination, User} = require('../db/models')
+const {checkAwardRelation} = require('./securityMiddleware')
+const {Op} = require('sequelize')
 module.exports = router
+const buildContract = require('./Relayer/relayerToContract')
+const abiNominate = require('./Relayer/abi')
 
 // get all awards
 router.get('/', async (req, res, next) => {
@@ -41,10 +45,54 @@ router.get('/:awardId', async (req, res, next) => {
   }
 })
 
-// edit award
-// Will need route protection
+//change status of an open award to close after withdrawal of funds or donation reaches max limit
+router.put('/:id/withdraw', checkAwardRelation, async (req, res, next) => {
+  const {open} = req.body
+  try {
+    let {id} = req.params
+    const singleAward = await Award.findOne({
+      where: {id: id}
+    })
+    // make call to SC to expireAward
+    const contract = buildContract()
+    const txn = await contract.methods.expireAward(id).send()
+    if (txn.status) {
+      let result = await singleAward.update({open: open})
+      res.json(result)
+    } else {
+      res.sendStatus(401)
+    }
+  } catch (err) {
+    next(err)
+  }
+})
 
-// router.put('/', async (req, res, next) => {
+router.put('/:id/edit', async (req, res, next) => {
+  const {firstName, lastName, category, title, description, imageUrl} = req.body
+
+  try {
+    let {id} = req.params
+    const singleAward = await Award.findOne({
+      where: {id: id}
+    })
+    let result = await singleAward.update({
+      firstName,
+      lastName,
+      category,
+      title,
+      description,
+      imageUrl
+    })
+
+    res.json(result)
+  } catch (err) {
+    next(err)
+  }
+})
+
+// edit award
+
+// router.put('/', checkAwardRelation, async (req, res, next) => {
 //   try {
 //     let {nominatorUserID, nomineeEmail} = req.body
 //     const nominee = User.findOne({where: {email: nomineeEmail}})

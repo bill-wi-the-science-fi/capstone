@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import {getSingleAward, clearTransaction} from '../store'
 import {DonateForm} from '../components'
 import Web3 from 'web3'
+import {ShareButton} from './ShareButton'
 
 /**
  * COMPONENT
@@ -55,6 +56,9 @@ class SingleAward extends Component {
               {' ETH'}
             </Card.Text>
           </Card.Body>
+          <ShareButton
+            url={`https://pay-eth-forward.herokuapp.com/awards/${singleAward.award_id}`}
+          />
         </Card>
       </div>
     )
