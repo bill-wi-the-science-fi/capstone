@@ -10,12 +10,6 @@ const sessionStore = new SequelizeStore({db})
 const PORT = process.env.PORT || 8080
 const app = express()
 const socketio = require('socket.io')
-const cron = require('node-cron')
-const Nominate = require('../client/contracts/Nominate.json')
-const Web3 = require('web3')
-
-let infuraUrl = 'wss://ropsten.infura.io/ws/v3/8cb1eb8e6e60464a8c51222f37dc5a98'
-let address = '0x386e65c82c0d6b636711dfbF33b7640Aa2be2e45'
 
 module.exports = app
 
@@ -101,79 +95,81 @@ const createApp = () => {
   })
 }
 
+const cron = require('node-cron')
+const Nominate = require('../client/contracts/Nominate.json')
+const Web3 = require('web3')
+const {infuraUrl, contractAddress} = require('../secrets')
+// let infuraUrl = 'wss://ropsten.infura.io/ws/v3/8cb1eb8e6e60464a8c51222f37dc5a98'
+// let contractAddress = '0xd5cb8F7F6362B4D1C75489926Ae95312dDE56014'
 const web3 = new Web3(infuraUrl)
 
-// var subscription = web3.eth
-//   .subscribe(
-//     'logs',
-//     {
-//       address: address,
-//       index: 'Emit_Funds_Donated'
-//     },
-//     function (error, result) {
-//       if (!error) console.log(result)
-//     }
-//   )
-//   .on('connected', function (subscriptionId) {
-//     console.log(subscriptionId)
-//   })
-//   .on('data', function (log) {
-//     console.log(log)
-//   })
-//   .on('changed', function (log) {})
-// console.log('\n --------🚀 \n subscription', subscription)
+/* var subscription = web3.eth
+  .subscribe(
+    'logs',
+    {
+      address: address,
+      index: 'Emit_Funds_Donated'
+    },
+    function (error, result) {
+      if (!error) console.log(result)
+    }
+  )
+  .on('connected', function (subscriptionId) {
+    console.log(subscriptionId)
+  })
+  .on('data', function (log) {
+    console.log(log)
+  })
+  .on('changed', function (log) {})
+ */
 
 const initListener = async () => {
-  const web3 = new Web3(infuraUrl)
+  /*   const web3 = new Web3(infuraUrl)
   const networkId = await web3.eth.net.getId()
-  const myContract = new web3.eth.Contract(
-    Nominate.abi,
-    Nominate.networks[networkId].address
-  )
+ */
+
+  const myContract = new web3.eth.Contract(Nominate.abi, contractAddress)
   myContract.events
     .allEvents()
     .on('data', (event) => {
       console.log('smart contract event logged \n \n', event, '\n\n')
     })
     .on('error', console.error)
-  // console.log('\n --------🚀 \n initListener \n tx', tx)
 }
+let contractListner = initListener()
 
-const getEthAmount = async () => {
+/* const getEthAmount = async () => {
   const web3 = new Web3(infuraUrl)
   const networkId = await web3.eth.net.getId()
   const myContract = new web3.eth.Contract(
     Nominate.abi,
     Nominate.networks[networkId].address
   )
-  // myContract.getAmount()
-  //
-  // console.log('\n --------🚀 \n getEthAmount \n tx', tx)
 }
+ */
 
-let contractListner = initListener()
+/* var contract = new Contract(
+  Nominate.abi,
+  '0x3AFAe04805bB556Ff14A4af4aa7875053D6C3948'
+)
 
-// var contract = new Contract(
-//   Nominate.abi,
-//   '0x3AFAe04805bB556Ff14A4af4aa7875053D6C3948'
-// )
+set provider for all later instances to use
+Contract.setProvider('ws://localhost:8546')
 
-// set provider for all later instances to use
-// Contract.setProvider('ws://localhost:8546')
-
-// var Contract = Web3.eth
-//   .contract(Nominate.abi)
-//   .at('0x3AFAe04805bB556Ff14A4af4aa7875053D6C3948')
+var Contract = Web3.eth
+  .contract(Nominate.abi)
+  .at('0x3AFAe04805bB556Ff14A4af4aa7875053D6C3948')
+ */
 
 let counter = 0
-cron.schedule('* * * * *', () => {
+
+cron.schedule('* * * * * *', () => {
   counter++
-  let contractBalance = getEthAmount()
+  // let contractBalance = getEthAmount()
   // if (contractBalance){
   // log it?
   // } else initListener()
-
-  console.log('Ive been running for', counter, 'minutes')
+  console.log('Ive been running for', counter, 'seconds')
 })
 
 const startListening = () => {
