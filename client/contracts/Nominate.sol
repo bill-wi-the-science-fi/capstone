@@ -49,7 +49,7 @@ contract Nominate {
       allAwards[_awardId].donationTotal += msg.value;
 
       // log donation
-      emit Emit_Funds_Donated(msg.sender, address(this), msg.value);
+      emit Emit_Funds_Donated(msg.sender, address(this), msg.value, _awardId);
 
       // check if award donations has reached amount limit
       checkLimit(_awardId);
@@ -63,7 +63,7 @@ contract Nominate {
       createAwardStruct(_awardId, msg.sender, _recipientAddress);
 
       // log donation
-      emit Emit_Funds_Donated(msg.sender, address(this), msg.value);
+      emit Emit_Funds_Donated(msg.sender, address(this), msg.value, _awardId);
 
       // check if award donations has reached amount limit
       checkLimit(_awardId);
@@ -160,7 +160,8 @@ contract Nominate {
   event Emit_Funds_Donated (
       address indexed _from,
       address indexed _contract,
-      uint _value
+      uint _value,
+      unit _awardId
   );
   event Award_Goal_Reached (
       address indexed _to,
