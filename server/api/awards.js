@@ -8,7 +8,11 @@ const buildContract = require('./Relayer/relayerToContract')
 // get all awards
 router.get('/', async (req, res, next) => {
   try {
-    const awards = await Award.findAll()
+    const awards = await Award.findAll({
+      where: {
+        open: 'open'
+      }
+    })
     res.json(awards)
   } catch (err) {
     next(err)

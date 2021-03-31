@@ -14,9 +14,10 @@ class HomeLanding extends Component {
   }
 
   render() {
-    const card1 = this.props.awards.allAwards[0]
-    const card2 = this.props.awards.allAwards[1]
-    const card3 = this.props.awards.allAwards[2]
+    const awards = []
+    for (let i = 0; i < Math.min(this.props.awards.allAwards.length, 3); i++) {
+      awards.push(this.props.awards.allAwards[i])
+    }
 
     return (
       <div>
@@ -84,56 +85,38 @@ class HomeLanding extends Component {
         {!this.props.awards.allAwards[0] ? (
           <div>Getting the best award nominees...</div>
         ) : (
-          <div className="container mt-4">
-            <div className="row flex-wrap">
-              <div className="col-md-4 mb-3">
-                <Card border="success" style={{width: 'vw20'}}>
-                  <Card.Img variant="top" src={card1.imageUrl} />
-                  <Card.Body>
-                    <Card.Title>{card1.title}</Card.Title>
-                    <Card.Text>{card1.description}</Card.Text>
-                    <Button
-                      as={Link}
-                      to={`/awards/${card1.id}`}
-                      variant="success"
-                    >
-                      Learn More
-                    </Button>
-                  </Card.Body>
-                </Card>
-              </div>
-              <div className="col-md-4 mb-3">
-                <Card border="success" style={{width: 'vw20'}}>
-                  <Card.Img variant="top" src={card2.imageUrl} />
-                  <Card.Body>
-                    <Card.Title>{card2.title}</Card.Title>
-                    <Card.Text>{card2.description}</Card.Text>
-                    <Button
-                      as={Link}
-                      to={`/awards/${card2.id}`}
-                      variant="success"
-                    >
-                      Learn More
-                    </Button>
-                  </Card.Body>
-                </Card>
-              </div>
-              <div className="col-md-4 mb-3">
-                <Card border="success" style={{width: 'vw20'}}>
-                  <Card.Img variant="top" src={card3.imageUrl} />
-                  <Card.Body>
-                    <Card.Title>{card3.title}</Card.Title>
-                    <Card.Text>{card3.description}</Card.Text>
-                    <Button
-                      as={Link}
-                      to={`/awards/${card3.id}`}
-                      variant="success"
-                    >
-                      Learn More
-                    </Button>
-                  </Card.Body>
-                </Card>
-              </div>
+          <div className="container-fluid mt-4 top-three-container">
+            <div className="row flex-wrap top-three">
+              {awards.map((awardObject) => (
+                <div
+                  key={awardObject.id}
+                  className="col-md-4 mb-3 award-card-container"
+                >
+                  <Card
+                    className="award-card"
+                    border="success"
+                    style={{width: 'vw20'}}
+                  >
+                    <Card.Img
+                      className="award-image"
+                      variant="top"
+                      src={awardObject.imageUrl}
+                    />
+                    <Card.Body className="d-flex flex-column">
+                      <Card.Title>{awardObject.title}</Card.Title>
+                      {/* <Card.Text>{awardObject.description}</Card.Text> */}
+                      <Button
+                        as={Link}
+                        to={`/awards/${awardObject.id}`}
+                        variant="success"
+                        className="mt-auto"
+                      >
+                        Learn More
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                </div>
+              ))}
             </div>
           </div>
         )}

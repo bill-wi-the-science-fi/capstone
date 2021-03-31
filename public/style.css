@@ -55,6 +55,32 @@ form div {
   align-items: center;
 }
 
+.award-image {
+  width: 200px;
+  height: 200px;
+  object-fit: fill;
+}
+.award-card-container {
+  display: flex;
+  max-height: 500px;
+  justify-content: center;
+}
+.award-card {
+  height: 400px;
+  min-width: 30vw;
+  max-width: 350px;
+  align-self: center;
+}
+.top-three-container {
+  display: flex;
+  justify-content: center;
+}
+.top-three {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+}
+
 .pagination > .active > a {
   background-color: #47ccde;
   border-color: #47ccde;
