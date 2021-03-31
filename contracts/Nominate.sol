@@ -168,11 +168,7 @@ contract Nominate {
       address indexed _from,
       address indexed _contract,
       uint _value,
-<<<<<<< HEAD
-      unit _awardId
-=======
       uint _awardId
->>>>>>> 1b06bfe527ca82f1eb17e0cd8136fc5208337459
   );
   event Award_Goal_Reached (
       address indexed _to,

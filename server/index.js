@@ -10,8 +10,14 @@ const sessionStore = new SequelizeStore({db})
 const PORT = process.env.PORT || 8080
 const app = express()
 const socketio = require('socket.io')
+const cron = require('node-cron')
+const Nominate = require('../client/contracts/Nominate.json')
+const Web3 = require('web3')
+
+let infuraUrl = 'wss://ropsten.infura.io/ws/v3/8cb1eb8e6e60464a8c51222f37dc5a98'
+let address = '0x386e65c82c0d6b636711dfbF33b7640Aa2be2e45'
+
 module.exports = app
-var cron = require('node-cron')
 
 // This is a global Mocha hook, used for resource cleanup.
 // Otherwise, Mocha v4+ never quits after tests.
@@ -95,10 +101,6 @@ const createApp = () => {
   })
 }
 
-let infuraUrl = 'wss://ropsten.infura.io/ws/v3/8cb1eb8e6e60464a8c51222f37dc5a98'
-const Nominate = require('../client/contracts/Nominate.json')
-const Web3 = require('web3')
-let address = '0x3AFAe04805bB556Ff14A4af4aa7875053D6C3948'
 const web3 = new Web3(infuraUrl)
 
 // var subscription = web3.eth
