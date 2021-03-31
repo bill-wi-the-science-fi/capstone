@@ -1,6 +1,7 @@
-const abiNominate = require('./abi')
+const Nominate = require('../../../client/contracts/Nominate.json')
+const abiNominate = Nominate.abi
+const nominateContractAddress = Nominate.networks[3].address
 const relayerAddress = '0x7714e9182799ce2f92b26e70c9cd55cd1b3c1d38'
-const nominateContractAddress = '0x3AFAe04805bB556Ff14A4af4aa7875053D6C3948'
 const Web3 = require('web3')
 const {DefenderRelayProvider} = require('defender-relay-client/lib/web3')
 // PUT SECRET IS SECRETS.JS FILE (PROCESS_ENV)
