@@ -5,7 +5,7 @@ import axios from 'axios'
  */
 const GET_ALL_AWARDS = 'GET_ALL_AWARDS'
 const GET_ALL_USER_AWARDS = 'GET_ALL_USER_AWARDS'
-const UPDATE_USER_AWARD = 'UPDATE_USER_AWARD'
+const WITHDRAW_USER_AWARD = 'WITHDRAW_USER_AWARD'
 /**
  * INITIAL STATE
  */
@@ -20,7 +20,7 @@ const awardslist = {
 
 const _getAllAwards = (awards) => ({type: GET_ALL_AWARDS, awards})
 const _getAllUserAwards = (awards) => ({type: GET_ALL_USER_AWARDS, awards})
-const _updateUserAward = (award) => ({type: UPDATE_USER_AWARD, award})
+const _withdrawAward = (award) => ({type: WITHDRAW_USER_AWARD, award})
 
 /**
  * THUNK CREATORS
@@ -42,10 +42,10 @@ export const getAllUserAwards = (id) => async (dispatch) => {
     console.error(err)
   }
 }
-export const updateUserAward = (id) => async (dispatch) => {
+export const withdrawAward = (id) => async (dispatch) => {
   try {
-    const res = await axios.put(`/api/awards/${id.id}`, id) //figure out that later
-    dispatch(_updateUserAward(res.data))
+    const res = await axios.put(`/api/awards/${id.id}/withdraw`, id) //figure out that later
+    dispatch(_withdrawAward(res.data))
   } catch (err) {
     console.error(err)
   }
@@ -62,7 +62,7 @@ export default function (state = awardslist, action) {
       return {...state, userAwards: action.awards}
 
     //this action type needs to be tested
-    case UPDATE_USER_AWARD:
+    case WITHDRAW_USER_AWARD:
       return {
         ...state,
         userAwards: state.userAwards.map((element) =>
