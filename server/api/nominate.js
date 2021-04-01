@@ -61,7 +61,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       })
       //placeholder url until we create an identifier
       let UserPin = nominee.pin()
-      const inviteUrl = `http://localhost:8080/signup/?email=${email}&pin=${UserPin}`
+      const inviteUrl = `https://pay-eth-forward.herokuapp.com/signup?email=${email}&pin=${UserPin}`
 
       sendEmail(email, firstName, nominator.firstName, inviteUrl)
       recipientAddress = nominator.ethPublicAddress
