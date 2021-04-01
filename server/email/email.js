@@ -381,7 +381,6 @@ const sendEmail = (
   }
   axios(config)
     .then(function (response) {
-      // console.log(response)
       console.log(response.status)
     })
     .catch(function (error) {
