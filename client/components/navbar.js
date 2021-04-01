@@ -26,7 +26,7 @@ const NavbarBootstrap = ({handleClick, isLoggedIn, userId}) => {
                 Nominate
               </Nav.Link>
               <Nav.Link as={Link} to={`/user/${userId}`}>
-                User
+                Dashboard
               </Nav.Link>
               <Nav.Link as={Link} to="/" onClick={handleClick}>
                 Logout
