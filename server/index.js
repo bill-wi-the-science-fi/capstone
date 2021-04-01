@@ -163,7 +163,7 @@ async function ping() {
 
 let counter = 0
 cron.schedule('10 * * * *', () => {
-  counter += 10
+  counter = counter + 10
   ping()
   console.log('Listener has been running for', counter, 'minutes')
 })
