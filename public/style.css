@@ -63,7 +63,22 @@ form div {
   display: flex;
   align-items: center;
 }
-
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-style: italic;
+  font-size: larger;
+}
+.forbidden-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-style: italic;
+  font-size: larger;
+}
 .award-image {
   width: 200px;
   height: 200px;

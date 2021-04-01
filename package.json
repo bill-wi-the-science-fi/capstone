@@ -59,6 +59,7 @@
     "react-bootstrap": "^1.5.2",
     "react-bootstrap-4-pagination": "^1.0.4",
     "react-dom": "^16.8.6",
+    "react-loading": "^2.0.3",
     "react-paginate": "^7.1.2",
     "react-redux": "^7.0.1",
     "react-router-dom": "^5.0.0",
