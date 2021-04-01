@@ -44,7 +44,6 @@ const schema = yup.object().shape({
 class NominateForm extends Component {
   constructor() {
     super()
-
     this.onSubmit = this.onSubmit.bind(this)
     this.startAwardAndDonate = this.startAwardAndDonate.bind(this)
   }
@@ -93,7 +92,6 @@ class NominateForm extends Component {
   ) => {
     try {
       const {accounts, contract, web3} = this.state
-
       const contractTxn = await contract.methods
         .startAwardAndDonate(awardId, recipientAddress, donationLimit)
         .send({
@@ -107,7 +105,6 @@ class NominateForm extends Component {
             hash: hash,
             award: awardId
           })
-
           // similar behavior as an HTTP redirect
           this.props.history.push('/confirmation')
         })
