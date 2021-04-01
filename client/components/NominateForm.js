@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, {Component} from 'react'
 import {Button, Col, Form} from 'react-bootstrap'
 import {connect} from 'react-redux'
@@ -102,6 +103,7 @@ class NominateForm extends Component {
         })
         .on('transactionHash', async (hash) => {
           await this.props.newTransaction({
+            status: 'pending',
             hash: hash,
             award: awardId
           })
@@ -110,15 +112,19 @@ class NominateForm extends Component {
           this.props.history.push('/confirmation')
         })
       if (contractTxn.status) {
-        const txnBody = {
-          userId: this.props.signedInUser.id,
-          awardId: awardId,
-          transactionHash: contractTxn.transactionHash,
-          amountWei: amountOfDonation,
-          smartContractAddress: contractTxn.to,
-          recipientEmail: recipientEmail
-        }
-        this.props.postTransaction(txnBody)
+        // const txnBody = {
+        //   userId: this.props.signedInUser.id,
+        //   awardId: awardId,
+        //   transactionHash: contractTxn.transactionHash,
+        //   amountWei: amountOfDonation,
+        //   smartContractAddress: contractTxn.to,
+        //   recipientEmail: recipientEmail
+        // }
+        this.props.postTransaction({
+          status: 'confirmed',
+          // hash: hash,
+          award: this.props.awardInfo
+        })
       } else {
         // eslint-disable-next-line no-alert
         alert(

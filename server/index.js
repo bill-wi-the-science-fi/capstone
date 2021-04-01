@@ -259,14 +259,14 @@ var Contract = Web3.eth
  */
 
 let counter = 0
-cron.schedule('* * * * * *', () => {
-  counter++
+cron.schedule('10 * * * *', () => {
+  counter += 10
   ping()
   // let contractBalance = getEthAmount()
   // if (contractBalance){
   // log it?
   // } else initListener()
-  console.log('Ive been running for', counter, 'seconds')
+  console.log('Ive been running for', counter, 'minutes')
 })
 
 const startListening = () => {
