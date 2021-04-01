@@ -77,6 +77,9 @@ function DonateForm(props) {
                   )
                 }
               } catch (error) {
+                alert(
+                  `Transaction was not able to settle on the blockchain. Please refer to MetaMask for more information on transaction with hash ${contractTxn.transactionHash}`
+                )
                 console.log(error)
               }
             } else {
