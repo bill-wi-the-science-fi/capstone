@@ -89,7 +89,14 @@ class EditAwards extends Component {
       this.props.match.params.userId != this.props.signedInUser.id ||
       this.props.singleAward.recipient_id != this.props.signedInUser.id
     ) {
-      return <div className="access-msg">User Access Denied</div>
+      return (
+        <div className="forbidden-container">
+          <div>Access Denied</div>
+          <div>
+            <img src="/403-img.webp"></img>
+          </div>
+        </div>
+      )
     } else if (
       this.props.singleAward &&
       this.props.singleAward.recipient_firstName

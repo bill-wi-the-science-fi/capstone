@@ -71,9 +71,11 @@ form div {
   font-style: italic;
   font-size: larger;
 }
-.access-msg {
+.forbidden-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
   font-style: italic;
   font-size: larger;
 }

@@ -110,9 +110,7 @@ class HomeLanding extends Component {
               />
             </div>
           ) : (
-            <div className="loading-container">
-              sorry, no awards available at this time
-            </div>
+            ''
           )
         ) : (
           <div className="container-fluid mt-4 top-three-container">
