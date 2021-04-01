@@ -62,8 +62,8 @@ class EditAwards extends Component {
     }
   }
 
+  // eslint-disable-next-line complexity
   render() {
-    console.log('keys', Object.keys(this.props.singleAward) === 0)
     if (
       Object.keys(this.props.singleAward).length === 0 &&
       Object.keys(this.props.signedInUser).length === 0

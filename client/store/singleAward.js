@@ -55,7 +55,6 @@ export const getSingleAward = (awardId) => async (dispatch) => {
 }
 
 export const editSingleAward = (awardId, formValues) => async (dispatch) => {
-  console.log('inside thunk')
   try {
     const res = await axios.put(`/api/awards/${awardId}/edit`, formValues)
     dispatch(_editSingleAward(res.data))
@@ -69,8 +68,6 @@ export const editSingleAward = (awardId, formValues) => async (dispatch) => {
  * REDUCER
  */
 export default function (state = initialState, action) {
-  console.log('inside reducer')
-
   switch (action.type) {
     case GET_SINGLE_AWARD:
       return action.singleAward

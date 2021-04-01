@@ -21,7 +21,6 @@ router.post('/login', async (req, res, next) => {
 
 router.post('/signup', async (req, res, next) => {
   try {
-    console.log('signup route running')
     const {
       ethPublicAddress,
       firstName,

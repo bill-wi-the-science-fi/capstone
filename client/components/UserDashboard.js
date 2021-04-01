@@ -48,7 +48,6 @@ class UserDashboard extends Component {
       //     value: 0
       //   })
       //if transaction is accepted, we will update db award status
-      console.log('e.target ----------------------------', e.target)
       await this.props.withdrawAward({id: e.target.value, open: 'closed'})
       //this.props.history.push('/user')
 
@@ -157,7 +156,6 @@ class UserDashboard extends Component {
         </div>
       )
     }
-    console.log('ea', this.props)
     const date = new Date()
     if (
       awards.length > 0 &&

@@ -16,7 +16,6 @@ const getWeb3AndContract = (data) => {
 
 // establish connection with web3 (users account), and connection with contract
 export const fetchWeb3AndContract = () => {
-  console.log('fetch is running')
   return async (dispatch, getState) => {
     try {
       const web3 = await getWeb3()
@@ -27,7 +26,6 @@ export const fetchWeb3AndContract = () => {
         Nominate.abi,
         deployedNetwork && deployedNetwork.address
       )
-      console.log('end of try is running', getState())
       dispatch(getWeb3AndContract({web3, accounts, contract}))
     } catch (error) {
       console.log(error)

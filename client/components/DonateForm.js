@@ -20,7 +20,6 @@ const schema = yup.object().shape({
 })
 
 function DonateForm(props) {
-  console.log(props, 're-rendering')
   return (
     <Formik
       validationSchema={schema}

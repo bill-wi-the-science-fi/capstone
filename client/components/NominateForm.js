@@ -140,8 +140,6 @@ class NominateForm extends Component {
   }
 
   async onSubmit(formValues) {
-    console.log('submitted')
-
     formValues.nominatorId = this.props.signedInUser.id
     const donationAmountUSD = +formValues.donationTotal
     const donationLimitUSD = +formValues.donationLimit

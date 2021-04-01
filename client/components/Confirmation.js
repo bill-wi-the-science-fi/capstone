@@ -7,7 +7,6 @@ import {connect} from 'react-redux'
  */
 
 export const Confirmation = (props) => {
-  console.log('help', props)
   const {previousTransaction, pendingTransaction} = props.transactions
   const {hash, award} = pendingTransaction
 

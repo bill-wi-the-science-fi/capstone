@@ -13,7 +13,6 @@ import {
 } from 'react-share'
 
 export const ShareButton = (props) => {
-  console.log('props', props)
   return (
     <div>
       {' '}

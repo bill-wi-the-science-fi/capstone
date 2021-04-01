@@ -15,7 +15,6 @@ class HomeLanding extends Component {
     }
   }
   componentDidMount() {
-    console.log('homelandoing')
     this.props.getAllAwards()
     if (this.state.dataAvailable) {
       this.timer = setTimeout(

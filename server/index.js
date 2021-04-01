@@ -165,7 +165,7 @@ let counter = 0
 cron.schedule('10 * * * *', () => {
   counter += 10
   ping()
-  console.log('Ive been running for', counter, 'minutes')
+  console.log('Listener has been running for', counter, 'minutes')
 })
 
 const startListening = () => {

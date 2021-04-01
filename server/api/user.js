@@ -110,7 +110,6 @@ router.get('/:id', isLoggedIn, async (req, res, next) => {
         order: [['id', 'DESC']]
       })
 
-      console.log('war', awards[0])
       res.json(awards)
     } else {
       awards = []
@@ -139,7 +138,6 @@ router.get('/:id/nominations', isLoggedIn, async (req, res, next) => {
         order: [['id', 'DESC']]
       })
 
-      console.log('war', awards[0])
       res.json(awards)
     } else {
       awards = []
