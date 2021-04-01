@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import {Button, Col, Form} from 'react-bootstrap'
 import {connect} from 'react-redux'
 import {getSingleAward, editSingleAward, clearSingleAward} from '../store'
+import ReactLoading from 'react-loading'
+import {Link} from 'react-router-dom'
 
 import {Formik} from 'formik'
 import * as yup from 'yup'
@@ -31,11 +33,21 @@ const schema = yup.object().shape({
 class EditAwards extends Component {
   constructor() {
     super()
-
+    this.state = {dataAvailable: true}
     this.onSubmit = this.onSubmit.bind(this)
   }
   async componentDidMount() {
     await this.props.getSingleAward(this.props.match.params.id)
+    if (this.state.dataAvailable) {
+      this.timer = setTimeout(
+        () =>
+          this.setState((state) => ({
+            ...state,
+            dataAvailable: !state.dataAvailable
+          })),
+        5000
+      )
+    }
   }
 
   componentWillUnmount() {
@@ -56,12 +68,36 @@ class EditAwards extends Component {
       Object.keys(this.props.singleAward).length === 0 &&
       Object.keys(this.props.signedInUser).length === 0
     ) {
-      return <div>Loading</div>
+      return this.state.dataAvailable ? (
+        <div className="loading-container">
+          <div>
+            <strong>fetching award to edit...</strong>
+          </div>
+          <ReactLoading
+            type="cubes"
+            color="rgb(36, 225, 96)"
+            height={100}
+            width={150}
+          />
+        </div>
+      ) : (
+        <div className="loading-container">
+          <strong>this award can not be editted</strong>
+        </div>
+      )
     } else if (
       this.props.match.params.userId != this.props.signedInUser.id ||
-      this.props.singleAward.recipient_id != this.props.signedInUser.id
+      (this.props.singleAward.recipient_id != this.props.signedInUser.id &&
+        this.props.singleAward.giver_id != this.props.signedInUser.id)
     ) {
-      return <div>User access Denied</div>
+      return (
+        <div className="forbidden-container">
+          <div>Access Denied</div>
+          <div>
+            <img src="/403-img.webp"></img>
+          </div>
+        </div>
+      )
     } else if (
       this.props.singleAward &&
       this.props.singleAward.recipient_firstName

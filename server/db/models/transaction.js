@@ -13,7 +13,7 @@ const Transaction = db.define('transaction', {
     allowNull: false
   },
   amountWei: {
-    type: Sequelize.FLOAT,
+    type: Sequelize.STRING,
     unique: false,
     allowNull: false
   }

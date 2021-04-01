@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import {getAllAwards} from '../store'
 import {Link} from 'react-router-dom'
 import ReactPaginate from 'react-paginate'
+import ReactLoading from 'react-loading'
 
 /**
  * COMPONENT
@@ -16,7 +17,8 @@ class AllAwards extends Component {
       startAwardIndex: 0,
       awards: [],
       perPage: 4,
-      currentPage: 0
+      currentPage: 0,
+      dataAvailable: true
     }
     this.pagination = this.pagination.bind(this)
     this.handlePageClick = this.handlePageClick.bind(this)
@@ -59,13 +61,42 @@ class AllAwards extends Component {
   async componentDidMount() {
     await this.props.getAllAwards()
     this.pagination()
+    if (this.state.dataAvailable) {
+      this.timer = setTimeout(
+        () =>
+          this.setState((state) => ({
+            ...state,
+            dataAvailable: !state.dataAvailable
+          })),
+        5000
+      )
+    }
   }
 
   render() {
     const {awards} = this.state
 
     if (!awards.length) {
-      return <h2> Loading awards... </h2>
+      return this.state.dataAvailable ? (
+        <div className="loading-container">
+          <div>
+            <strong>fetching awards...</strong>
+          </div>
+          <ReactLoading
+            type="cubes"
+            color="rgb(36, 225, 96)"
+            height={100}
+            width={150}
+          />
+        </div>
+      ) : (
+        <div className="loading-container">
+          <strong>sorry, no active awards available at this time</strong>
+          <Link to="/nominate">
+            Nominate someone who has performed a kind gesture!
+          </Link>
+        </div>
+      )
     }
 
     return (
