@@ -11,7 +11,6 @@ const handleSubmit = (evt) => {
   console.log(evt)
 }
 const NavbarBootstrap = (props, {handleClick, isLoggedIn, userId}) => {
-  console.log(props)
   return (
     <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
       <Navbar.Brand as={Link} to="/">
@@ -52,14 +51,22 @@ const NavbarBootstrap = (props, {handleClick, isLoggedIn, userId}) => {
             </React.Fragment>
           )}
         </Nav>
-        <Nav>
-          <Form inline onSubmit={handleSubmit}>
-            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-            <Button variant="outline-success" type="submit">
-              Search
-            </Button>
-          </Form>
-        </Nav>
+        {props.location.pathname === '/awards' ? (
+          <Nav>
+            <Form inline onSubmit={handleSubmit}>
+              <FormControl
+                type="text"
+                placeholder="Search"
+                className="mr-sm-2"
+              />
+              <Button variant="outline-success" type="submit">
+                Search
+              </Button>
+            </Form>
+          </Nav>
+        ) : (
+          ''
+        )}
       </Navbar.Collapse>
     </Navbar>
   )

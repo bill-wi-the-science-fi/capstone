@@ -25,7 +25,6 @@ class AllAwards extends Component {
   }
 
   pagination() {
-    console.log('t', this.props)
     const {perPage, startAwardIndex} = this.state
     //data for awards to display on page
     const awards = this.props.awards.slice(
