@@ -8,6 +8,8 @@ import Nominate from '../contracts/Nominate.json'
 import Web3 from 'web3'
 
 // import ReactPaginate from 'react-paginate'
+//import ReactPaginate from 'react-paginate'
+import ReactLoading from 'react-loading'
 
 /**
  * COMPONENT
@@ -21,7 +23,8 @@ class UserDashboard extends Component {
       startAwardIndex: 0,
       awards: [],
       perPage: 4,
-      currentPage: 0
+      currentPage: 0,
+      dataAvailable: true
     }
     // this.pagination = this.pagination.bind(this)
     this.handlePageClick = this.handlePageClick.bind(this)
@@ -91,6 +94,16 @@ class UserDashboard extends Component {
 
   async componentDidMount() {
     try {
+      if (this.state.dataAvailable) {
+        this.timer = setTimeout(
+          () =>
+            this.setState((state) => ({
+              ...state,
+              dataAvailable: !state.dataAvailable
+            })),
+          5000
+        )
+      }
       //creates a web3 instance with metamask
       const web3 = await getWeb3()
 
@@ -126,7 +139,23 @@ class UserDashboard extends Component {
     const {nominations} = this.props
 
     if (this.props.loading) {
-      return <h2> Loading awards... </h2>
+      return this.state.dataAvailable ? (
+        <div className="loading-container">
+          <div>
+            <strong>fetching your awards...</strong>
+          </div>
+          <ReactLoading
+            type="cubes"
+            color="rgb(36, 225, 96)"
+            height={100}
+            width={150}
+          />
+        </div>
+      ) : (
+        <div className="loading-container">
+          <strong>no awards available at this time</strong>
+        </div>
+      )
     }
     console.log('ea', this.props)
     const date = new Date()

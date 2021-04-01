@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {withRouter, Route, Switch} from 'react-router-dom'
+import {withRouter, Route, Switch, Redirect} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import {
   Login,
@@ -59,6 +59,9 @@ class Routes extends Component {
             <Route path="/user/:id" component={UserDashboard} />
           </Switch>
         )}
+        <Route path="/nominate">
+          <Redirect to="/nominateLogin" />
+        </Route>
         {/* Displays our Login component as a fallback - change this to homepage*/}
         <Route component={HomeLanding} />
       </Switch>

@@ -5,6 +5,8 @@ import {getSingleAward, clearTransaction} from '../store'
 import Web3 from 'web3'
 import {ShareButton} from './ShareButton'
 import {DonateForm} from './index'
+import ReactLoading from 'react-loading'
+import {Link} from 'react-router-dom'
 
 /**
  * COMPONENT
@@ -13,16 +15,46 @@ import {DonateForm} from './index'
 const web3 = new Web3()
 
 class SingleAward extends Component {
+  constructor() {
+    super()
+    this.state = {dataAvailable: true}
+  }
   componentDidMount() {
     this.props.getSingleAward(this.props.match.params.id)
     this.props.clearTransaction()
+    if (this.state.dataAvailable) {
+      this.timer = setTimeout(
+        () =>
+          this.setState((state) => ({
+            ...state,
+            dataAvailable: !state.dataAvailable
+          })),
+        5000
+      )
+    }
   }
 
   render() {
     const {singleAward} = this.props
 
     if (!singleAward.award_id) {
-      return <h2> Loading award... </h2>
+      return this.state.dataAvailable ? (
+        <div className="loading-container">
+          <div>
+            <strong>fetching award...</strong>
+          </div>
+          <ReactLoading
+            type="cubes"
+            color="rgb(36, 225, 96)"
+            height={100}
+            width={150}
+          />
+        </div>
+      ) : (
+        <div className="loading-container">
+          <strong>sorry, we are not able to retrieve this award</strong>
+        </div>
+      )
     }
 
     const amountDonatedETH = web3.utils.fromWei(
