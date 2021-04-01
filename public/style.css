@@ -98,6 +98,12 @@ form div {
   object-fit: cover;
 }
 
+.confirmation-img {
+  width: 50vw;
+  height: 50vh;
+  object-fit: cover;
+}
+
 .user-dash-img {
   width: 125px;
   height: 125px;

@@ -77,9 +77,12 @@ function DonateForm(props) {
                   )
                 }
               } catch (error) {
+                // eslint-disable-next-line no-alert
                 alert(
-                  `Transaction was not able to settle on the blockchain. Please refer to MetaMask for more information on transaction with hash ${contractTxn.transactionHash}`
+                  `Transaction was not able to settle on the blockchain. Please refer to MetaMask for more information under the "Activity" tab.`
                 )
+                props.history.push('/')
+
                 console.log(error)
               }
             } else {
