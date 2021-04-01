@@ -1,6 +1,5 @@
 import React from 'react'
 import {Jumbotron, Container, Image} from 'react-bootstrap'
-
 import {connect} from 'react-redux'
 
 export const Intro = () => {

@@ -1,11 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
+import {withRouter} from 'react-router'
 import {connect} from 'react-redux'
 import {Navbar, Nav, Form, FormControl, Button} from 'react-bootstrap'
 import {logout} from '../store'
-
-const NavbarBootstrap = ({handleClick, isLoggedIn, userId}) => {
+const handleSubmit = (evt) => {
+  evt.persist()
+  evt.preventDefault()
+  console.log(evt)
+}
+const NavbarBootstrap = (props, {handleClick, isLoggedIn, userId}) => {
+  console.log(props)
   return (
     <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
       <Navbar.Brand as={Link} to="/">
@@ -47,9 +53,11 @@ const NavbarBootstrap = ({handleClick, isLoggedIn, userId}) => {
           )}
         </Nav>
         <Nav>
-          <Form inline>
+          <Form inline onSubmit={handleSubmit}>
             <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-            <Button variant="outline-success">Search</Button>
+            <Button variant="outline-success" type="submit">
+              Search
+            </Button>
           </Form>
         </Nav>
       </Navbar.Collapse>
@@ -75,7 +83,7 @@ const mapDispatch = (dispatch) => {
   }
 }
 
-export default connect(mapState, mapDispatch)(NavbarBootstrap)
+export default withRouter(connect(mapState, mapDispatch)(NavbarBootstrap))
 
 /**
  * PROP TYPES
