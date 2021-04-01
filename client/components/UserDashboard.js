@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import {getAllUserAwards, withdrawAward, getAllUserNoms} from '../store'
 import getWeb3 from '../common/getWeb3'
 import {Link} from 'react-router-dom'
-import Nominate from '../contracts/Nominate.json'
+import Nominate from '../../build/contracts/Nominate.json'
 import Web3 from 'web3'
 
 // import ReactPaginate from 'react-paginate'

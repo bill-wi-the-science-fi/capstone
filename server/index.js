@@ -98,11 +98,12 @@ const createApp = () => {
 }
 
 const cron = require('node-cron')
-const Nominate = require('../client/contracts/Nominate.json')
+const Nominate = require('../build/contracts/Nominate.json')
 
 const Web3 = require('web3')
 
-const {infuraUrl, contractAddress} = require('../secrets')
+const {infuraUrl} = require('../secrets')
+const contractAddress = Nominate.networks[3].address
 // let infuraUrl = 'wss://ropsten.infura.io/ws/v3/8cb1eb8e6e60464a8c51222f37dc5a98'
 // let contractAddress = '0xd5cb8F7F6362B4D1C75489926Ae95312dDE56014'
 const web3 = new Web3(infuraUrl)

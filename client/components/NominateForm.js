@@ -6,7 +6,7 @@ import {Formik} from 'formik'
 import * as yup from 'yup'
 import {fetchWeb3AndContract} from '../store/contract'
 import getWeb3 from '../common/getWeb3'
-import Nominate from '../contracts/Nominate.json'
+import Nominate from '../../build/contracts/Nominate.json'
 import {
   nominateUser,
   getPriceConversion,
