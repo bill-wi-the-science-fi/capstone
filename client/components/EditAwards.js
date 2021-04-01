@@ -59,7 +59,8 @@ class EditAwards extends Component {
       return <div>Loading</div>
     } else if (
       this.props.match.params.userId != this.props.signedInUser.id ||
-      this.props.singleAward.recipient_id != this.props.signedInUser.id
+      (this.props.singleAward.recipient_id != this.props.signedInUser.id &&
+        this.props.singleAward.giver_id != this.props.signedInUser.id)
     ) {
       return <div>User access Denied</div>
     } else if (
