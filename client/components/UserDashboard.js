@@ -192,6 +192,7 @@ class UserDashboard extends Component {
                   {date > new Date(award.timeConstraint).getTime() &&
                   award.open === 'open' ? (
                     <Button
+                      variant="success"
                       type="button"
                       value={award.id}
                       onClick={(e) => this.withdraw(e)}
@@ -206,7 +207,9 @@ class UserDashboard extends Component {
                       <Link
                         to={`/user/${this.props.signedInUser.id}/awards/${award.id}/edit`}
                       >
-                        <Button type="button">Edit</Button>
+                        <Button variant="success" type="button">
+                          Edit
+                        </Button>
                       </Link>
                     </div>
                   )}
@@ -230,7 +233,7 @@ class UserDashboard extends Component {
             />
           </div> */}
 
-          <h2 className="ml-5">Your nominations</h2>
+          <h2 className="ml-5">Awards you've nominated people for: </h2>
           <div className="col flex-wrap award">
             {nominations.map((nom) => (
               <div
@@ -256,7 +259,9 @@ class UserDashboard extends Component {
                   <Link
                     to={`/user/${this.props.signedInUser.id}/awards/${nom.id}/edit`}
                   >
-                    <Button type="button">Edit</Button>
+                    <Button variant="success" type="button">
+                      Edit
+                    </Button>
                   </Link>
                 </div>
               </div>
