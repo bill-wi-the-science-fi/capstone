@@ -43,6 +43,15 @@ form div {
 .about-img {
   width: 13rem;
 }
+.single-award-recipient-img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+.single-award-img {
+  width: 55vw;
+  object-fit: cover;
+}
 
 .pagination {
   margin: 15px auto;
@@ -53,6 +62,32 @@ form div {
 .centered {
   display: flex;
   align-items: center;
+}
+
+.award-image {
+  width: 200px;
+  height: 200px;
+  object-fit: fill;
+}
+.award-card-container {
+  display: flex;
+  max-height: 500px;
+  justify-content: center;
+}
+.award-card {
+  height: 400px;
+  min-width: 30vw;
+  max-width: 350px;
+  align-self: center;
+}
+.top-three-container {
+  display: flex;
+  justify-content: center;
+}
+.top-three {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
 }
 
 .pagination > .active > a {

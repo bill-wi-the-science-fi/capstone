@@ -97,18 +97,25 @@ router.get('/:id', isLoggedIn, async (req, res, next) => {
     const pairIdArray = await Nomination.findAll({
       where: {recipientId: req.params.id}
     })
-    let pairIds = pairIdArray.map((element) => element.dataValues.id)
+    let awards
+    if (pairIdArray.length > 0) {
+      let pairIds = pairIdArray.map((element) => element.dataValues.id)
 
-    const awards = await Award.findAll({
-      where: {
-        pairId: {
-          [Op.or]: pairIds
-        }
-      },
-      order: [['id', 'DESC']]
-    })
+      awards = await Award.findAll({
+        where: {
+          pairId: {
+            [Op.or]: pairIds
+          }
+        },
+        order: [['id', 'DESC']]
+      })
 
-    res.json(awards)
+      console.log('war', awards[0])
+      res.json(awards)
+    } else {
+      awards = []
+      res.json(awards)
+    }
   } catch (err) {
     next(err)
   }

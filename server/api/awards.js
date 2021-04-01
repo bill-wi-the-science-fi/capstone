@@ -8,7 +8,11 @@ const buildContract = require('./Relayer/relayerToContract')
 // get all awards
 router.get('/', async (req, res, next) => {
   try {
-    const awards = await Award.findAll()
+    const awards = await Award.findAll({
+      where: {
+        open: 'open'
+      }
+    })
     res.json(awards)
   } catch (err) {
     next(err)
@@ -66,7 +70,7 @@ router.put('/:id/withdraw', checkAwardRelation, async (req, res, next) => {
   }
 })
 
-router.put('/:id/edit', async (req, res, next) => {
+router.put('/:id/edit', checkAwardRelation, async (req, res, next) => {
   const {firstName, lastName, category, title, description, imageUrl} = req.body
 
   try {

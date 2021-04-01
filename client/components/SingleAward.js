@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
-import {Card} from 'react-bootstrap'
+import {Row, Image, ProgressBar, Button} from 'react-bootstrap'
 import {connect} from 'react-redux'
 import {getSingleAward, clearTransaction} from '../store'
-import {DonateForm} from '../components'
 import Web3 from 'web3'
 import {ShareButton} from './ShareButton'
+import {DonateForm} from './index'
 
 /**
  * COMPONENT
@@ -25,9 +25,85 @@ class SingleAward extends Component {
       return <h2> Loading award... </h2>
     }
 
+    const amountDonatedETH = web3.utils.fromWei(
+      singleAward.award_donationTotal,
+      'ether'
+    )
+    const donationLimitETH = web3.utils.fromWei(
+      singleAward.award_donationLimit,
+      'ether'
+    )
+
+    const percentDonated = Math.ceil(
+      (amountDonatedETH / donationLimitETH) * 100
+    )
+
     return (
-      <div className="container">
-        <Card className="m-3" border="success" style={{width: '60vw'}}>
+      <div className="container-fluid">
+        <div className="container-fluid mt-5 mr-4 ml-4 mb-0">
+          <ProgressBar className="pr-4" now={percentDonated} />
+          <p className="mb-0">
+            Amount donated: {amountDonatedETH}
+            {' ETH with a limit of '}
+            {donationLimitETH}
+            {' ETH'}
+          </p>
+        </div>
+
+        <Row className="ml-5 mr-5 mt-1 flex-wrap-reverse">
+          <div className="col-md-4 pt-2 pr-5 pl-5 pb-2">
+            <Row className="mt-3">
+              <Image
+                className="single-award-recipient-img"
+                src={singleAward.recipient_imgUrl}
+                rounded
+              />
+            </Row>
+            <Row className="mb-5">
+              <h3>Award Recipient: </h3>
+              <h3>
+                {singleAward.recipient_firstName}{' '}
+                {singleAward.recipient_lastName}
+              </h3>
+            </Row>
+
+            <Row className="mb-5">
+              <p className="m-0">Nominated by: </p>
+              <p className="m-0">
+                {singleAward.giver_firstName} {singleAward.giver_lastName}
+              </p>
+            </Row>
+            <Row>
+              <ShareButton
+                url={`https://pay-eth-forward.herokuapp.com/awards/${singleAward.award_id}`}
+              />
+            </Row>
+          </div>
+          <div className="col-md-8 pt-2 pr-5 pl-5 pb-2">
+            <Row className="mt-5">
+              <h2>{singleAward.award_title}</h2>
+            </Row>
+            <Row className="mt-3">
+              <p>{singleAward.award_description}</p>
+            </Row>
+            <Row>
+              <Image
+                className="single-award-img mt-3"
+                src={singleAward.award_imageUrl}
+                rounded
+              />
+            </Row>
+            <Row>
+              <DonateForm
+                awardId={`${singleAward.award_id}`}
+                history={this.props.history}
+                awardInfo={singleAward}
+              />
+            </Row>
+          </div>
+        </Row>
+
+        {/* <Card className="m-3" border="success" style={{width: '60vw'}}>
           <Card.Img variant="top" src={singleAward.award_imageUrl} />
           <Card.Body>
             <Card.Title>{singleAward.award_title}</Card.Title>
@@ -49,17 +125,13 @@ class SingleAward extends Component {
               />
             </div>
             <Card.Text className="text-right">
-              Amount donated:{' '}
-              {web3.utils.fromWei(singleAward.award_donationTotal, 'ether')}
-              {' ETH with a limit of '}
-              {web3.utils.fromWei(singleAward.award_donationLimit, 'ether')}
-              {' ETH'}
+
             </Card.Text>
           </Card.Body>
           <ShareButton
             url={`https://pay-eth-forward.herokuapp.com/awards/${singleAward.award_id}`}
           />
-        </Card>
+        </Card> */}
       </div>
     )
   }
