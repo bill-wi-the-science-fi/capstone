@@ -10,6 +10,8 @@ const sessionStore = new SequelizeStore({db})
 const PORT = process.env.PORT || 8080
 const app = express()
 const socketio = require('socket.io')
+// const {postTransaction} = require('../client/store')
+const {Award, Nomination, User, Transaction} = require('./db/models')
 
 module.exports = app
 
@@ -124,22 +126,116 @@ const web3 = new Web3(infuraUrl)
   })
   .on('changed', function (log) {})
  */
+const myContract = new web3.eth.Contract(Nominate.abi, contractAddress)
+// console.log('\n --------🚀 \n myContract', myContract)
+
+async function updateDb(event) {
+  const {transactionHash, address, returnValues} = event
+  const smartContractAddress = address
+  const awardId = returnValues['3']
+  const donatorAddress = returnValues['0']
+  const amountWei = returnValues['2']
+  console.log(
+    '\ntrxHash->',
+    transactionHash,
+    '\ncontract address->',
+    smartContractAddress,
+    '\nawardId->',
+    awardId,
+    '\nSender Address->',
+    donatorAddress,
+    '\namount->',
+    amountWei
+  )
+
+  const singleAward = await Award.findOne({
+    where: {id: awardId}
+  })
+  // console.log('\n --------🚀 \n updateDb \n singleAward', singleAward)
+
+  const singleNomination = await Nomination.findOne({
+    where: {id: singleAward.pairId}
+  })
+  // console.log('\n --------🚀 \n updateDb \n singleNomination', singleNomination)
+  const recipientOfAward = await User.findOne({
+    where: {id: singleNomination.recipientId}
+  })
+  // console.log('\n --------🚀 \n updateDb \n recipientOfAward', recipientOfAward)
+  const giverOfAward = await User.findOne({
+    where: {id: singleNomination.userId}
+  })
+  // console.log('\n --------🚀 \n updateDb \n giverOfAward', giverOfAward)
+
+  // let someTrx = await Transaction.findOrCreate({
+  //   where: {
+  //     transactionHash,
+  //     smartContractAddress,
+  //     amountWei,
+  //     awardId
+  //   }
+  // })
+
+  giverOfAward.createTransaction({
+    transactionHash,
+    smartContractAddress,
+    amountWei,
+    awardId
+  })
+  // giverOfAward.addTransaction(someTrx)
+
+  const updatesToAward = {
+    donationTotal: singleAward.donatationTotal
+  }
+
+  // if it's there, that means its a new award donation, and the smart contract is established, so we can move it's status to pending.
+  if (!recipientOfAward.ethPublicAddress) {
+    updatesToAward.open = 'pending'
+  } else {
+    updatesToAward.open = 'open'
+  }
+
+  //We need to figure out
+
+  //update amount award instance property of donationTotal with the current donation
+  let newDonationTotal = web3.utils
+    .toBN(amountWei)
+    .add(web3.utils.toBN(singleAward.donationTotal))
+    .toString()
+  updatesToAward.donationTotal = newDonationTotal
+
+  await singleAward.update(updatesToAward)
+
+  // postTransaction({
+  //   awardId: awardId,
+  //   transactionHash: transactionHash,
+  //   amountWei: amountWei,
+  //   smartContractAddress: smartContractAddress,
+  //   donatorAddress: donatorAddress
+  // })
+}
 
 const initListener = async () => {
   /*   const web3 = new Web3(infuraUrl)
   const networkId = await web3.eth.net.getId()
  */
 
-  const myContract = new web3.eth.Contract(Nominate.abi, contractAddress)
   myContract.events
     .allEvents()
     .on('data', (event) => {
       // add to db
+      console.log('\n --------🚀 ', event.event, '\n\n')
       console.log('smart contract event logged \n \n', event, '\n\n')
+      if (event.event === 'Emit_Funds_Donated') updateDb(event)
     })
     .on('error', console.error)
 }
 let contractListner = initListener()
+
+async function ping() {
+  let balance = await myContract.methods.balanceOfContract().call()
+  console.log('\ncontract balance in ETH', balance * 1e-18, 'ETH\n')
+}
+
 /* const getEthAmount = async () => {
   const web3 = new Web3(infuraUrl)
   const networkId = await web3.eth.net.getId()
@@ -163,9 +259,9 @@ var Contract = Web3.eth
  */
 
 let counter = 0
-
 cron.schedule('* * * * * *', () => {
   counter++
+  ping()
   // let contractBalance = getEthAmount()
   // if (contractBalance){
   // log it?

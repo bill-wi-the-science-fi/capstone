@@ -55,21 +55,31 @@ function DonateForm(props) {
                   })
                   .on('transactionHash', (hash) => {
                     //sending hash from pending transaction into state
-                    props.newTransaction({hash: hash, award: props.awardInfo})
+                    props.newTransaction({
+                      status: 'pending',
+                      hash: hash,
+                      award: props.awardInfo
+                    })
 
                     //sending user to a confirmation page with pending transaction
                     props.history.push('/confirmation')
                   })
+
                 if (contractTxn.status) {
-                  const txnBody = {
-                    userId: props.signedInUser.id,
-                    awardId: props.awardId,
-                    transactionHash: contractTxn.transactionHash,
-                    amountWei: web3.utils.toWei(amountETH, 'ether'),
-                    smartContractAddress: contractTxn.to,
-                    recipientEmail: props.awardInfo.recipient_email
-                  }
-                  props.postTransaction(txnBody)
+                  // const txnBody = {
+                  //   userId: props.signedInUser.id,
+                  //   awardId: props.awardId,
+                  //   transactionHash: contractTxn.transactionHash,
+                  //   amountWei: web3.utils.toWei(amountETH, 'ether'),
+                  //   smartContractAddress: contractTxn.to,
+                  //   recipientEmail: props.awardInfo.recipient_email
+                  // }
+                  // props.postTransaction(txnBody)
+                  props.postTransaction({
+                    status: 'confirmed',
+                    // hash: hash,
+                    award: props.awardInfo
+                  })
                 } else {
                   // eslint-disable-next-line no-alert
                   alert(
