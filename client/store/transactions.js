@@ -15,7 +15,7 @@ const _getAllTransactions = (transactions) => ({
   type: GET_ALL_TRANSACTIONS,
   transactions
 })
-const _postTransaction = (transaction) => ({
+export const postTransaction = (transaction) => ({
   type: POST_TRANSACTION,
   transaction
 })
@@ -42,32 +42,35 @@ export const clearTransaction = () => ({
 //     console.error(err)
 //   }
 // }
-export const postTransaction = (txnData) => {
+/* export const postTransaction = (txnData) => {
   return async (dispatch) => {
     try {
       const {
-        userId,
+        // userId,
         awardId,
         transactionHash,
         amountWei,
-        smartContractAddress,
-        recipientEmail
+        smartContractAddress
+        // recipientEmail
       } = txnData
       let body = {
-        userId,
+        // userId,
         awardId,
         transactionHash,
         amountWei,
-        smartContractAddress,
-        recipientEmail
+        smartContractAddress
+        // recipientEmail
       }
+
       const transaction = (await axios.post('/api/transactions', body)).data
+
       dispatch(_postTransaction(transaction))
     } catch (error) {
       console.log(error)
     }
   }
 }
+ */
 export const getPriceConversion = (amountUSD) => {
   return async (dispatch) => {
     try {

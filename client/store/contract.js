@@ -1,5 +1,5 @@
 import getWeb3 from '../common/getWeb3'
-import Nominate from '../contracts/Nominate.json'
+import Nominate from '../../build/contracts/Nominate.json'
 
 // action type
 const SET_WEB3 = 'SET_WEB3'
