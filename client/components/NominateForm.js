@@ -340,6 +340,8 @@ class NominateForm extends Component {
             </Form.Row>
 
             <Button
+              className="ml-3"
+              variant="success"
               disabled={
                 !regEx.test(values.donationLimit) ||
                 !regEx.test(values.donationTotal)

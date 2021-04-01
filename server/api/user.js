@@ -120,3 +120,32 @@ router.get('/:id', isLoggedIn, async (req, res, next) => {
     next(err)
   }
 })
+
+router.get('/:id/nominations', isLoggedIn, async (req, res, next) => {
+  try {
+    const pairIdArray = await Nomination.findAll({
+      where: {userId: req.params.id}
+    })
+    let awards
+    if (pairIdArray.length > 0) {
+      let pairIds = pairIdArray.map((element) => element.dataValues.id)
+
+      awards = await Award.findAll({
+        where: {
+          pairId: {
+            [Op.or]: pairIds
+          }
+        },
+        order: [['id', 'DESC']]
+      })
+
+      console.log('war', awards[0])
+      res.json(awards)
+    } else {
+      awards = []
+      res.json(awards)
+    }
+  } catch (err) {
+    next(err)
+  }
+})
