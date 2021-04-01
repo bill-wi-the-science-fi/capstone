@@ -12,7 +12,7 @@ import {
   EditAwards,
   Intro,
   Confirmation,
-  UserAwards
+  UserDashboard
 } from './components'
 import {me} from './store'
 
@@ -56,7 +56,7 @@ class Routes extends Component {
             />
             <Route exact path="/" component={HomeLanding} />
             <Route path="/home" component={HomeLanding} />
-            <Route path="/user/:id" component={UserAwards} />
+            <Route path="/user/:id" component={UserDashboard} />
           </Switch>
         )}
         <Route path="/nominate">

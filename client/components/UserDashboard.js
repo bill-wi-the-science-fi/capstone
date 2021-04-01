@@ -1,18 +1,22 @@
 import React, {Component} from 'react'
 import {Button, Card} from 'react-bootstrap'
 import {connect} from 'react-redux'
-import {getAllUserAwards, withdrawAward} from '../store'
+import {getAllUserAwards, withdrawAward, getAllUserNoms} from '../store'
 import getWeb3 from '../common/getWeb3'
 import {Link} from 'react-router-dom'
 import Nominate from '../contracts/Nominate.json'
-import ReactPaginate from 'react-paginate'
+import Web3 from 'web3'
+
+// import ReactPaginate from 'react-paginate'
+//import ReactPaginate from 'react-paginate'
 import ReactLoading from 'react-loading'
 
 /**
  * COMPONENT
  */
+const web3Global = new Web3()
 
-class UserAwards extends Component {
+class UserDashboard extends Component {
   constructor() {
     super()
     this.state = {
@@ -22,9 +26,14 @@ class UserAwards extends Component {
       currentPage: 0,
       dataAvailable: true
     }
-    this.pagination = this.pagination.bind(this)
+    // this.pagination = this.pagination.bind(this)
     this.handlePageClick = this.handlePageClick.bind(this)
     this.withdraw = this.withdraw.bind(this)
+    this.convertDonation = this.convertDonation.bind(this)
+  }
+
+  convertDonation(donation) {
+    return web3Global.utils.fromWei(donation, 'ether')
   }
 
   //only contracts that are expired and not withdrawn will have this function
@@ -49,19 +58,19 @@ class UserAwards extends Component {
     }
   }
 
-  pagination() {
-    const {perPage, startAwardIndex} = this.state
-    // awards to display on page
-    const awards = this.props.awards.slice(
-      startAwardIndex,
-      startAwardIndex + perPage
-    )
-    //add to state how many pages, and the awards for current page
-    this.setState((state) => ({
-      awards,
-      pageCount: Math.ceil(this.props.awards.length / state.perPage)
-    }))
-  }
+  // pagination() {
+  //   const {perPage, startAwardIndex} = this.state
+  //   // awards to display on page
+  //   const awards = this.props.awards.slice(
+  //     startAwardIndex,
+  //     startAwardIndex + perPage
+  //   )
+  //   //add to state how many pages, and the awards for current page
+  //   this.setState((state) => ({
+  //     awards,
+  //     pageCount: Math.ceil(this.props.awards.length / state.perPage)
+  //   }))
+  // }
 
   //when user clicks on next, previous, or a page buttton
   handlePageClick = (e) => {
@@ -114,6 +123,8 @@ class UserAwards extends Component {
       }
       //grab all awards for a user, active, pending, or closed
       await this.props.getAllUserAwards(this.props.signedInUser.id)
+      await this.props.getAllUserNoms(this.props.signedInUser.id)
+
       this.setState({awards: this.props.awards})
 
       //paginate page
@@ -125,6 +136,7 @@ class UserAwards extends Component {
 
   render() {
     const {awards} = this.state
+    const {nominations} = this.props
 
     if (this.props.loading) {
       return this.state.dataAvailable ? (
@@ -153,44 +165,56 @@ class UserAwards extends Component {
     ) {
       return (
         <div className="container">
-          <div className="row flex-wrap">
-            {awards.map((award) => (
-              <div className="col-lg-6 p-3" key={award.id}>
-                <Card border="success" style={{width: '26rem'}}>
-                  <Card.Img variant="top" src={award.imageUrl} />
-                  <Card.Body>
-                    <Card.Title>{award.title}</Card.Title>
-                    <Card.Text>{award.description}</Card.Text>
-                    {/* <Button variant="outline-secondary">Donate</Button> */}
-                    {date > new Date(award.timeConstraint).getTime() &&
-                    award.open === 'open' ? (
-                      <Button
-                        type="button"
-                        value={award.id}
-                        onClick={(e) => this.withdraw(e)}
-                      >
-                        Withdraw
-                      </Button>
-                    ) : date > new Date(award.timeConstraint).getTime() ? (
-                      <div> Award Accepted </div>
-                    ) : (
-                      <div>
-                        Award Pending
-                        <Link
-                          to={`/user/${this.props.signedInUser.id}/awards/${award.id}/edit`}
-                        >
-                          <Button type="button">Edit</Button>
-                        </Link>
-                      </div>
-                    )}
+          <h2 className="ml-5 mt-1">Your awards</h2>
 
-                    {/* <DonateForm awardId={`${award.id}`} /> */}
-                  </Card.Body>
-                </Card>
+          <div className="col flex-wrap award">
+            {awards.map((award) => (
+              <div
+                className="border border-success rounded row flex-wrap m-4 p-4"
+                key={award.id}
+              >
+                <div className="col-lg-2 flex-wrap">
+                  <img className="user-dash-img rounded" src={award.imageUrl} />
+                </div>
+                <div className="col-lg-6 flex-wrap">
+                  {' '}
+                  <h3>{award.title}</h3>
+                  <p>{award.description}</p>
+                </div>
+                <div className="col-lg-2 flex-wrap">
+                  <h3>Donation total</h3>
+                  <p>
+                    {this.convertDonation(award.donationTotal)}
+                    {' ETH'}
+                  </p>
+                </div>
+                <div className="col-lg-2 flex-wrap">
+                  {date > new Date(award.timeConstraint).getTime() &&
+                  award.open === 'open' ? (
+                    <Button
+                      type="button"
+                      value={award.id}
+                      onClick={(e) => this.withdraw(e)}
+                    >
+                      Withdraw
+                    </Button>
+                  ) : date > new Date(award.timeConstraint).getTime() ? (
+                    <div> Award Accepted </div>
+                  ) : (
+                    <div>
+                      Award Pending
+                      <Link
+                        to={`/user/${this.props.signedInUser.id}/awards/${award.id}/edit`}
+                      >
+                        <Button type="button">Edit</Button>
+                      </Link>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>
-          <div className="centered">
+          {/* <div className="centered">
             <ReactPaginate
               previousLabel="prev"
               nextLabel="next"
@@ -204,6 +228,39 @@ class UserAwards extends Component {
               subContainerClassName="pages pagination"
               activeClassName="active"
             />
+          </div> */}
+
+          <h2 className="ml-5">Your nominations</h2>
+          <div className="col flex-wrap award">
+            {nominations.map((nom) => (
+              <div
+                className="border border-success rounded row flex-wrap m-4 p-4"
+                key={nom.id}
+              >
+                <div className="col-lg-2 flex-wrap">
+                  <img className="user-dash-img rounded" src={nom.imageUrl} />
+                </div>
+                <div className="col-lg-6 flex-wrap">
+                  {' '}
+                  <h3>{nom.title}</h3>
+                  <p>{nom.description}</p>
+                </div>
+                <div className="col-lg-2 flex-wrap">
+                  <h3>Donation total</h3>
+                  <p>
+                    {this.convertDonation(nom.donationTotal)}
+                    {' ETH'}
+                  </p>
+                </div>
+                <div className="col-lg-2 flex-wrap">
+                  <Link
+                    to={`/user/${this.props.signedInUser.id}/awards/${nom.id}/edit`}
+                  >
+                    <Button type="button">Edit</Button>
+                  </Link>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )
@@ -226,6 +283,8 @@ class UserAwards extends Component {
 const mapState = (state) => {
   return {
     awards: state.awards.userAwards,
+    nominations: state.awards.userNominations,
+
     loading: state.awards.loading,
     signedInUser: state.signedInUser
   }
@@ -234,8 +293,10 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     getAllUserAwards: (id) => dispatch(getAllUserAwards(id)),
+    getAllUserNoms: (id) => dispatch(getAllUserNoms(id)),
+
     withdrawAward: (info) => dispatch(withdrawAward(info))
   }
 }
 
-export default connect(mapState, mapDispatch)(UserAwards)
+export default connect(mapState, mapDispatch)(UserDashboard)

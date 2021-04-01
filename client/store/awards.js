@@ -5,6 +5,8 @@ import axios from 'axios'
  */
 const GET_ALL_AWARDS = 'GET_ALL_AWARDS'
 const GET_ALL_USER_AWARDS = 'GET_ALL_USER_AWARDS'
+const GET_ALL_USER_NOMS = 'GET_ALL_USER_NOMS'
+
 const WITHDRAW_USER_AWARD = 'WITHDRAW_USER_AWARD'
 /**
  * INITIAL STATE
@@ -12,6 +14,7 @@ const WITHDRAW_USER_AWARD = 'WITHDRAW_USER_AWARD'
 const awardslist = {
   allAwards: [],
   userAwards: [],
+  userNominations: [],
   loading: true
 }
 
@@ -21,6 +24,8 @@ const awardslist = {
 
 const _getAllAwards = (awards) => ({type: GET_ALL_AWARDS, awards})
 const _getAllUserAwards = (awards) => ({type: GET_ALL_USER_AWARDS, awards})
+const _getAllUserNoms = (awards) => ({type: GET_ALL_USER_NOMS, awards})
+
 const _withdrawAward = (award) => ({type: WITHDRAW_USER_AWARD, award})
 
 /**
@@ -43,6 +48,16 @@ export const getAllUserAwards = (id) => async (dispatch) => {
     console.error(err)
   }
 }
+
+export const getAllUserNoms = (id) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/api/user/${id}/nominations`)
+    dispatch(_getAllUserNoms(res.data))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 export const withdrawAward = (id) => async (dispatch) => {
   try {
     const res = await axios.put(`/api/awards/${id.id}/withdraw`, id) //figure out that later
@@ -61,6 +76,8 @@ export default function (state = awardslist, action) {
       return {...state, allAwards: action.awards}
     case GET_ALL_USER_AWARDS:
       return {...state, userAwards: action.awards, loading: false}
+    case GET_ALL_USER_NOMS:
+      return {...state, userNominations: action.awards, loading: false}
     case WITHDRAW_USER_AWARD:
       return {
         ...state,

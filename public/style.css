@@ -84,6 +84,18 @@ form div {
   height: 200px;
   object-fit: fill;
 }
+
+.user-dash-img {
+  width: 125px;
+  height: 125px;
+  object-fit: cover;
+}
+
+.user-award {
+  border: #5cb85c;
+  border-radius: 5px;
+}
+
 .award-card-container {
   display: flex;
   max-height: 500px;
