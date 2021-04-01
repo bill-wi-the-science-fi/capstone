@@ -3,14 +3,30 @@ import {Carousel, Jumbotron, Button, Card, Image} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
 import {getAllAwards} from '../store'
 import {connect} from 'react-redux'
-
+import ReactLoading from 'react-loading'
 /**
  * COMPONENT
  */
 class HomeLanding extends Component {
+  constructor() {
+    super()
+    this.state = {
+      dataAvailable: true
+    }
+  }
   componentDidMount() {
     console.log('homelandoing')
     this.props.getAllAwards()
+    if (this.state.dataAvailable) {
+      this.timer = setTimeout(
+        () =>
+          this.setState((state) => ({
+            ...state,
+            dataAvailable: !state.dataAvailable
+          })),
+        5000
+      )
+    }
   }
 
   render() {
@@ -83,7 +99,21 @@ class HomeLanding extends Component {
           </div>
         </div>
         {!this.props.awards.allAwards[0] ? (
-          <div>Getting the best award nominees...</div>
+          this.state.dataAvailable ? (
+            <div className="loading-container">
+              <div>fetching today's top awards...</div>
+              <ReactLoading
+                type="cubes"
+                color="rgb(36, 225, 96)"
+                height={100}
+                width={150}
+              />
+            </div>
+          ) : (
+            <div className="loading-container">
+              sorry, no awards available at this time
+            </div>
+          )
         ) : (
           <div className="container-fluid mt-4 top-three-container">
             <div className="row flex-wrap top-three">
