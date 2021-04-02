@@ -13,7 +13,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       title,
       category,
       description,
-      imgUrl,
+      imageUrl,
       donationLimit,
       nominatorId,
       email,
@@ -28,7 +28,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       where: {email: email}
     });
     console.log(req.body);
-    console.log(imgUrl);
+    console.log(imageUrl);
     // Get noiminator Instance
     const nominator = await User.findOne({where: {id: nominatorId}});
 
@@ -43,7 +43,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       title: title,
       category: category,
       description: description,
-      imageUrl: imgUrl,
+      imageUrl: imageUrl,
       donationLimit: donationLimit,
       donationTotal: '0'
     };
@@ -76,7 +76,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       // WORKAROUND UNITL WE WIPE ETH CONTRACT db is not synced with smart contract
       awardId: newAward.id,
       recipient: recipientAddress,
-      imageUrl: imgUrl
+      imageUrl: imageUrl
     };
     res.json(result);
   } catch (err) {

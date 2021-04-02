@@ -39,7 +39,7 @@ export function authSignUp(userInfoObject, method) {
       lastName,
       email,
       password,
-      imgUrl
+      imageUrl
       //pin
     } = userInfoObject;
     let res;
@@ -51,7 +51,7 @@ export function authSignUp(userInfoObject, method) {
         lastName,
         email,
         password,
-        imgUrl
+        imageUrl
         //pin
       });
     } catch (authError) {

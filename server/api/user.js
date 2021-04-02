@@ -35,7 +35,7 @@ router.put('/verified', async (req, res, next) => {
       lastName,
       email,
       password,
-      imgUrl,
+      imageUrl,
       pin
     } = req.body;
     let user = await User.findOne({
@@ -50,13 +50,13 @@ router.put('/verified', async (req, res, next) => {
         firstName,
         lastName,
         password,
-        imgUrl
+        imageUrl
       });
     }
     //sending back limited information
     user = await User.findOne({
       where: {email: email, pin: pin},
-      attributes: ['id', 'email', 'firstName', 'lastName', 'imgUrl']
+      attributes: ['id', 'email', 'firstName', 'lastName', 'imageUrl']
     });
     const nominations = await Nomination.findAll({
       where: {

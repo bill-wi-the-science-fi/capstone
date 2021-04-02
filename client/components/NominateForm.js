@@ -37,7 +37,6 @@ const schema = yup.object().shape({
     ])
     .required(),
   donationTotal: yup.number().required().positive(),
-  donationLimit: yup.number().required().positive(),
   title: yup.string().required(),
   description: yup.string().required(),
   file: yup.mixed()
@@ -94,7 +93,7 @@ class NominateForm extends Component {
     amountOfDonation,
     recipientEmail,
     donationLimit,
-    imgUrl
+    imageUrl
   ) => {
     try {
       const {accounts, contract, web3} = this.state;
@@ -110,7 +109,7 @@ class NominateForm extends Component {
             status: 'pending',
             hash: hash,
             award: awardId,
-            imageUrl: imgUrl
+            imageUrl: imageUrl
           });
           // similar behavior as an HTTP redirect
           this.props.history.push('/confirmation');
@@ -146,7 +145,7 @@ class NominateForm extends Component {
   async onSubmit(formValues) {
     formValues.nominatorId = this.props.signedInUser.id;
     const donationAmountUSD = +formValues.donationTotal;
-    const donationLimitUSD = +formValues.donationLimit;
+    const donationLimitUSD = +formValues.donationTotal * 1000;
     const {file} = this.state;
     const uploadTask = storage.ref(`images/${file.name}`).put(file);
     await uploadTask.on(
@@ -161,7 +160,7 @@ class NominateForm extends Component {
           .child(file.name)
           .getDownloadURL()
           .then(async (url) => {
-            formValues.imgUrl = url;
+            formValues.imageUrl = url;
 
             try {
               const donationAmountETH = (
@@ -196,7 +195,7 @@ class NominateForm extends Component {
                 formData.donationTotal,
                 formValues.email,
                 formData.donationLimit,
-                formData.imgUrl
+                formData.imageUrl
               );
             } catch (error) {
               console.log(error);
@@ -295,7 +294,7 @@ class NominateForm extends Component {
               <Form.Group as={Col} md="4" controlId="validationFormik105">
                 <Form.Label>Donation ($USD)</Form.Label>
                 <Form.Control
-                  type="text"
+                  type="number"
                   placeholder="Donation"
                   name="donationTotal"
                   value={values.donationTotal}
@@ -311,19 +310,12 @@ class NominateForm extends Component {
               <Form.Group as={Col} md="4" controlId="validationFormik106">
                 <Form.Label>Donation Limit ($USD)</Form.Label>
                 <Form.Control
+                  readonly="readonly"
                   type="text"
                   placeholder="Donation Limit"
                   name="donationLimit"
-                  value={values.donationLimit}
+                  value={Math.ceil(values.donationTotal * 1000)}
                   onBlur={handleBlur}
-                  onChange={handleChange}
-                  isValid={
-                    touched.donationLimit &&
-                    !errors.donationLimit &&
-                    Number(values.donationLimit) >
-                      Number(values.donationTotal) &&
-                    regEx.test(values.donationLimit)
-                  }
                 />
               </Form.Group>
               <Form.File
@@ -383,10 +375,7 @@ class NominateForm extends Component {
             <Button
               className="ml-3"
               variant="success"
-              disabled={
-                !regEx.test(values.donationLimit) ||
-                !regEx.test(values.donationTotal)
-              }
+              disabled={!regEx.test(values.donationTotal)}
               type="submit"
             >
               Submit form

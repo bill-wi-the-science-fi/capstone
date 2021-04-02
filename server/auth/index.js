@@ -27,7 +27,7 @@ router.post('/signup', async (req, res, next) => {
       lastName,
       email,
       password,
-      imgUrl
+      imageUrl
     } = req.body;
     const user = await User.create({
       ethPublicAddress,
@@ -35,7 +35,7 @@ router.post('/signup', async (req, res, next) => {
       lastName,
       email,
       password,
-      imgUrl
+      imageUrl
     });
     req.login(user, (err) => (err ? next(err) : res.json(user)));
   } catch (err) {

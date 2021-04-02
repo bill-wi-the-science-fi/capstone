@@ -3,6 +3,7 @@ import {Button, Col, Form} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {getSingleAward, editSingleAward, clearSingleAward} from '../store';
 import ReactLoading from 'react-loading';
+import {storage} from '../firebase/index';
 
 import {Formik} from 'formik';
 import * as yup from 'yup';
@@ -26,7 +27,7 @@ const schema = yup.object().shape({
     .required(),
   title: yup.string().required(),
   description: yup.string().required(),
-  imageUrl: yup.string()
+  file: yup.mixed()
 });
 
 class EditAwards extends Component {
@@ -34,6 +35,7 @@ class EditAwards extends Component {
     super();
     this.state = {dataAvailable: true};
     this.onSubmit = this.onSubmit.bind(this);
+    this.handleImage = this.handleImage.bind(this);
   }
   async componentDidMount() {
     await this.props.getSingleAward(this.props.match.params.id);
@@ -49,16 +51,44 @@ class EditAwards extends Component {
     }
   }
 
+  handleImage(e) {
+    e.persist();
+    if (e.target.files[0]) {
+      this.setState({file: e.target.files[0]});
+    }
+  }
+
   componentWillUnmount() {
     this.props.clearSingleAward();
   }
   async onSubmit(formValues) {
-    try {
-      await this.props.editSingleAward(this.props.match.params.id, formValues);
-      this.props.clearSingleAward();
-    } catch (error) {
-      console.log(error);
-    }
+    const {file} = this.state;
+    const uploadTask = storage.ref(`images/${file.name}`).put(file);
+    await uploadTask.on(
+      'state_changed',
+      () => {},
+      (error) => {
+        console.log(error);
+      },
+      () =>
+        storage
+          .ref('images')
+          .child(file.name)
+          .getDownloadURL()
+          .then(async (url) => {
+            formValues.imageUrl = url;
+
+            try {
+              await this.props.editSingleAward(
+                this.props.match.params.id,
+                formValues
+              );
+              this.props.clearSingleAward();
+            } catch (error) {
+              console.log(error);
+            }
+          })
+    );
   }
 
   // eslint-disable-next-line complexity
@@ -188,18 +218,17 @@ class EditAwards extends Component {
                     isValid={touched.description && !errors.description}
                   />
                 </Form.Group>
-                <Form.Group as={Col} md="4" controlId="validationFormik103">
-                  <Form.Label>Image</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Do you have a hosted image to share with us?"
-                    name="imageUrl"
-                    onBlur={handleBlur}
-                    value={values.imageUrl}
-                    onChange={handleChange}
-                    isValid={touched.imageUrl && !errors.imageUrl}
-                  />
-                </Form.Group>
+                <Form.File
+                  className="position-relative"
+                  name="file"
+                  label="File"
+                  onChange={(e) => this.handleImage(e)}
+                  isInvalid={!!errors.file}
+                  feedback={errors.file}
+                  id="validationFormik107"
+                  feedbackTooltip
+                />
+
                 <Form.Group controlId="SelectCategory">
                   <Form.Label>Category</Form.Label>
                   <Form.Control
