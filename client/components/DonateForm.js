@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import getWeb3 from '../common/getWeb3';
-import Nominate from '../contracts/Nominate.json';
+import Nominate from '../../build/contracts/Nominate.json';
 import {postTransaction, newTransaction, getPriceConversion} from '../store';
 
 // import {getSingleAward} from '../store'

@@ -1,11 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {Navbar, Nav} from 'react-bootstrap';
-import {logout, fetchFilteredAwards} from '../store';
+import {Navbar, Nav, Form, FormControl, Button} from 'react-bootstrap';
+import {logout} from '../store';
 
-const NavbarBootstrap = (props, {handleClick, isLoggedIn, userId}) => {
+const NavbarBootstrap = ({handleClick, isLoggedIn, userId}) => {
   return (
     <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
       <Navbar.Brand as={Link} to="/">
@@ -63,7 +62,6 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    fetchFilteredAwards: (category) => dispatch(fetchFilteredAwards(category)),
     handleClick() {
       dispatch(logout());
     }
