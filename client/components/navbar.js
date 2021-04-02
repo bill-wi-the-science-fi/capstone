@@ -3,15 +3,7 @@ import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import {withRouter, Redirect} from 'react-router';
 import {connect} from 'react-redux';
-import {
-  Navbar,
-  Nav,
-  Form,
-  FormControl,
-  Button,
-  Dropdown,
-  DropdownButton
-} from 'react-bootstrap';
+import {Navbar, Nav} from 'react-bootstrap';
 import {logout, fetchFilteredAwards} from '../store';
 
 const NavbarBootstrap = (props, {handleClick, isLoggedIn, userId}) => {
@@ -55,36 +47,6 @@ const NavbarBootstrap = (props, {handleClick, isLoggedIn, userId}) => {
             </React.Fragment>
           )}
         </Nav>
-        {props.location.pathname === '/awards' ? (
-          <Nav>
-            <DropdownButton
-              id="dropdown-button-drop-left"
-              drop="left"
-              variant="info"
-              title="Select Award Category"
-              onSelect={(evtValue) => {
-                props.history.push(`/awards/${evtValue}`);
-              }}
-            >
-              <Dropdown.Item eventKey="all">All</Dropdown.Item>
-              <Dropdown.Item eventKey="Open-Source">Open-Source</Dropdown.Item>
-              <Dropdown.Item eventKey="Community">Community</Dropdown.Item>
-              <Dropdown.Item eventKey="Lifetime of Awesome">
-                Lifetime of Awesome
-              </Dropdown.Item>
-              <Dropdown.Item eventKey="Health and Wellness">
-                Health and Wellness
-              </Dropdown.Item>
-              <Dropdown.Item eventKey="Volunteer">Volunteer</Dropdown.Item>
-              <Dropdown.Item eventKey="Animals">Animals</Dropdown.Item>
-              <Dropdown.Item eventKey="Heroic Act">Heroic Act</Dropdown.Item>
-              <Dropdown.Item eventKey="Enviornment">Enviornment</Dropdown.Item>
-              <Dropdown.Item eventKey="Activism">Activism</Dropdown.Item>
-            </DropdownButton>
-          </Nav>
-        ) : (
-          ''
-        )}
       </Navbar.Collapse>
     </Navbar>
   );

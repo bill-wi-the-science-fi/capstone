@@ -1,5 +1,13 @@
 import React, {Component} from 'react';
-import {Button, Card} from 'react-bootstrap';
+import {
+  Button,
+  Card,
+  Form,
+  FormControl,
+  Nav,
+  Dropdown,
+  DropdownButton
+} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {getAllAwards, fetchFilteredAwards} from '../store';
 import {Link} from 'react-router-dom';
@@ -23,6 +31,7 @@ class AllAwards extends Component {
     };
     this.pagination = this.pagination.bind(this);
     this.handlePageClick = this.handlePageClick.bind(this);
+    this.handleFilter = this.handleFilter.bind(this);
   }
 
   pagination() {
@@ -42,10 +51,8 @@ class AllAwards extends Component {
   handlePageClick = (e) => {
     //page that is selected and the new starting point in the index of data
     const {perPage} = this.state;
-
     const selectedPage = e.selected;
     const startAwardIndex = selectedPage * perPage;
-
     //setting new State with new information of awards, current page, and start index
     this.setState(
       {
@@ -57,12 +64,16 @@ class AllAwards extends Component {
       }
     );
   };
-
+  handleFilter = async (category) => {
+    await this.props.fetchFilteredAwards(category);
+    this.setState((prevState) => ({
+      awardsLocal: this.props.awards,
+      currentPage: 0,
+      pageCount: Math.ceil(this.props.awards.length / prevState.perPage)
+    }));
+  };
   async componentDidMount() {
-    console.log('awards did mount', this.props.match.params);
-
     await this.props.getAllAwards();
-
     this.pagination();
     if (this.state.dataAvailable) {
       this.timer = setTimeout(
@@ -75,55 +86,8 @@ class AllAwards extends Component {
       );
     }
   }
-  async componentDidUpdate(prevProps) {
-    console.log(prevProps);
-    if (this.props.match.params.category !== this.state.filteredView) {
-      this.setState((prevState) => ({
-        ...prevState,
-        filteredView: this.props.match.params.category
-      }));
-      await this.props.fetchFilteredAwards(this.props.match.params.category);
-    }
-    // console.log('props', this.props);
-    // if (prevProps.match.params.category !== this.props.match.params.category) {
-    //   this.setState((prevState) => ({
-    //     awardsLocal: this.props.awards,
-    //     currentPage: 0,
-    //     pageCount: Math.ceil(this.props.awards.length / prevState.perPage)
-    //   }));
-    // }
-    // current state is empty
-    // if (!this.props.awards.length && prevProps.awards.length) {
-    //   this.setState((prevState) => ({
-    //     awardsLocal: this.props.awards,
-    //     currentPage: 0,
-    //     pageCount: Math.ceil(this.props.awards.length / prevState.perPage)
-    //   }));
-    // } else if (this.props.awards.length && !prevProps.awards.length) {
-    //   // prev state is empty
-    //   this.setState((prevState) => ({
-    //     awardsLocal: this.props.awards,
-    //     currentPage: 0,
-    //     pageCount: Math.ceil(this.props.awards.length / prevState.perPage)
-    //   }));
-    // } else if (
-    //   this.props.awards.length &&
-    //   prevProps.awards.length &&
-    //   prevProps.awards[prevProps.awards.length - 1].id !==
-    //     this.props.awards[this.props.awards.length - 1].id
-    // ) {
-    //   // both states are full
-    //   this.setState((prevState) => ({
-    //     awardsLocal: this.props.awards,
-    //     currentPage: 0,
-    //     pageCount: Math.ceil(this.props.awards.length / prevState.perPage)
-    //   }));
-    // }
-  }
   render() {
     const {awardsLocal} = this.state;
-    console.log('all awards props---------------', this.props);
-    console.log('all awards STATE---------------', this.state);
     if (!awardsLocal.length) {
       return this.state.dataAvailable ? (
         <div className="loading-container">
@@ -138,17 +102,79 @@ class AllAwards extends Component {
           />
         </div>
       ) : (
-        <div className="loading-container">
-          <strong>sorry, no active awards available at this time</strong>
-          <Link to="/nominate">
-            Nominate someone who has performed a kind gesture!
-          </Link>
+        <div className="container">
+          <div id="award-filter-container">
+            <Nav>
+              <DropdownButton
+                id="dropdown-button-drop-down"
+                drop="down"
+                variant="info"
+                title="Select Award Category"
+                onSelect={(evtValue) => {
+                  this.handleFilter(evtValue);
+                }}
+              >
+                <Dropdown.Item eventKey="all">All</Dropdown.Item>
+                <Dropdown.Item eventKey="Open-Source">
+                  Open-Source
+                </Dropdown.Item>
+                <Dropdown.Item eventKey="Community">Community</Dropdown.Item>
+                <Dropdown.Item eventKey="Lifetime of Awesome">
+                  Lifetime of Awesome
+                </Dropdown.Item>
+                <Dropdown.Item eventKey="Health and Wellness">
+                  Health and Wellness
+                </Dropdown.Item>
+                <Dropdown.Item eventKey="Volunteer">Volunteer</Dropdown.Item>
+                <Dropdown.Item eventKey="Animals">Animals</Dropdown.Item>
+                <Dropdown.Item eventKey="Heroic Act">Heroic Act</Dropdown.Item>
+                <Dropdown.Item eventKey="Enviornment">
+                  Enviornment
+                </Dropdown.Item>
+                <Dropdown.Item eventKey="Activism">Activism</Dropdown.Item>
+              </DropdownButton>
+            </Nav>
+          </div>
+          <div className="loading-container">
+            <strong>sorry, no active awards available at this time</strong>
+            <Link to="/nominate">
+              Nominate someone who has performed a kind gesture!
+            </Link>
+          </div>
         </div>
       );
     }
 
     return (
       <div className="container">
+        <div id="award-filter-container">
+          <Nav>
+            <DropdownButton
+              id="dropdown-button-drop-down"
+              drop="down"
+              variant="info"
+              title="Select Award Category"
+              onSelect={(evtValue) => {
+                this.handleFilter(evtValue);
+              }}
+            >
+              <Dropdown.Item eventKey="all">All</Dropdown.Item>
+              <Dropdown.Item eventKey="Open-Source">Open-Source</Dropdown.Item>
+              <Dropdown.Item eventKey="Community">Community</Dropdown.Item>
+              <Dropdown.Item eventKey="Lifetime of Awesome">
+                Lifetime of Awesome
+              </Dropdown.Item>
+              <Dropdown.Item eventKey="Health and Wellness">
+                Health and Wellness
+              </Dropdown.Item>
+              <Dropdown.Item eventKey="Volunteer">Volunteer</Dropdown.Item>
+              <Dropdown.Item eventKey="Animals">Animals</Dropdown.Item>
+              <Dropdown.Item eventKey="Heroic Act">Heroic Act</Dropdown.Item>
+              <Dropdown.Item eventKey="Enviornment">Enviornment</Dropdown.Item>
+              <Dropdown.Item eventKey="Activism">Activism</Dropdown.Item>
+            </DropdownButton>
+          </Nav>
+        </div>
         <div className="row flex-wrap">
           {awardsLocal.map((award) => (
             <div className="col-lg-6 p-3 award-card-container" key={award.id}>
