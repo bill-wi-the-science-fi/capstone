@@ -1,6 +1,6 @@
 const sgMail = require('@sendgrid/mail');
 const axios = require('axios');
-const SENDGRID_API_KEY_SECRET = require('../../secrets');
+const {SENDGRID_API_KEY_SECRET} = require('../../secrets');
 sgMail.setApiKey(SENDGRID_API_KEY_SECRET);
 
 const sendEmail = (
