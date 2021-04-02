@@ -43,7 +43,7 @@ class HomeLanding extends Component {
               <Carousel fade>
                 <Carousel.Item>
                   <img
-                    className="d-block w-100"
+                    className="home-carousel d-block w-100"
                     src="https://cdn.stocksnap.io/img-thumbs/960w/alone-background_TJSWWAXG9T.jpg"
                     alt="First slide"
                   />
@@ -57,7 +57,7 @@ class HomeLanding extends Component {
                 </Carousel.Item>
                 <Carousel.Item>
                   <img
-                    className="d-block w-100"
+                    className="home-carousel d-block w-100"
                     src="https://cdn.stocksnap.io/img-thumbs/960w/hipster-man_Y7VURRDV8Q.jpg"
                     alt="Second slide"
                   />
@@ -69,7 +69,7 @@ class HomeLanding extends Component {
                 </Carousel.Item>
                 <Carousel.Item>
                   <img
-                    className="d-block w-100"
+                    className="home-carousel d-block w-100"
                     src="https://cdn.stocksnap.io/img-thumbs/960w/lgbtq-person_PA4GTSVKVB.jpg"
                     alt="Third slide"
                   />
@@ -167,8 +167,9 @@ class HomeLanding extends Component {
                 </p>
               </Jumbotron>
             </div>
-            <div className="col-md-5">
+            <div className="col-md-5 p-1">
               <Image
+                className="home-image"
                 src="https://i.pinimg.com/564x/93/f6/d6/93f6d6cc10039a46c5ada9fede57585d.jpg"
                 rounded
               />

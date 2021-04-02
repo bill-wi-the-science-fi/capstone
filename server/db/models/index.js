@@ -28,63 +28,63 @@ User.hasMany(Transaction)
 Transaction.belongsTo(User)
 
 // These will print all magic methods for a model!
-const userModel = User
-console.log('\n\nUser model can use:\n\n')
-for (let assoc of Object.keys(userModel.associations)) {
-  for (let accessor of Object.keys(userModel.associations[assoc].accessors)) {
-    console.log(
-      userModel.name +
-        '.' +
-        userModel.associations[assoc].accessors[accessor] +
-        '()'
-    )
-  }
-}
+// const userModel = User
+// console.log('\n\nUser model can use:\n\n')
+// for (let assoc of Object.keys(userModel.associations)) {
+//   for (let accessor of Object.keys(userModel.associations[assoc].accessors)) {
+//     console.log(
+//       userModel.name +
+//         '.' +
+//         userModel.associations[assoc].accessors[accessor] +
+//         '()'
+//     )
+//   }
+// }
 
-// These will print all magic methods for a model!
-const awardModel = Award
-console.log('\n\nAward model can use:\n\n')
-for (let assoc of Object.keys(awardModel.associations)) {
-  for (let accessor of Object.keys(awardModel.associations[assoc].accessors)) {
-    console.log(
-      awardModel.name +
-        '.' +
-        awardModel.associations[assoc].accessors[accessor] +
-        '()'
-    )
-  }
-}
+// // These will print all magic methods for a model!
+// const awardModel = Award
+// console.log('\n\nAward model can use:\n\n')
+// for (let assoc of Object.keys(awardModel.associations)) {
+//   for (let accessor of Object.keys(awardModel.associations[assoc].accessors)) {
+//     console.log(
+//       awardModel.name +
+//         '.' +
+//         awardModel.associations[assoc].accessors[accessor] +
+//         '()'
+//     )
+//   }
+// }
 
-// These will print all magic methods for a model!
-const transactionModel = Transaction
-console.log('\n\nTransaction model can use:\n\n')
-for (let assoc of Object.keys(transactionModel.associations)) {
-  for (let accessor of Object.keys(
-    transactionModel.associations[assoc].accessors
-  )) {
-    console.log(
-      transactionModel.name +
-        '.' +
-        transactionModel.associations[assoc].accessors[accessor] +
-        '()'
-    )
-  }
-}
+// // These will print all magic methods for a model!
+// const transactionModel = Transaction
+// console.log('\n\nTransaction model can use:\n\n')
+// for (let assoc of Object.keys(transactionModel.associations)) {
+//   for (let accessor of Object.keys(
+//     transactionModel.associations[assoc].accessors
+//   )) {
+//     console.log(
+//       transactionModel.name +
+//         '.' +
+//         transactionModel.associations[assoc].accessors[accessor] +
+//         '()'
+//     )
+//   }
+// }
 
-const nominationModel = Nomination
-console.log('\n\nNomination model can use:\n\n')
-for (let assoc of Object.keys(nominationModel.associations)) {
-  for (let accessor of Object.keys(
-    nominationModel.associations[assoc].accessors
-  )) {
-    console.log(
-      nominationModel.name +
-        '.' +
-        nominationModel.associations[assoc].accessors[accessor] +
-        '()'
-    )
-  }
-}
+// const nominationModel = Nomination
+// console.log('\n\nNomination model can use:\n\n')
+// for (let assoc of Object.keys(nominationModel.associations)) {
+//   for (let accessor of Object.keys(
+//     nominationModel.associations[assoc].accessors
+//   )) {
+//     console.log(
+//       nominationModel.name +
+//         '.' +
+//         nominationModel.associations[assoc].accessors[accessor] +
+//         '()'
+//     )
+//   }
+// }
 
 module.exports = {
   User,
