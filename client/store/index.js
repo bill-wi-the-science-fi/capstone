@@ -8,6 +8,7 @@ import awards from './awards';
 import singleAward from './singleAward';
 import nominate from './nominate';
 import contract from './contract';
+import transactions from './transactions';
 import singleUser from './singleUser';
 
 const reducer = combineReducers({
@@ -32,6 +33,7 @@ export * from './singleUser';
 export * from './awards';
 export * from './singleAward';
 export * from './nominate';
+export * from './transactions';
 
 /*
 store =
