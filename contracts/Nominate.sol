@@ -13,7 +13,6 @@ pragma solidity >=0.7.0 <0.8.0;
 *
 * v11 --------------------------------------------------------------------------------------------
 * ToDo --------------------------------------------------------------------------------------------
-* remove withinLimit modifier -> currently would never be able to take funds designated for award from SC (even though there should never be more than the limit allowed)
 * check for sufficient balance on SC before deactivating an award (before distributing funds)
 
 */
@@ -100,10 +99,14 @@ contract Nominate {
           deactivateAward(_awardId);
       }
   }
-  function deactivateAward(uint _awardId) public withinLimit(_awardId) awardExist(_awardId) {
+
+function deactivateAward(uint _awardId) public awardExist(_awardId) {
+      //donationTotal back to 0
+      uint amount = allAwards[_awardId].donationTotal;
+      allAwards[_awardId].donationTotal = 0;
 
       // execute distribution of donations (amount sent to recipient == amount donated to respective award)
-      allAwards[_awardId].recipientAddress.transfer(allAwards[_awardId].donationTotal);
+      allAwards[_awardId].recipientAddress.transfer(amount);
       // emit distribution
       emit Award_Distributed(allAwards[_awardId].recipientAddress, address(this), allAwards[_awardId].donationTotal, _awardId);
 
@@ -112,9 +115,8 @@ contract Nominate {
       // emit award deactivated
       emit Award_Deactivated(allAwards[_awardId].recipientAddress, address(this), allAwards[_awardId].donationTotal, _awardId);
 
-      //donationTotal back to 0
-      allAwards[_awardId].donationTotal = 0;
   }
+
   function createAwardStruct(uint _awardId, address _nominatorAddress, address payable _recipientAddress, uint _donationLimit ) internal {
       Award memory newAward = Award ({
           recipientAddress: _recipientAddress,
@@ -149,11 +151,6 @@ contract Nominate {
   }
   modifier aboveMinimum () {
       require( msg.value > 0 ether, "please donate an amount greater than 0 ether");
-      _;
-  }
-  // used by DeactivateAward
-  modifier withinLimit (uint _awardId) {
-      require(allAwards[_awardId].donationTotal <= allAwards[_awardId].donationLimit, 'This award has donations that exceed the limit for distribution');
       _;
   }
   // does award exist?

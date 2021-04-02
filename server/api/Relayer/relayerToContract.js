@@ -1,4 +1,4 @@
-const Nominate = require('../../../client/contracts/Nominate.json')
+const Nominate = require('../../../build/contracts/Nominate.json')
 const abiNominate = Nominate.abi
 const nominateContractAddress = Nominate.networks[3].address
 const relayerAddress = '0x7714e9182799ce2f92b26e70c9cd55cd1b3c1d38'

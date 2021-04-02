@@ -17,7 +17,7 @@ export const Intro = () => {
 
       <div className="container pr-0 pl-0">
         <div className="row flex-wrap-reverse no-gutters">
-          <div className="col-md-8">
+          <div className="col-md-8 p-4">
             <h2>
               I've been nominated, and I have to get an app called MetaMask,
               what is that?
@@ -43,7 +43,7 @@ export const Intro = () => {
           </div>
           <div className="col-md-3 flex">
             <Image
-              className="about-img mt-5"
+              className="about-img md mt-5"
               src="https://blogs.airdropalert.com/wp-content/uploads/2018/10/metamask_featured.jpg"
             />
           </div>
@@ -53,11 +53,11 @@ export const Intro = () => {
         <div className="row mt-5 mb-5 flex-wrap no-gutters">
           <div className="col-md-3 flex">
             <Image
-              className="about-img mt-5"
+              className="about-img md mt-5"
               src="https://www.uktech.news/wp-content/uploads/2019/09/shutterstock_776426233-898x505.jpg"
             />
           </div>
-          <div className="col-md-8">
+          <div className="col-md-8 p-4">
             <h2>
               Woah there, I know Bitcoin, but what is the "Ethereum Network?"
             </h2>
@@ -82,7 +82,7 @@ export const Intro = () => {
       </div>
       <div className="container pr-0 pl-0">
         <div className="row flex-wrap-reverse no-gutters">
-          <div className="col-md-8">
+          <div className="col-md-8 p-4">
             <h2>Really, do I have to ask about Smart Contracts too?</h2>
             <p>Sorry! Smart contracts 101!</p>
             <p>
@@ -104,7 +104,7 @@ export const Intro = () => {
           </div>
           <div className="col-md-3 flex">
             <Image
-              className="about-img mt-5"
+              className="about-img md mt-5"
               src="https://youteam.io/blog/wp-content/uploads/2018/04/image-e1523955910900.png"
             />
           </div>
