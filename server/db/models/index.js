@@ -1,7 +1,7 @@
-const User = require('./user')
-const Transaction = require('./transaction')
-const Award = require('./award')
-const Nomination = require('./nomination')
+const User = require('./user');
+const Transaction = require('./transaction');
+const Award = require('./award');
+const Nomination = require('./nomination');
 
 /**
  * If we had any associations to make, this would be a great place to put them!
@@ -17,15 +17,15 @@ const Nomination = require('./nomination')
  * instead of: const User = require('../db/models/user')
  */
 
-User.belongsToMany(User, {as: 'recipient', through: 'nomination'})
+User.belongsToMany(User, {as: 'recipient', through: 'nomination'});
 
-Nomination.hasMany(Award, {foreignKey: 'pairId'})
+Nomination.hasMany(Award, {foreignKey: 'pairId'});
 
-Award.hasMany(Transaction)
-Transaction.belongsTo(Award)
+Award.hasMany(Transaction);
+Transaction.belongsTo(Award);
 
-User.hasMany(Transaction)
-Transaction.belongsTo(User)
+User.hasMany(Transaction);
+Transaction.belongsTo(User);
 
 // These will print all magic methods for a model!
 // const userModel = User
@@ -91,4 +91,4 @@ module.exports = {
   Transaction,
   Award,
   Nomination
-}
+};

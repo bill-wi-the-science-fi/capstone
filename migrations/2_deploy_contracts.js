@@ -1,5 +1,5 @@
-var Nominate = artifacts.require('Nominate')
+var Nominate = artifacts.require('Nominate');
 module.exports = function (deployer) {
-  deployer.deploy(Nominate)
+  deployer.deploy(Nominate);
   // Additional contracts can be deployed here
-}
+};

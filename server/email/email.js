@@ -1,7 +1,7 @@
-const sgMail = require('@sendgrid/mail')
-const axios = require('axios')
-const SENDGRID_API_KEY_SECRET = require('../../secrets')
-sgMail.setApiKey(SENDGRID_API_KEY_SECRET)
+const sgMail = require('@sendgrid/mail');
+const axios = require('axios');
+const SENDGRID_API_KEY_SECRET = require('../../secrets');
+sgMail.setApiKey(SENDGRID_API_KEY_SECRET);
 
 const sendEmail = (
   recipientEmail,
@@ -367,7 +367,7 @@ const sendEmail = (
         type: 'text/html'
       }
     ]
-  })
+  });
   const config = {
     method: 'post',
     url: 'https://api.sendgrid.com/v3/mail/send',
@@ -376,15 +376,17 @@ const sendEmail = (
       'Content-Type': 'application/json'
     },
     data: data
-  }
+  };
   axios(config)
     .then(function (response) {
-      // console.log(response)
-      console.log(response.status)
+      console.log(response.status);
     })
     .catch(function (error) {
-      console.log('There was an error sending your email', error)
-    })
-}
+      console.log(
+        'There was an error sending the email. Status:',
+        error.response.status
+      );
+    });
+};
 
-module.exports = sendEmail
+module.exports = sendEmail;
