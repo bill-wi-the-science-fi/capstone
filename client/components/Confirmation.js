@@ -1,8 +1,6 @@
-
-import React from 'react'
-import {Card, Row} from 'react-bootstrap'
-import {connect} from 'react-redux'
-
+import React from 'react';
+import {Card, Row} from 'react-bootstrap';
+import {connect} from 'react-redux';
 
 /**
  * COMPONENT
@@ -10,7 +8,7 @@ import {connect} from 'react-redux'
 
 export const Confirmation = (props) => {
   const {previousTransaction, pendingTransaction} = props.transactions;
-  const {hash, award} = pendingTransaction;
+  const {hash, award, imageUrl} = pendingTransaction;
 
   if (award && Object.keys(pendingTransaction).length) {
     if (!Object.keys(previousTransaction).length) {
@@ -20,15 +18,11 @@ export const Confirmation = (props) => {
             className="col-lg-12 p-3 justify-content-center"
             key={award.award_id}
           >
-
             <Row className="m-3 justify-content-center">
               <h2>Your donation is pending approval!</h2>
             </Row>
             <Row className="m-3 justify-content-center">
-              <img
-                className="confirmation-img rounded"
-                src={award.award_imageUrl}
-              />
+              <img className="confirmation-img rounded" src={imageUrl} />
             </Row>
             <Row className="m-3 justify-content-center">
               <p>
@@ -57,7 +51,6 @@ export const Confirmation = (props) => {
                 </a>
               </p>
             </Row>
-
           </div>
         </div>
       );

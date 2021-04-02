@@ -14,6 +14,7 @@ import {
   newTransaction,
   clearTransaction
 } from '../store';
+import {storage} from '../firebase/index';
 
 const regEx = /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/;
 // put in common
@@ -39,7 +40,7 @@ const schema = yup.object().shape({
   donationLimit: yup.number().required().positive(),
   title: yup.string().required(),
   description: yup.string().required(),
-  file: yup.mixed().required()
+  file: yup.mixed()
 });
 
 class NominateForm extends Component {
@@ -92,7 +93,8 @@ class NominateForm extends Component {
     recipientAddress,
     amountOfDonation,
     recipientEmail,
-    donationLimit
+    donationLimit,
+    imgUrl
   ) => {
     try {
       const {accounts, contract, web3} = this.state;
@@ -107,7 +109,8 @@ class NominateForm extends Component {
           await this.props.newTransaction({
             status: 'pending',
             hash: hash,
-            award: awardId
+            award: awardId,
+            imageUrl: imgUrl
           });
           // similar behavior as an HTTP redirect
           this.props.history.push('/confirmation');
@@ -144,42 +147,67 @@ class NominateForm extends Component {
     formValues.nominatorId = this.props.signedInUser.id;
     const donationAmountUSD = +formValues.donationTotal;
     const donationLimitUSD = +formValues.donationLimit;
-    try {
-      const donationAmountETH = (
-        await this.props.getPriceConversion(donationAmountUSD)
-      ).toString();
-      const donationLimitETH = (
-        await this.props.getPriceConversion(donationLimitUSD)
-      ).toString();
-      const formData = {
-        ...formValues,
-        donationTotal: this.state.web3.utils.toWei(donationAmountETH, 'ether'),
-        donationLimit: this.state.web3.utils.toWei(donationLimitETH, 'ether')
-      };
-      // formValues.donationTotal = this.state.web3.utils.toWei(
-      //   donationAmountETH,
-      //   'ether'
-      // )
-      // formValues.donationLimit = this.state.web3.utils.toWei(
-      //   donationLimitETH,
-      //   'ether'
-      // )
-      await this.props.nominateUser(formData);
-      this.startAwardAndDonate(
-        this.props.nominate.awardId,
-        this.props.nominate.recipient,
-        formData.donationTotal,
-        formValues.email,
-        formData.donationLimit
-      );
-    } catch (error) {
-      console.log(error);
-    }
+    const {file} = this.state;
+    const uploadTask = storage.ref(`images/${file.name}`).put(file);
+    await uploadTask.on(
+      'state_changed',
+      () => {},
+      (error) => {
+        console.log(error);
+      },
+      () =>
+        storage
+          .ref('images')
+          .child(file.name)
+          .getDownloadURL()
+          .then(async (url) => {
+            formValues.imgUrl = url;
+
+            try {
+              const donationAmountETH = (
+                await this.props.getPriceConversion(donationAmountUSD)
+              ).toString();
+              const donationLimitETH = (
+                await this.props.getPriceConversion(donationLimitUSD)
+              ).toString();
+              const formData = {
+                ...formValues,
+                donationTotal: this.state.web3.utils.toWei(
+                  donationAmountETH,
+                  'ether'
+                ),
+                donationLimit: this.state.web3.utils.toWei(
+                  donationLimitETH,
+                  'ether'
+                )
+              };
+              // formValues.donationTotal = this.state.web3.utils.toWei(
+              //   donationAmountETH,
+              //   'ether'
+              // )
+              // formValues.donationLimit = this.state.web3.utils.toWei(
+              //   donationLimitETH,
+              //   'ether'
+              // )
+              await this.props.nominateUser(formData);
+              this.startAwardAndDonate(
+                this.props.nominate.awardId,
+                this.props.nominate.recipient,
+                formData.donationTotal,
+                formValues.email,
+                formData.donationLimit,
+                formData.imgUrl
+              );
+            } catch (error) {
+              console.log(error);
+            }
+          })
+    );
   }
   handleImage(e) {
     e.persist();
     if (e.target.files[0]) {
-      console.log('hi', e.target.files[0]);
+      this.setState({file: e.target.files[0]});
     }
   }
   render() {
@@ -300,7 +328,6 @@ class NominateForm extends Component {
               </Form.Group>
               <Form.File
                 className="position-relative"
-                required
                 name="file"
                 label="File"
                 onChange={(e) => this.handleImage(e)}
