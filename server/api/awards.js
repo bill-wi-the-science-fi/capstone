@@ -22,6 +22,7 @@ router.get('/', async (req, res, next) => {
 router.get('/filter/:category', async (req, res, next) => {
   try {
     const {category} = req.params
+    console.log(category)
     const awards = await Award.findAll({
       where: {
         open: 'open',
