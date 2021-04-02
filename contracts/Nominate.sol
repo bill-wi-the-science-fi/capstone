@@ -11,7 +11,7 @@ pragma solidity >=0.7.0 <0.8.0;
 * check if recipient address is default or has been set
 * platform pays gas fee WHEN RECIPIENT SETS ADDRESS
 *
-* v11 --------------------------------------------------------------------------------------------
+* v13 --------------------------------------------------------------------------------------------
 * ToDo --------------------------------------------------------------------------------------------
 * check for sufficient balance on SC before deactivating an award (before distributing funds)
 
@@ -21,12 +21,14 @@ contract Nominate {
    uint internal donationLimitValue;
    uint internal range;
    uint8 awardDurationDays;
+   address relayerAddress;
 
    constructor() {
       owner = msg.sender;
       donationLimitValue = 5 ether;
       range = 0.005 ether;
       awardDurationDays = 14;
+      relayerAddress = 0x7714E9182799cE2f92B26E70c9CD55cD1b3c1d38;
    }
 
    //**struct are like models in dbs, we can make instances of the Award Struct each time a person is nominated
@@ -41,7 +43,9 @@ contract Nominate {
 
    //**all awards will be our data structure. it is an object with they key as the award id, and the information of the award struct as the pair in key-pair
   mapping(uint => Award) public allAwards;
-
+  function setRelayerAddress (address _newRelayerAddress) public onlyOwner() {
+      relayerAddress = _newRelayerAddress;
+  }
   function donateFunds (uint _awardId) public payable aboveMinimum() awardExist(_awardId) donationUnderLimit (_awardId)  {
       require(allAwards[_awardId].recipientAddress != allAwards[_awardId].nominatorAddress, 'this award can not accept any donations until recipient address has been set');
       // add donation amount to award
@@ -69,14 +73,17 @@ contract Nominate {
   }
   //Notes--This function is invoked to set the award winners address
   function setRecipient(uint _awardId, address payable _recipientAddress) public awardExist(_awardId) {
+      require(msg.sender == relayerAddress, 'msg.sender is not the designated sender for setRecipient');
       //check to see if award id in the object if not reject donation….I.e. person tries to claim award after its expired
       //modifier to check if there is an award
       //set the award
       allAwards[_awardId].recipientAddress = _recipientAddress;
       //allAwards[_awardId].recipientAddress = msg.sender; // attached recipientAddress to .send()
       // allAwards[_awardId].donationTotal += msg.value; // would an excess amount be sent to pay for gas fee?
+      emit Set_Recipient(_recipientAddress, _awardId);
   }
   function setRecipients(uint[] memory _awardIdList, address payable _recipientAddress) public {
+      require(msg.sender == relayerAddress, 'msg.sender is not the designated sender for setRecipient');
       for (uint i = 0; i < _awardIdList.length; i++) {
           if (allAwards[_awardIdList[i]].active) {
               allAwards[_awardIdList[i]].recipientAddress = _recipientAddress;
@@ -99,8 +106,7 @@ contract Nominate {
           deactivateAward(_awardId);
       }
   }
-
-function deactivateAward(uint _awardId) public awardExist(_awardId) {
+  function deactivateAward(uint _awardId) public awardExist(_awardId) {
       //donationTotal back to 0
       uint amount = allAwards[_awardId].donationTotal;
       allAwards[_awardId].donationTotal = 0;
@@ -114,9 +120,7 @@ function deactivateAward(uint _awardId) public awardExist(_awardId) {
       allAwards[_awardId].active = false;
       // emit award deactivated
       emit Award_Deactivated(allAwards[_awardId].recipientAddress, address(this), allAwards[_awardId].donationTotal, _awardId);
-
   }
-
   function createAwardStruct(uint _awardId, address _nominatorAddress, address payable _recipientAddress, uint _donationLimit ) internal {
       Award memory newAward = Award ({
           recipientAddress: _recipientAddress,
@@ -158,6 +162,10 @@ function deactivateAward(uint _awardId) public awardExist(_awardId) {
       require(allAwards[_awardId].active, 'award is not active');
       _;
   }
+  modifier onlyOwner () {
+      require( msg.sender == owner, 'only the owner may set the relayer address');
+      _;
+  }
 
   // Events Emitters -----------------------------------------------------------------------------------------------------
   // the "index" keyword lets the log be filtered by those parameters
@@ -185,5 +193,8 @@ function deactivateAward(uint _awardId) public awardExist(_awardId) {
       uint _value,
       uint _awardId
   );
+  event Set_Recipient (
+      address indexed _newRecipient,
+      uint _awardId
+  );
 }
-

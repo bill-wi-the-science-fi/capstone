@@ -3,6 +3,51 @@
 const db = require('../server/db');
 const {User, Nomination, Transaction} = require('../server/db/models');
 
+// async function seed() {
+//   await db.sync({force: true});
+//   console.log('db synced!');
+//   await User.bulkCreate([
+//     {
+//       email: 'atunamelt@email.com',
+//       firstName: 'tuna',
+//       lastName: 'melt',
+//       password: '123',
+//       ethPublicAddress: '0x76a992fdc12221DEade9b0c299C3deDde5414f7d',
+//       imgUrl:
+//         'https://www.pinclipart.com/picdir/middle/395-3956920_free-download-jake-the-dog-finn-the-human.png',
+//       pin: '215019'
+//     },
+//     {
+//       email: 'viral@aol.com',
+//       firstName: 'Viral',
+//       lastName: 'Patel',
+//       password: '123',
+//       ethPublicAddress: '0x7Fe1759649DbAAB7ef53543C9896C12cf30883f7',
+//       pin: '215019'
+//     },
+//     {
+//       email: 'alanowatson@gmail.com',
+//       firstName: 'Alan',
+//       lastName: 'Watson',
+//       password: 'Ether2TheMoon!',
+//       ethPublicAddress: '0x4c5f05721bbcfabec7a5a2f58760d0a0ef20d0e6',
+//       imgUrl:
+//         'https://tisch.nyu.edu/content/dam/tisch/clive-davis-institute/alanwatson_crop.jpg',
+//       pin: '230419'
+//     },
+//     {
+//       email: 'alpay@gmail.com',
+//       firstName: 'Alpay',
+//       lastName: 'Aldemir',
+//       password: '123',
+//       ethPublicAddress: '0x7E797cEE6176283375A7b5975493F4fB36b54777',
+//       imgUrl:
+//         'https://tisch.nyu.edu/content/dam/tisch/clive-davis-institute/alanwatson_crop.jpg',
+//       pin: '230419'
+//     }
+//   ]);
+// }
+
 async function seed() {
   await db.sync({force: true});
   console.log('db synced!');
@@ -134,6 +179,28 @@ async function seed() {
     donationLimit: '7000000000000000000',
     donationTotal: '1000000000000000000'
   });
+  let maybeAward6 = await throughRow4.createAward({
+    title: 'So... is this a dog or a Hyena',
+    description:
+      'We have an unresolved group debate on what this animal actully was... Vote "Dog" with 2 ETH or Vote "Hyena" with 1 ETH',
+    donationLimit: '7000000000000000000',
+    donationTotal: '1000000000000000000'
+  });
+  let maybeAward7 = await throughRow4.createAward({
+    title: 'So... is this a dog or a Hyena',
+    description:
+      'We have an unresolved group debate on what this animal actully was... Vote "Dog" with 2 ETH or Vote "Hyena" with 1 ETH',
+    donationLimit: '7000000000000000000',
+    donationTotal: '1000000000000000000'
+  });
+  let maybeAward8 = await throughRow4.createAward({
+    title: 'So... is this a dog or a Hyena',
+    description:
+      'We have an unresolved group debate on what this animal actully was... Vote "Dog" with 2 ETH or Vote "Hyena" with 1 ETH',
+    donationLimit: '7000000000000000000',
+    donationTotal: '1000000000000000000'
+  });
+
   await alansTrx.setAward(maybeAward4);
   await alansTrx.setUser(alan);
   console.log(`seeded ${users.length} users`);
