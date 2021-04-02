@@ -46,6 +46,7 @@
     "defender-relay-client": "^1.5.0",
     "express": "^4.16.4",
     "express-session": "^1.15.1",
+    "firebase": "^8.3.2",
     "formik": "^2.2.6",
     "formik-yup": "0.0.5",
     "history": "^4.9.0",

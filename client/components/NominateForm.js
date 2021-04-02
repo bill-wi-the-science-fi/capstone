@@ -38,7 +38,8 @@ const schema = yup.object().shape({
   donationTotal: yup.number().required().positive(),
   donationLimit: yup.number().required().positive(),
   title: yup.string().required(),
-  description: yup.string().required()
+  description: yup.string().required(),
+  file: yup.mixed().required()
 })
 
 class NominateForm extends Component {
@@ -47,6 +48,7 @@ class NominateForm extends Component {
 
     this.onSubmit = this.onSubmit.bind(this)
     this.startAwardAndDonate = this.startAwardAndDonate.bind(this)
+    this.handleImage = this.handleImage.bind(this)
   }
   async componentDidMount() {
     this.props.clearTransaction()
@@ -177,7 +179,12 @@ class NominateForm extends Component {
       console.log(error)
     }
   }
-
+  handleImage(e) {
+    e.persist()
+    if (e.target.files[0]) {
+      console.log('hi', e.target.files[0])
+    }
+  }
   render() {
     return (
       <Formik
@@ -191,6 +198,7 @@ class NominateForm extends Component {
           donationTotal: '',
           donationLimit: '',
           title: '',
+          file: null,
           description: ''
           // file: null
         }}
@@ -295,6 +303,17 @@ class NominateForm extends Component {
                   }
                 />
               </Form.Group>
+              <Form.File
+                className="position-relative"
+                required
+                name="file"
+                label="File"
+                onChange={(e) => this.handleImage(e)}
+                isInvalid={!!errors.file}
+                feedback={errors.file}
+                id="validationFormik107"
+                feedbackTooltip
+              />
               <Form.Group as={Col} md="4" controlId="validationFormik103">
                 <Form.Label>Award Description</Form.Label>
                 <Form.Control
