@@ -1,5 +1,5 @@
-const Sequelize = require('sequelize')
-const db = require('../db')
+const Sequelize = require('sequelize');
+const db = require('../db');
 
 const Award = db.define('award', {
   title: {
@@ -54,6 +54,6 @@ const Award = db.define('award', {
     unique: false,
     allowNull: false
   }
-})
+});
 
-module.exports = Award
+module.exports = Award;

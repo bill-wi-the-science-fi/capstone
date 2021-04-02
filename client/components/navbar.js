@@ -1,9 +1,9 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import {Link} from 'react-router-dom'
-import {connect} from 'react-redux'
-import {Navbar, Nav, Form, FormControl, Button} from 'react-bootstrap'
-import {logout} from '../store'
+import React from 'react';
+import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {Navbar, Nav, Form, FormControl, Button} from 'react-bootstrap';
+import {logout} from '../store';
 
 const NavbarBootstrap = ({handleClick, isLoggedIn, userId}) => {
   return (
@@ -54,8 +54,8 @@ const NavbarBootstrap = ({handleClick, isLoggedIn, userId}) => {
         </Nav>
       </Navbar.Collapse>
     </Navbar>
-  )
-}
+  );
+};
 
 /**
  * CONTAINER
@@ -64,18 +64,18 @@ const mapState = (state) => {
   return {
     isLoggedIn: !!state.signedInUser.id,
     userId: state.signedInUser.id
-  }
-}
+  };
+};
 
 const mapDispatch = (dispatch) => {
   return {
     handleClick() {
-      dispatch(logout())
+      dispatch(logout());
     }
-  }
-}
+  };
+};
 
-export default connect(mapState, mapDispatch)(NavbarBootstrap)
+export default connect(mapState, mapDispatch)(NavbarBootstrap);
 
 /**
  * PROP TYPES

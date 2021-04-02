@@ -1,14 +1,14 @@
-import React from 'react'
-import {Card} from 'react-bootstrap'
-import {connect} from 'react-redux'
+import React from 'react';
+import {Card} from 'react-bootstrap';
+import {connect} from 'react-redux';
 
 /**
  * COMPONENT
  */
 
 export const Confirmation = (props) => {
-  const {previousTransaction, pendingTransaction} = props.transactions
-  const {hash, award} = pendingTransaction
+  const {previousTransaction, pendingTransaction} = props.transactions;
+  const {hash, award} = pendingTransaction;
 
   if (award && Object.keys(pendingTransaction).length) {
     if (!Object.keys(previousTransaction).length) {
@@ -50,7 +50,7 @@ export const Confirmation = (props) => {
             </Card>
           </div>
         </div>
-      )
+      );
     } else
       return (
         <div className="text-center">
@@ -75,11 +75,11 @@ export const Confirmation = (props) => {
             </span>
           </div>
         </div>
-      )
+      );
   } else {
-    return <div>You currently have no donations</div>
+    return <div>You currently have no donations</div>;
   }
-}
+};
 
 /**
  * CONTAINER
@@ -87,7 +87,7 @@ export const Confirmation = (props) => {
 const mapState = (state) => {
   return {
     transactions: state.transactions
-  }
-}
+  };
+};
 
-export default connect(mapState, null)(Confirmation)
+export default connect(mapState, null)(Confirmation);

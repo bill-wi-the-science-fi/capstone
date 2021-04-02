@@ -1,12 +1,12 @@
-import React, {Component} from 'react'
-import {Button, Col, Form} from 'react-bootstrap'
-import {connect} from 'react-redux'
-import {getSingleAward, editSingleAward, clearSingleAward} from '../store'
-import ReactLoading from 'react-loading'
-import {Link} from 'react-router-dom'
+import React, {Component} from 'react';
+import {Button, Col, Form} from 'react-bootstrap';
+import {connect} from 'react-redux';
+import {getSingleAward, editSingleAward, clearSingleAward} from '../store';
+import ReactLoading from 'react-loading';
+import {Link} from 'react-router-dom';
 
-import {Formik} from 'formik'
-import * as yup from 'yup'
+import {Formik} from 'formik';
+import * as yup from 'yup';
 
 const schema = yup.object().shape({
   firstName: yup.string().required(),
@@ -28,16 +28,16 @@ const schema = yup.object().shape({
   title: yup.string().required(),
   description: yup.string().required(),
   imageUrl: yup.string()
-})
+});
 
 class EditAwards extends Component {
   constructor() {
-    super()
-    this.state = {dataAvailable: true}
-    this.onSubmit = this.onSubmit.bind(this)
+    super();
+    this.state = {dataAvailable: true};
+    this.onSubmit = this.onSubmit.bind(this);
   }
   async componentDidMount() {
-    await this.props.getSingleAward(this.props.match.params.id)
+    await this.props.getSingleAward(this.props.match.params.id);
     if (this.state.dataAvailable) {
       this.timer = setTimeout(
         () =>
@@ -46,19 +46,19 @@ class EditAwards extends Component {
             dataAvailable: !state.dataAvailable
           })),
         5000
-      )
+      );
     }
   }
 
   componentWillUnmount() {
-    this.props.clearSingleAward()
+    this.props.clearSingleAward();
   }
   async onSubmit(formValues) {
     try {
-      await this.props.editSingleAward(this.props.match.params.id, formValues)
-      this.props.clearSingleAward()
+      await this.props.editSingleAward(this.props.match.params.id, formValues);
+      this.props.clearSingleAward();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
@@ -84,7 +84,7 @@ class EditAwards extends Component {
         <div className="loading-container">
           <strong>this award can not be editted</strong>
         </div>
-      )
+      );
     } else if (
       this.props.match.params.userId != this.props.signedInUser.id ||
       (this.props.singleAward.recipient_id != this.props.signedInUser.id &&
@@ -97,7 +97,7 @@ class EditAwards extends Component {
             <img src="/403-img.webp"></img>
           </div>
         </div>
-      )
+      );
     } else if (
       this.props.singleAward &&
       this.props.singleAward.recipient_firstName
@@ -109,7 +109,7 @@ class EditAwards extends Component {
         award_category,
         award_description,
         award_imageUrl
-      } = this.props.singleAward
+      } = this.props.singleAward;
       return (
         <Formik
           enableReinitialize
@@ -233,7 +233,7 @@ class EditAwards extends Component {
             </Form>
           )}
         </Formik>
-      )
+      );
     }
   }
 }
@@ -242,15 +242,15 @@ const mapState = (state) => {
   return {
     signedInUser: state.signedInUser,
     singleAward: state.singleAward
-  }
-}
+  };
+};
 
 const mapDispatch = (dispatch) => {
   return {
     getSingleAward: (id) => dispatch(getSingleAward(id)),
     editSingleAward: (id, award) => dispatch(editSingleAward(id, award)),
     clearSingleAward: () => dispatch(clearSingleAward())
-  }
-}
+  };
+};
 
-export default connect(mapState, mapDispatch)(EditAwards)
+export default connect(mapState, mapDispatch)(EditAwards);

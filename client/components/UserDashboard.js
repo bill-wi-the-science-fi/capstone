@@ -1,45 +1,45 @@
-import React, {Component} from 'react'
-import {Button, Card} from 'react-bootstrap'
-import {connect} from 'react-redux'
-import {getAllUserAwards, withdrawAward, getAllUserNoms} from '../store'
-import getWeb3 from '../common/getWeb3'
-import {Link} from 'react-router-dom'
-import Nominate from '../../build/contracts/Nominate.json'
-import Web3 from 'web3'
+import React, {Component} from 'react';
+import {Button, Card} from 'react-bootstrap';
+import {connect} from 'react-redux';
+import {getAllUserAwards, withdrawAward, getAllUserNoms} from '../store';
+import getWeb3 from '../common/getWeb3';
+import {Link} from 'react-router-dom';
+import Nominate from '../../build/contracts/Nominate.json';
+import Web3 from 'web3';
 
 // import ReactPaginate from 'react-paginate'
 //import ReactPaginate from 'react-paginate'
-import ReactLoading from 'react-loading'
+import ReactLoading from 'react-loading';
 
 /**
  * COMPONENT
  */
-const web3Global = new Web3()
+const web3Global = new Web3();
 
 class UserDashboard extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
       startAwardIndex: 0,
       awards: [],
       perPage: 4,
       currentPage: 0,
       dataAvailable: true
-    }
+    };
     // this.pagination = this.pagination.bind(this)
-    this.handlePageClick = this.handlePageClick.bind(this)
-    this.withdraw = this.withdraw.bind(this)
-    this.convertDonation = this.convertDonation.bind(this)
+    this.handlePageClick = this.handlePageClick.bind(this);
+    this.withdraw = this.withdraw.bind(this);
+    this.convertDonation = this.convertDonation.bind(this);
   }
 
   convertDonation(donation) {
-    return web3Global.utils.fromWei(donation, 'ether')
+    return web3Global.utils.fromWei(donation, 'ether');
   }
 
   //only contracts that are expired and not withdrawn will have this function
   async withdraw(e) {
     try {
-      e.persist()
+      e.persist();
       //invoking contract method that payouts
       // const contractTxn = await this.state.contract.methods
       //   .expireAward(e.target.value)
@@ -48,12 +48,12 @@ class UserDashboard extends Component {
       //     value: 0
       //   })
       //if transaction is accepted, we will update db award status
-      await this.props.withdrawAward({id: e.target.value, open: 'closed'})
+      await this.props.withdrawAward({id: e.target.value, open: 'closed'});
       //this.props.history.push('/user')
 
       //if transaction works, change db award status to closed
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
@@ -74,10 +74,10 @@ class UserDashboard extends Component {
   //when user clicks on next, previous, or a page buttton
   handlePageClick = (e) => {
     //page that is selected and the new starting point in the index of data
-    const {perPage} = this.state
+    const {perPage} = this.state;
 
-    const selectedPage = e.selected
-    const startAwardIndex = selectedPage * perPage
+    const selectedPage = e.selected;
+    const startAwardIndex = selectedPage * perPage;
 
     //setting new State with new information of awards, current page, and start index
     this.setState(
@@ -86,10 +86,10 @@ class UserDashboard extends Component {
         startAwardIndex: startAwardIndex
       },
       () => {
-        this.pagination()
+        this.pagination();
       }
-    )
-  }
+    );
+  };
 
   async componentDidMount() {
     try {
@@ -101,41 +101,41 @@ class UserDashboard extends Component {
               dataAvailable: !state.dataAvailable
             })),
           5000
-        )
+        );
       }
       //creates a web3 instance with metamask
-      const web3 = await getWeb3()
+      const web3 = await getWeb3();
 
       //grabs account information (public address)
-      const accounts = await web3.eth.getAccounts()
+      const accounts = await web3.eth.getAccounts();
       if (accounts) {
         //grabs network information that smart contract is on
-        const networkId = await web3.eth.net.getId()
+        const networkId = await web3.eth.net.getId();
         //const deployedNetwork = Nominate.networks[networkId];
-        const deployedNetwork = Nominate.networks[networkId]
+        const deployedNetwork = Nominate.networks[networkId];
         //create a contract instance
         const contract = new web3.eth.Contract(
           Nominate.abi,
           deployedNetwork && deployedNetwork.address
-        )
-        this.setState({contract, accounts})
+        );
+        this.setState({contract, accounts});
       }
       //grab all awards for a user, active, pending, or closed
-      await this.props.getAllUserAwards(this.props.signedInUser.id)
-      await this.props.getAllUserNoms(this.props.signedInUser.id)
+      await this.props.getAllUserAwards(this.props.signedInUser.id);
+      await this.props.getAllUserNoms(this.props.signedInUser.id);
 
-      this.setState({awards: this.props.awards})
+      this.setState({awards: this.props.awards});
 
       //paginate page
-      this.pagination()
+      this.pagination();
     } catch (err) {
-      console.error(err)
+      console.error(err);
     }
   }
 
   render() {
-    const {awards} = this.state
-    const {nominations} = this.props
+    const {awards} = this.state;
+    const {nominations} = this.props;
 
     if (this.props.loading) {
       return this.state.dataAvailable ? (
@@ -154,9 +154,9 @@ class UserDashboard extends Component {
         <div className="loading-container">
           <strong>no awards available at this time</strong>
         </div>
-      )
+      );
     }
-    const date = new Date()
+    const date = new Date();
     if (
       awards.length > 0 &&
       this.props.match.params.id == this.props.signedInUser.id
@@ -266,16 +266,16 @@ class UserDashboard extends Component {
             ))}
           </div>
         </div>
-      )
+      );
     } else if (this.props.match.params.id != this.props.signedInUser.id) {
-      return <div>Unauthorized Access</div>
+      return <div>Unauthorized Access</div>;
     } else {
       return (
         <div>
           You have not been nominated for your excellent work yet! Here are some
           charities to get started!
         </div>
-      )
+      );
     }
   }
 }
@@ -290,8 +290,8 @@ const mapState = (state) => {
 
     loading: state.awards.loading,
     signedInUser: state.signedInUser
-  }
-}
+  };
+};
 
 const mapDispatch = (dispatch) => {
   return {
@@ -299,7 +299,7 @@ const mapDispatch = (dispatch) => {
     getAllUserNoms: (id) => dispatch(getAllUserNoms(id)),
 
     withdrawAward: (info) => dispatch(withdrawAward(info))
-  }
-}
+  };
+};
 
-export default connect(mapState, mapDispatch)(UserDashboard)
+export default connect(mapState, mapDispatch)(UserDashboard);
