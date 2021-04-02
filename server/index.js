@@ -103,7 +103,7 @@ const createApp = () => {
   });
 };
 
-async function updateDb(event) {
+async function createTransactionInDB(event) {
   const {transactionHash, address, returnValues} = event;
   const smartContractAddress = address;
   const awardId = returnValues['3'];
@@ -146,14 +146,26 @@ async function updateDb(event) {
   await singleAward.update(updatesToAward);
 }
 
+async function deactivateAwardInDb(event) {
+  const awardId = event.returnValues['3'];
+  const singleAward = await Award.findOne({
+    where: {id: awardId}
+  });
+  await singleAward.update({open: 'closed'});
+}
+
 const initListener = () => {
   myContract.events
     .allEvents()
     .on('data', (event) => {
-      if (event.event === 'Emit_Funds_Donated') updateDb(event);
+      console.log('\n --------🚀 ', event.event, '\n\n');
+      console.log('smart contract event logged \n \n', event, '\n\n');
+      if (event.event === 'Emit_Funds_Donated') createTransactionInDB(event);
+      if (event.event === 'Award_Deactivated') deactivateAwardInDb(event);
     })
     .on('error', console.error);
 };
+
 // if this goes down , what next
 let contractListner = initListener();
 
