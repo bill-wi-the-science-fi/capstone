@@ -134,36 +134,6 @@ class SingleAward extends Component {
             </Row>
           </div>
         </Row>
-
-        {/* <Card className="m-3" border="success" style={{width: '60vw'}}>
-          <Card.Img variant="top" src={singleAward.award_imageUrl} />
-          <Card.Body>
-            <Card.Title>{singleAward.award_title}</Card.Title>
-            <Card.Text>{singleAward.award_description}</Card.Text>
-
-            <Card.Text>
-              Awarded to: {singleAward.recipient_firstName}{' '}
-              {singleAward.recipient_lastName}
-            </Card.Text>
-            <Card.Text>
-              Nominated by: {singleAward.giver_firstName}{' '}
-              {singleAward.giver_lastName}
-            </Card.Text>
-            <div className="container mb-4 text-center">
-              <DonateForm
-                awardId={`${singleAward.award_id}`}
-                history={this.props.history}
-                awardInfo={singleAward}
-              />
-            </div>
-            <Card.Text className="text-right">
-
-            </Card.Text>
-          </Card.Body>
-          <ShareButton
-            url={`https://pay-eth-forward.herokuapp.com/awards/${singleAward.award_id}`}
-          />
-        </Card> */}
       </div>
     );
   }
