@@ -19,6 +19,21 @@ router.get('/', async (req, res, next) => {
   }
 })
 
+router.get('/filter/:category', async (req, res, next) => {
+  try {
+    const {category} = req.params
+    const awards = await Award.findAll({
+      where: {
+        open: 'open',
+        category: category
+      }
+    })
+    res.status(200).send(awards)
+  } catch (error) {
+    next(error)
+  }
+})
+
 // get one award
 router.get('/:awardId', async (req, res, next) => {
   try {

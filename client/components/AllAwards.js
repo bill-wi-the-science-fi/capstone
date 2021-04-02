@@ -15,7 +15,7 @@ class AllAwards extends Component {
     super()
     this.state = {
       startAwardIndex: 0,
-      awards: [],
+      awardsLocal: [],
       perPage: 4,
       currentPage: 0,
       dataAvailable: true
@@ -33,7 +33,7 @@ class AllAwards extends Component {
     )
     //add to state how many pages, and the awards for current page
     this.setState((state) => ({
-      awards,
+      awardsLocal: awards,
       pageCount: Math.ceil(this.props.awards.length / state.perPage)
     }))
   }
@@ -71,11 +71,40 @@ class AllAwards extends Component {
       )
     }
   }
-
+  componentDidUpdate(prevProps) {
+    // current state is empty
+    if (!this.props.awards.length && prevProps.awards.length) {
+      this.setState((prevState) => ({
+        awardsLocal: this.props.awards,
+        currentPage: 0,
+        pageCount: Math.ceil(this.props.awards.length / prevState.perPage)
+      }))
+    } else if (this.props.awards.length && !prevProps.awards.length) {
+      // prev state is empty
+      this.setState((prevState) => ({
+        awardsLocal: this.props.awards,
+        currentPage: 0,
+        pageCount: Math.ceil(this.props.awards.length / prevState.perPage)
+      }))
+    } else if (
+      this.props.awards.length &&
+      prevProps.awards.length &&
+      prevProps.awards[prevProps.awards.length - 1].id !==
+        this.props.awards[this.props.awards.length - 1].id
+    ) {
+      // both states are full
+      this.setState((prevState) => ({
+        awardsLocal: this.props.awards,
+        currentPage: 0,
+        pageCount: Math.ceil(this.props.awards.length / prevState.perPage)
+      }))
+    }
+  }
   render() {
-    const {awards} = this.state
-
-    if (!awards.length) {
+    const {awardsLocal} = this.state
+    console.log('all awards props---------------', this.props)
+    console.log('all awards STATE---------------', this.state)
+    if (!awardsLocal.length) {
       return this.state.dataAvailable ? (
         <div className="loading-container">
           <div>
@@ -101,7 +130,7 @@ class AllAwards extends Component {
     return (
       <div className="container">
         <div className="row flex-wrap">
-          {awards.map((award) => (
+          {awardsLocal.map((award) => (
             <div className="col-lg-6 p-3 award-card-container" key={award.id}>
               <Card border="success" style={{width: '26rem'}}>
                 <Card.Img

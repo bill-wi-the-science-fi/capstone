@@ -6,8 +6,8 @@ import axios from 'axios'
 const GET_ALL_AWARDS = 'GET_ALL_AWARDS'
 const GET_ALL_USER_AWARDS = 'GET_ALL_USER_AWARDS'
 const GET_ALL_USER_NOMS = 'GET_ALL_USER_NOMS'
-
 const WITHDRAW_USER_AWARD = 'WITHDRAW_USER_AWARD'
+const FILTER_AWARDS = 'FILTER_AWARDS'
 /**
  * INITIAL STATE
  */
@@ -25,13 +25,31 @@ const awardslist = {
 const _getAllAwards = (awards) => ({type: GET_ALL_AWARDS, awards})
 const _getAllUserAwards = (awards) => ({type: GET_ALL_USER_AWARDS, awards})
 const _getAllUserNoms = (awards) => ({type: GET_ALL_USER_NOMS, awards})
-
 const _withdrawAward = (award) => ({type: WITHDRAW_USER_AWARD, award})
-
+const _getFilteredAwards = (filteredAwards) => ({
+  type: FILTER_AWARDS,
+  filteredAwards
+})
 /**
  * THUNK CREATORS
  */
-
+export const fetchFilteredAwards = (category) => {
+  return async (dispatch) => {
+    try {
+      if (category === 'all') {
+        const allAwards = (await axios.get('/api/awards')).data
+        dispatch(_getAllAwards(allAwards))
+      } else {
+        const filteredAwards = (
+          await axios.get(`/api/awards/filter/${category}`)
+        ).data
+        dispatch(_getFilteredAwards(filteredAwards))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
 export const getAllAwards = () => async (dispatch) => {
   try {
     const res = await axios.get('/api/awards') //figure out that later
@@ -78,6 +96,8 @@ export default function (state = awardslist, action) {
       return {...state, userAwards: action.awards, loading: false}
     case GET_ALL_USER_NOMS:
       return {...state, userNominations: action.awards, loading: false}
+    case FILTER_AWARDS:
+      return {...state, allAwards: action.filteredAwards}
     case WITHDRAW_USER_AWARD:
       return {
         ...state,
