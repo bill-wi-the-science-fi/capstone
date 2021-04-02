@@ -1,8 +1,8 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import {Link} from 'react-router-dom'
-import {withRouter} from 'react-router'
-import {connect} from 'react-redux'
+import React from 'react';
+import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
+import {withRouter, Redirect} from 'react-router';
+import {connect} from 'react-redux';
 import {
   Navbar,
   Nav,
@@ -11,8 +11,8 @@ import {
   Button,
   Dropdown,
   DropdownButton
-} from 'react-bootstrap'
-import {logout, fetchFilteredAwards} from '../store'
+} from 'react-bootstrap';
+import {logout, fetchFilteredAwards} from '../store';
 
 const NavbarBootstrap = (props, {handleClick, isLoggedIn, userId}) => {
   return (
@@ -62,9 +62,11 @@ const NavbarBootstrap = (props, {handleClick, isLoggedIn, userId}) => {
               drop="left"
               variant="info"
               title="Select Award Category"
-              onSelect={(evtValue) => props.fetchFilteredAwards(evtValue)}
+              onSelect={(evtValue) => {
+                props.history.push(`/awards/${evtValue}`);
+              }}
             >
-              <Dropdown.Item eventKey="all">All Awards</Dropdown.Item>
+              <Dropdown.Item eventKey="all">All</Dropdown.Item>
               <Dropdown.Item eventKey="Open-Source">Open-Source</Dropdown.Item>
               <Dropdown.Item eventKey="Community">Community</Dropdown.Item>
               <Dropdown.Item eventKey="Lifetime of Awesome">
@@ -85,8 +87,8 @@ const NavbarBootstrap = (props, {handleClick, isLoggedIn, userId}) => {
         )}
       </Navbar.Collapse>
     </Navbar>
-  )
-}
+  );
+};
 
 /**
  * CONTAINER
@@ -95,19 +97,19 @@ const mapState = (state) => {
   return {
     isLoggedIn: !!state.signedInUser.id,
     userId: state.signedInUser.id
-  }
-}
+  };
+};
 
 const mapDispatch = (dispatch) => {
   return {
     fetchFilteredAwards: (category) => dispatch(fetchFilteredAwards(category)),
     handleClick() {
-      dispatch(logout())
+      dispatch(logout());
     }
-  }
-}
+  };
+};
 
-export default withRouter(connect(mapState, mapDispatch)(NavbarBootstrap))
+export default withRouter(connect(mapState, mapDispatch)(NavbarBootstrap));
 
 /**
  * PROP TYPES

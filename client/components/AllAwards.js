@@ -1,10 +1,10 @@
-import React, {Component} from 'react'
-import {Button, Card} from 'react-bootstrap'
-import {connect} from 'react-redux'
-import {getAllAwards} from '../store'
-import {Link} from 'react-router-dom'
-import ReactPaginate from 'react-paginate'
-import ReactLoading from 'react-loading'
+import React, {Component} from 'react';
+import {Button, Card} from 'react-bootstrap';
+import {connect} from 'react-redux';
+import {getAllAwards, fetchFilteredAwards} from '../store';
+import {Link} from 'react-router-dom';
+import ReactPaginate from 'react-paginate';
+import ReactLoading from 'react-loading';
 
 /**
  * COMPONENT
@@ -12,38 +12,39 @@ import ReactLoading from 'react-loading'
 
 class AllAwards extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
       startAwardIndex: 0,
       awardsLocal: [],
       perPage: 4,
       currentPage: 0,
-      dataAvailable: true
-    }
-    this.pagination = this.pagination.bind(this)
-    this.handlePageClick = this.handlePageClick.bind(this)
+      dataAvailable: true,
+      filteredView: 'all'
+    };
+    this.pagination = this.pagination.bind(this);
+    this.handlePageClick = this.handlePageClick.bind(this);
   }
 
   pagination() {
-    const {perPage, startAwardIndex} = this.state
+    const {perPage, startAwardIndex} = this.state;
     //data for awards to display on page
     const awards = this.props.awards.slice(
       startAwardIndex,
       startAwardIndex + perPage
-    )
+    );
     //add to state how many pages, and the awards for current page
     this.setState((state) => ({
       awardsLocal: awards,
       pageCount: Math.ceil(this.props.awards.length / state.perPage)
-    }))
+    }));
   }
   //when user clicks on next, previous, or a page buttton
   handlePageClick = (e) => {
     //page that is selected and the new starting point in the index of data
-    const {perPage} = this.state
+    const {perPage} = this.state;
 
-    const selectedPage = e.selected
-    const startAwardIndex = selectedPage * perPage
+    const selectedPage = e.selected;
+    const startAwardIndex = selectedPage * perPage;
 
     //setting new State with new information of awards, current page, and start index
     this.setState(
@@ -52,14 +53,17 @@ class AllAwards extends Component {
         startAwardIndex: startAwardIndex
       },
       () => {
-        this.pagination()
+        this.pagination();
       }
-    )
-  }
+    );
+  };
 
   async componentDidMount() {
-    await this.props.getAllAwards()
-    this.pagination()
+    console.log('awards did mount', this.props.match.params);
+
+    await this.props.getAllAwards();
+
+    this.pagination();
     if (this.state.dataAvailable) {
       this.timer = setTimeout(
         () =>
@@ -68,42 +72,58 @@ class AllAwards extends Component {
             dataAvailable: !state.dataAvailable
           })),
         5000
-      )
+      );
     }
   }
-  componentDidUpdate(prevProps) {
-    // current state is empty
-    if (!this.props.awards.length && prevProps.awards.length) {
+  async componentDidUpdate(prevProps) {
+    console.log(prevProps);
+    if (this.props.match.params.category !== this.state.filteredView) {
       this.setState((prevState) => ({
-        awardsLocal: this.props.awards,
-        currentPage: 0,
-        pageCount: Math.ceil(this.props.awards.length / prevState.perPage)
-      }))
-    } else if (this.props.awards.length && !prevProps.awards.length) {
-      // prev state is empty
-      this.setState((prevState) => ({
-        awardsLocal: this.props.awards,
-        currentPage: 0,
-        pageCount: Math.ceil(this.props.awards.length / prevState.perPage)
-      }))
-    } else if (
-      this.props.awards.length &&
-      prevProps.awards.length &&
-      prevProps.awards[prevProps.awards.length - 1].id !==
-        this.props.awards[this.props.awards.length - 1].id
-    ) {
-      // both states are full
-      this.setState((prevState) => ({
-        awardsLocal: this.props.awards,
-        currentPage: 0,
-        pageCount: Math.ceil(this.props.awards.length / prevState.perPage)
-      }))
+        ...prevState,
+        filteredView: this.props.match.params.category
+      }));
+      await this.props.fetchFilteredAwards(this.props.match.params.category);
     }
+    // console.log('props', this.props);
+    // if (prevProps.match.params.category !== this.props.match.params.category) {
+    //   this.setState((prevState) => ({
+    //     awardsLocal: this.props.awards,
+    //     currentPage: 0,
+    //     pageCount: Math.ceil(this.props.awards.length / prevState.perPage)
+    //   }));
+    // }
+    // current state is empty
+    // if (!this.props.awards.length && prevProps.awards.length) {
+    //   this.setState((prevState) => ({
+    //     awardsLocal: this.props.awards,
+    //     currentPage: 0,
+    //     pageCount: Math.ceil(this.props.awards.length / prevState.perPage)
+    //   }));
+    // } else if (this.props.awards.length && !prevProps.awards.length) {
+    //   // prev state is empty
+    //   this.setState((prevState) => ({
+    //     awardsLocal: this.props.awards,
+    //     currentPage: 0,
+    //     pageCount: Math.ceil(this.props.awards.length / prevState.perPage)
+    //   }));
+    // } else if (
+    //   this.props.awards.length &&
+    //   prevProps.awards.length &&
+    //   prevProps.awards[prevProps.awards.length - 1].id !==
+    //     this.props.awards[this.props.awards.length - 1].id
+    // ) {
+    //   // both states are full
+    //   this.setState((prevState) => ({
+    //     awardsLocal: this.props.awards,
+    //     currentPage: 0,
+    //     pageCount: Math.ceil(this.props.awards.length / prevState.perPage)
+    //   }));
+    // }
   }
   render() {
-    const {awardsLocal} = this.state
-    console.log('all awards props---------------', this.props)
-    console.log('all awards STATE---------------', this.state)
+    const {awardsLocal} = this.state;
+    console.log('all awards props---------------', this.props);
+    console.log('all awards STATE---------------', this.state);
     if (!awardsLocal.length) {
       return this.state.dataAvailable ? (
         <div className="loading-container">
@@ -124,7 +144,7 @@ class AllAwards extends Component {
             Nominate someone who has performed a kind gesture!
           </Link>
         </div>
-      )
+      );
     }
 
     return (
@@ -171,7 +191,7 @@ class AllAwards extends Component {
           />
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -181,13 +201,14 @@ class AllAwards extends Component {
 const mapState = (state) => {
   return {
     awards: state.awards.allAwards
-  }
-}
+  };
+};
 
 const mapDispatch = (dispatch) => {
   return {
-    getAllAwards: () => dispatch(getAllAwards())
-  }
-}
+    getAllAwards: () => dispatch(getAllAwards()),
+    fetchFilteredAwards: (category) => dispatch(fetchFilteredAwards(category))
+  };
+};
 
-export default connect(mapState, mapDispatch)(AllAwards)
+export default connect(mapState, mapDispatch)(AllAwards);
