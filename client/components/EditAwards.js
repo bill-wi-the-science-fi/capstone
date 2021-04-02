@@ -91,9 +91,11 @@ class EditAwards extends Component {
     ) {
       return (
         <div className="forbidden-container">
-          <div>Access Denied</div>
           <div>
-            <img src="/403-img.webp"></img>
+            <p className="ml-4 mb-5 mt-3 pl-1 text-center">
+              Unauthorized Access
+            </p>
+            <img className="forbidden-img" src="/403-img.webp"></img>
           </div>
         </div>
       );
