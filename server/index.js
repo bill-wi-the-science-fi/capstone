@@ -10,12 +10,14 @@ const sessionStore = new SequelizeStore({db});
 const PORT = process.env.PORT || 8080;
 const app = express();
 const socketio = require('socket.io');
-const {Award, Nomination, User, Transaction} = require('./db/models');
+const {Award, Nomination, User} = require('./db/models');
 const cron = require('node-cron');
 const Nominate = require('../build/contracts/Nominate.json');
 const contractAddress = Nominate.networks[3].address;
 const Web3 = require('web3');
 const {infuraUrl} = require('../secrets');
+const web3 = new Web3(infuraUrl);
+const myContract = new web3.eth.Contract(Nominate.abi, contractAddress);
 
 module.exports = app;
 
@@ -144,8 +146,6 @@ async function updateDb(event) {
   await singleAward.update(updatesToAward);
 }
 
-const web3 = new Web3(infuraUrl);
-const myContract = new web3.eth.Contract(Nominate.abi, contractAddress);
 const initListener = () => {
   myContract.events
     .allEvents()
@@ -154,8 +154,9 @@ const initListener = () => {
     })
     .on('error', console.error);
 };
-
+// if this goes down , what next
 let contractListner = initListener();
+
 async function ping() {
   let balance = await myContract.methods.balanceOfContract().call();
   console.log('\ncontract balance in ETH', balance * 1e-18, 'ETH\n');

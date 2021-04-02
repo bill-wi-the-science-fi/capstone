@@ -188,7 +188,6 @@ class NominateForm extends Component {
           donationLimit: '',
           title: '',
           description: ''
-          // file: null
         }}
       >
         {({
@@ -197,7 +196,6 @@ class NominateForm extends Component {
           handleBlur,
           values,
           touched,
-          isValid,
           errors
         }) => (
           <Form noValidate onSubmit={handleSubmit}>
