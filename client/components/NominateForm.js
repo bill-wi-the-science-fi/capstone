@@ -1,21 +1,22 @@
-import React, {Component} from 'react'
-import {Button, Col, Form} from 'react-bootstrap'
-import {connect} from 'react-redux'
-import {Formik} from 'formik'
-import * as yup from 'yup'
-import {fetchWeb3AndContract} from '../store/contract'
-import getWeb3 from '../common/getWeb3'
-import Nominate from '../contracts/Nominate.json'
+/* eslint-disable complexity */
+import React, {Component} from 'react';
+import {Button, Col, Form} from 'react-bootstrap';
+import {connect} from 'react-redux';
+import {Formik} from 'formik';
+import * as yup from 'yup';
+import {fetchWeb3AndContract} from '../store/contract';
+import getWeb3 from '../common/getWeb3';
+import Nominate from '../../build/contracts/Nominate.json';
 import {
   nominateUser,
   getPriceConversion,
   postTransaction,
   newTransaction,
   clearTransaction
-} from '../store'
+} from '../store';
 
-const regEx = /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/
-
+const regEx = /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/;
+// put in common
 const schema = yup.object().shape({
   firstName: yup.string().required(),
   lastName: yup.string().required(),
@@ -38,32 +39,32 @@ const schema = yup.object().shape({
   donationLimit: yup.number().required().positive(),
   title: yup.string().required(),
   description: yup.string().required()
-})
+});
 
 class NominateForm extends Component {
   constructor() {
-    super()
-
-    this.onSubmit = this.onSubmit.bind(this)
-    this.startAwardAndDonate = this.startAwardAndDonate.bind(this)
+    super();
+    this.onSubmit = this.onSubmit.bind(this);
+    this.startAwardAndDonate = this.startAwardAndDonate.bind(this);
   }
+
   async componentDidMount() {
-    this.props.clearTransaction()
+    this.props.clearTransaction();
     try {
       // Get network provider and web3 instance. -> web3 attached to state
-      const web3 = await getWeb3()
+      const web3 = await getWeb3();
       // check if window object has ethereum object provided -> MM
       // Use web3 to get the user's accounts.
       // promps user to select which accounts the website shoul have access to -> pick first one
-      const accounts = await web3.eth.getAccounts()
+      const accounts = await web3.eth.getAccounts();
       // Get the contract instance.
-      const networkId = await web3.eth.net.getId()
+      const networkId = await web3.eth.net.getId();
       //const deployedNetwork = Nominate.networks[networkId];
-      const deployedNetwork = Nominate.networks[networkId]
+      const deployedNetwork = Nominate.networks[networkId];
       const instance = new web3.eth.Contract(
         Nominate.abi,
         deployedNetwork && deployedNetwork.address
-      )
+      );
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
 
@@ -72,14 +73,14 @@ class NominateForm extends Component {
         web3,
         accounts,
         contract: instance
-      }))
+      }));
     } catch (error) {
       // Catch any errors for any of the above operations.
       // *** if browser does not have metamask -> will throw error
       console.log(
         error,
         `Failed to load web3, accounts, or contract. Check console for details.`
-      )
+      );
     }
   }
 
@@ -91,8 +92,7 @@ class NominateForm extends Component {
     donationLimit
   ) => {
     try {
-      const {accounts, contract, web3} = this.state
-
+      const {accounts, contract, web3} = this.state;
       const contractTxn = await contract.methods
         .startAwardAndDonate(awardId, recipientAddress, donationLimit)
         .send({
@@ -102,55 +102,57 @@ class NominateForm extends Component {
         })
         .on('transactionHash', async (hash) => {
           await this.props.newTransaction({
+            status: 'pending',
             hash: hash,
             award: awardId
-          })
-
+          });
           // similar behavior as an HTTP redirect
-          this.props.history.push('/confirmation')
-        })
+          this.props.history.push('/confirmation');
+        });
       if (contractTxn.status) {
-        const txnBody = {
-          userId: this.props.signedInUser.id,
-          awardId: awardId,
-          transactionHash: contractTxn.transactionHash,
-          amountWei: amountOfDonation,
-          smartContractAddress: contractTxn.to,
-          recipientEmail: recipientEmail
-        }
-        this.props.postTransaction(txnBody)
+        // const txnBody = {
+        //   userId: this.props.signedInUser.id,
+        //   awardId: awardId,
+        //   transactionHash: contractTxn.transactionHash,
+        //   amountWei: amountOfDonation,
+        //   smartContractAddress: contractTxn.to,
+        //   recipientEmail: recipientEmail
+        // }
+        this.props.postTransaction({
+          status: 'confirmed',
+          // hash: hash,
+          award: this.props.awardInfo
+        });
       } else {
         // eslint-disable-next-line no-alert
         alert(
           `Transaction was not able to settle on the blockchain. Please refer to MetaMask for more information on transaction with hash ${contractTxn.transactionHash}`
-        )
+        );
       }
       // Update state with the result.
       //const balance = await contract.methods.balanceOfContract().call();
       //this.setState({ storageValue: balance });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   async onSubmit(formValues) {
-    console.log('submitted')
-
-    formValues.nominatorId = this.props.signedInUser.id
-    const donationAmountUSD = +formValues.donationTotal
-    const donationLimitUSD = +formValues.donationLimit
+    formValues.nominatorId = this.props.signedInUser.id;
+    const donationAmountUSD = +formValues.donationTotal;
+    const donationLimitUSD = +formValues.donationLimit;
     try {
       const donationAmountETH = (
         await this.props.getPriceConversion(donationAmountUSD)
-      ).toString()
+      ).toString();
       const donationLimitETH = (
         await this.props.getPriceConversion(donationLimitUSD)
-      ).toString()
+      ).toString();
       const formData = {
         ...formValues,
         donationTotal: this.state.web3.utils.toWei(donationAmountETH, 'ether'),
         donationLimit: this.state.web3.utils.toWei(donationLimitETH, 'ether')
-      }
+      };
       // formValues.donationTotal = this.state.web3.utils.toWei(
       //   donationAmountETH,
       //   'ether'
@@ -159,16 +161,16 @@ class NominateForm extends Component {
       //   donationLimitETH,
       //   'ether'
       // )
-      await this.props.nominateUser(formData)
+      await this.props.nominateUser(formData);
       this.startAwardAndDonate(
         this.props.nominate.awardId,
         this.props.nominate.recipient,
         formData.donationTotal,
         formValues.email,
         formData.donationLimit
-      )
+      );
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
@@ -186,7 +188,6 @@ class NominateForm extends Component {
           donationLimit: '',
           title: '',
           description: ''
-          // file: null
         }}
       >
         {({
@@ -195,7 +196,6 @@ class NominateForm extends Component {
           handleBlur,
           values,
           touched,
-          isValid,
           errors
         }) => (
           <Form noValidate onSubmit={handleSubmit}>
@@ -347,7 +347,7 @@ class NominateForm extends Component {
           </Form>
         )}
       </Formik>
-    )
+    );
   }
 }
 
@@ -358,8 +358,8 @@ const mapState = (state) => {
     contractInstance: state.contract.contractInstance,
     accounts: state.contract.accounts,
     ...state
-  }
-}
+  };
+};
 
 const mapDispatch = (dispatch) => {
   return {
@@ -370,7 +370,7 @@ const mapDispatch = (dispatch) => {
     postTransaction: (formData) => dispatch(postTransaction(formData)),
     newTransaction: (formData) => dispatch(newTransaction(formData)),
     clearTransaction: () => dispatch(clearTransaction())
-  }
-}
+  };
+};
 
-export default connect(mapState, mapDispatch)(NominateForm)
+export default connect(mapState, mapDispatch)(NominateForm);

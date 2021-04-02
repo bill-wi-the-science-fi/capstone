@@ -1,5 +1,5 @@
-const Sequelize = require('sequelize')
-const db = require('../db')
+const Sequelize = require('sequelize');
+const db = require('../db');
 
 const Nomination = db.define('nomination', {
   id: {
@@ -8,6 +8,6 @@ const Nomination = db.define('nomination', {
     autoIncrement: true,
     allowNull: false
   }
-})
+});
 
-module.exports = Nomination
+module.exports = Nomination;

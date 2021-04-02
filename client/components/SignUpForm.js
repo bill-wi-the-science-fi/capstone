@@ -1,10 +1,10 @@
-import React, {Component} from 'react'
-import {Button, Col, Form} from 'react-bootstrap'
-import {connect} from 'react-redux'
-import {Formik} from 'formik'
-import * as yup from 'yup'
-import {authSignUp, checkPin, createVerifiedUser, auth} from '../store'
-import getWeb3 from '../common/getWeb3'
+import React, {Component} from 'react';
+import {Button, Col, Form} from 'react-bootstrap';
+import {connect} from 'react-redux';
+import {Formik} from 'formik';
+import * as yup from 'yup';
+import {authSignUp, checkPin, createVerifiedUser, auth} from '../store';
+import getWeb3 from '../common/getWeb3';
 /**
  * COMPONENT
  */
@@ -29,46 +29,46 @@ const schema = yup.object().shape({
     }),
   imgUrl: yup.string()
   //pin: yup.string().required()
-})
+});
 
 class SignUpForm extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       urlCheckForPin: this.props.match.path === '/signup',
       accounts: [],
       pin: ''
-    }
-    this.onSubmit = this.onSubmit.bind(this)
+    };
+    this.onSubmit = this.onSubmit.bind(this);
   }
   async componentDidMount() {
     try {
-      const web3 = await getWeb3()
-      const accounts = await web3.eth.getAccounts()
+      const web3 = await getWeb3();
+      const accounts = await web3.eth.getAccounts();
       if (accounts) {
         this.setState((prevState) => ({
           ...prevState,
           accounts: accounts
-        }))
+        }));
       }
-      const params = new URLSearchParams(window.location.search)
+      const params = new URLSearchParams(window.location.search);
       if (params) {
-        const email = params.get('email')
-        const pin = params.get('pin')
-        this.setState({pin})
-        await this.props.checkPin({email, pin})
+        const email = params.get('email');
+        const pin = params.get('pin');
+        this.setState({pin});
+        await this.props.checkPin({email, pin});
       }
     } catch (error) {
       alert(
         'In order to sign up please install and connect MetaMask on the Ropsten Network'
-      )
-      this.props.history.goBack()
+      );
+      this.props.history.goBack();
     }
   }
   async onSubmit(evt) {
     // const {pin} = evt
-    const {firstName, lastName, email, password, imgUrl} = evt
-    const ethPublicAddress = this.state.accounts[0]
+    const {firstName, lastName, email, password, imgUrl} = evt;
+    const ethPublicAddress = this.state.accounts[0];
     if (this.props.singleUser.userHasPin) {
       await this.props.createVerifiedUser({
         ethPublicAddress,
@@ -78,13 +78,13 @@ class SignUpForm extends Component {
         password,
         imgUrl,
         pin: this.state.pin
-      })
-      await this.props.auth(email, password, 'login')
+      });
+      await this.props.auth(email, password, 'login');
     } else {
       this.props.authSignUp(
         {ethPublicAddress, firstName, lastName, email, password, imgUrl},
         'signup'
-      )
+      );
     }
   }
   render() {
@@ -92,7 +92,7 @@ class SignUpForm extends Component {
       <Formik
         validationSchema={schema}
         onSubmit={(evt) => {
-          return this.onSubmit(evt)
+          return this.onSubmit(evt);
         }}
         initialValues={{
           firstName: '',
@@ -215,7 +215,7 @@ class SignUpForm extends Component {
           </Form>
         )}
       </Formik>
-    )
+    );
   }
 }
 
@@ -223,15 +223,15 @@ class SignUpForm extends Component {
  * CONTAINER
  */
 const mapState = (state) => {
-  return {singleUser: state.singleUser}
-}
+  return {singleUser: state.singleUser};
+};
 
 const mapDispatch = (dispatch) => {
   return {
     checkPin: (info) => dispatch(checkPin(info)),
     createVerifiedUser: (info) => dispatch(createVerifiedUser(info)),
     auth: (email, password, type) => {
-      dispatch(auth(email, password, type))
+      dispatch(auth(email, password, type));
     },
     authSignUp: (
       {ethPublicAddress, firstName, lastName, email, password, imgUrl},
@@ -243,7 +243,7 @@ const mapDispatch = (dispatch) => {
           type
         )
       )
-  }
-}
+  };
+};
 
-export default connect(mapState, mapDispatch)(SignUpForm)
+export default connect(mapState, mapDispatch)(SignUpForm);

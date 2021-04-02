@@ -1,6 +1,6 @@
-const router = require('express').Router()
-const {User} = require('../db/models')
-module.exports = router
+const router = require('express').Router();
+const {User} = require('../db/models');
+module.exports = router;
 
 // getAllNominees thunk
 router.get('/', async (req, res, next) => {
@@ -10,18 +10,18 @@ router.get('/', async (req, res, next) => {
       // users' passwords are encrypted, it won't help if we just
       // send everything to anyone who asks!
       attributes: ['id', 'email']
-    })
-    res.json(users)
+    });
+    res.json(users);
   } catch (err) {
-    next(err)
+    next(err);
   }
-})
+});
 
 // Attached to the form for "sign up" new user.
 // need to add logged in middleware for protection.
 router.post('/', async (req, res, next) => {
   try {
-    const {email, firstName, lastName, ethPublicAddress, password} = req.body
+    const {email, firstName, lastName, ethPublicAddress, password} = req.body;
     let newUser = await User.findOrCreate({
       where: {
         email: email,
@@ -30,10 +30,10 @@ router.post('/', async (req, res, next) => {
         ethPublicAddress: ethPublicAddress,
         password: password
       }
-    })
-    newUser = newUser[0]
-    res.json(newUser)
+    });
+    newUser = newUser[0];
+    res.json(newUser);
   } catch (err) {
-    next(err)
+    next(err);
   }
-})
+});

@@ -1,15 +1,16 @@
+
 import React from 'react'
 import {Card, Row} from 'react-bootstrap'
 import {connect} from 'react-redux'
+
 
 /**
  * COMPONENT
  */
 
 export const Confirmation = (props) => {
-  console.log('help', props)
-  const {previousTransaction, pendingTransaction} = props.transactions
-  const {hash, award} = pendingTransaction
+  const {previousTransaction, pendingTransaction} = props.transactions;
+  const {hash, award} = pendingTransaction;
 
   if (award && Object.keys(pendingTransaction).length) {
     if (!Object.keys(previousTransaction).length) {
@@ -19,6 +20,7 @@ export const Confirmation = (props) => {
             className="col-lg-12 p-3 justify-content-center"
             key={award.award_id}
           >
+
             <Row className="m-3 justify-content-center">
               <h2>Your donation is pending approval!</h2>
             </Row>
@@ -55,9 +57,10 @@ export const Confirmation = (props) => {
                 </a>
               </p>
             </Row>
+
           </div>
         </div>
-      )
+      );
     } else
       return (
         <div className="text-center">
@@ -73,11 +76,11 @@ export const Confirmation = (props) => {
             </Card>
           </div>
         </div>
-      )
+      );
   } else {
-    return <div>You currently have no donations</div>
+    return <div>You currently have no donations</div>;
   }
-}
+};
 
 /**
  * CONTAINER
@@ -85,7 +88,7 @@ export const Confirmation = (props) => {
 const mapState = (state) => {
   return {
     transactions: state.transactions
-  }
-}
+  };
+};
 
-export default connect(mapState, null)(Confirmation)
+export default connect(mapState, null)(Confirmation);
