@@ -40,6 +40,7 @@ class AllAwards extends Component {
   }
   //when user clicks on next, previous, or a page buttton
   handlePageClick = (e) => {
+    console.log(e.selected);
     //page that is selected and the new starting point in the index of data
     const {perPage} = this.state;
     const selectedPage = e.selected;
@@ -57,10 +58,11 @@ class AllAwards extends Component {
   };
   handleFilter = async (category) => {
     await this.props.fetchFilteredAwards(category);
+    this.handlePageClick({selected: 0});
     this.setState((prevState) => ({
-      awardsLocal: this.props.awards,
-      currentPage: 0,
-      pageCount: Math.ceil(this.props.awards.length / prevState.perPage)
+      ...prevState,
+      pageCount: Math.ceil(this.props.awards.length / prevState.perPage),
+      awardsLocal: this.props.awards
     }));
   };
   async componentDidMount() {
