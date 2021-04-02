@@ -86,7 +86,15 @@ function DonateForm(props) {
                   );
                 }
               } catch (error) {
-                console.log(error);
+
+                // eslint-disable-next-line no-alert
+                alert(
+                  `Transaction was not able to settle on the blockchain. Please refer to MetaMask for more information under the "Activity" tab.`
+                )
+                props.history.push('/')
+
+                console.log(error)
+
               }
             } else {
               // eslint-disable-next-line no-alert
