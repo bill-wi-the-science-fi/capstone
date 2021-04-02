@@ -1,27 +1,27 @@
-import React, {Component} from 'react'
-import {Row, Image, ProgressBar, Button} from 'react-bootstrap'
-import {connect} from 'react-redux'
-import {getSingleAward, clearTransaction} from '../store'
-import Web3 from 'web3'
-import {ShareButton} from './ShareButton'
-import {DonateForm} from './index'
-import ReactLoading from 'react-loading'
-import {Link} from 'react-router-dom'
+import React, {Component} from 'react';
+import {Row, Image, ProgressBar, Button} from 'react-bootstrap';
+import {connect} from 'react-redux';
+import {getSingleAward, clearTransaction} from '../store';
+import Web3 from 'web3';
+import {ShareButton} from './ShareButton';
+import {DonateForm} from './index';
+import ReactLoading from 'react-loading';
+import {Link} from 'react-router-dom';
 
 /**
  * COMPONENT
  */
 
-const web3 = new Web3()
+const web3 = new Web3();
 
 class SingleAward extends Component {
   constructor() {
-    super()
-    this.state = {dataAvailable: true}
+    super();
+    this.state = {dataAvailable: true};
   }
   componentDidMount() {
-    this.props.getSingleAward(this.props.match.params.id)
-    this.props.clearTransaction()
+    this.props.getSingleAward(this.props.match.params.id);
+    this.props.clearTransaction();
     if (this.state.dataAvailable) {
       this.timer = setTimeout(
         () =>
@@ -30,12 +30,12 @@ class SingleAward extends Component {
             dataAvailable: !state.dataAvailable
           })),
         5000
-      )
+      );
     }
   }
 
   render() {
-    const {singleAward} = this.props
+    const {singleAward} = this.props;
 
     if (!singleAward.award_id) {
       return this.state.dataAvailable ? (
@@ -54,21 +54,21 @@ class SingleAward extends Component {
         <div className="loading-container">
           <strong>sorry, we are not able to retrieve this award</strong>
         </div>
-      )
+      );
     }
 
     const amountDonatedETH = web3.utils.fromWei(
       singleAward.award_donationTotal,
       'ether'
-    )
+    );
     const donationLimitETH = web3.utils.fromWei(
       singleAward.award_donationLimit,
       'ether'
-    )
+    );
 
     const percentDonated = Math.ceil(
       (amountDonatedETH / donationLimitETH) * 100
-    )
+    );
 
     return (
       <div className="container-fluid">
@@ -134,38 +134,8 @@ class SingleAward extends Component {
             </Row>
           </div>
         </Row>
-
-        {/* <Card className="m-3" border="success" style={{width: '60vw'}}>
-          <Card.Img variant="top" src={singleAward.award_imageUrl} />
-          <Card.Body>
-            <Card.Title>{singleAward.award_title}</Card.Title>
-            <Card.Text>{singleAward.award_description}</Card.Text>
-
-            <Card.Text>
-              Awarded to: {singleAward.recipient_firstName}{' '}
-              {singleAward.recipient_lastName}
-            </Card.Text>
-            <Card.Text>
-              Nominated by: {singleAward.giver_firstName}{' '}
-              {singleAward.giver_lastName}
-            </Card.Text>
-            <div className="container mb-4 text-center">
-              <DonateForm
-                awardId={`${singleAward.award_id}`}
-                history={this.props.history}
-                awardInfo={singleAward}
-              />
-            </div>
-            <Card.Text className="text-right">
-
-            </Card.Text>
-          </Card.Body>
-          <ShareButton
-            url={`https://pay-eth-forward.herokuapp.com/awards/${singleAward.award_id}`}
-          />
-        </Card> */}
       </div>
-    )
+    );
   }
 }
 
@@ -176,14 +146,14 @@ class SingleAward extends Component {
 const mapState = (state) => {
   return {
     singleAward: state.singleAward
-  }
-}
+  };
+};
 
 const mapDispatch = (dispatch) => {
   return {
     getSingleAward: (id) => dispatch(getSingleAward(id)),
     clearTransaction: () => dispatch(clearTransaction())
-  }
-}
+  };
+};
 
-export default connect(mapState, mapDispatch)(SingleAward)
+export default connect(mapState, mapDispatch)(SingleAward);

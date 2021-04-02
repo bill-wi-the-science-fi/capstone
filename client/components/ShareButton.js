@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
   TwitterIcon,
   TwitterShareButton,
@@ -10,10 +10,9 @@ import {
   WhatsappShareButton,
   RedditIcon,
   RedditShareButton
-} from 'react-share'
+} from 'react-share';
 
 export const ShareButton = (props) => {
-  console.log('props', props)
   return (
     <div>
       {' '}
@@ -36,5 +35,5 @@ export const ShareButton = (props) => {
         </RedditShareButton>
       </div>
     </div>
-  )
-}
+  );
+};

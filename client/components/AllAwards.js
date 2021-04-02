@@ -1,13 +1,5 @@
 import React, {Component} from 'react';
-import {
-  Button,
-  Card,
-  Form,
-  FormControl,
-  Nav,
-  Dropdown,
-  DropdownButton
-} from 'react-bootstrap';
+import {Button, Card, Nav, Dropdown, DropdownButton} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {getAllAwards, fetchFilteredAwards} from '../store';
 import {Link} from 'react-router-dom';
@@ -26,8 +18,7 @@ class AllAwards extends Component {
       awardsLocal: [],
       perPage: 4,
       currentPage: 0,
-      dataAvailable: true,
-      filteredView: 'all'
+      dataAvailable: true
     };
     this.pagination = this.pagination.bind(this);
     this.handlePageClick = this.handlePageClick.bind(this);

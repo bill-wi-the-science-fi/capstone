@@ -381,11 +381,13 @@ const sendEmail = (
   };
   axios(config)
     .then(function (response) {
-      // console.log(response)
       console.log(response.status);
     })
     .catch(function (error) {
-      console.log('There was an error sending your email', error);
+      console.log(
+        'There was an error sending the email. Status:',
+        error.response.status
+      );
     });
 };
 

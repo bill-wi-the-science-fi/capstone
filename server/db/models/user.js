@@ -1,6 +1,6 @@
-const crypto = require('crypto')
-const Sequelize = require('sequelize')
-const db = require('../db')
+const crypto = require('crypto');
+const Sequelize = require('sequelize');
+const db = require('../db');
 
 const User = db.define('user', {
   firstName: {
@@ -23,7 +23,7 @@ const User = db.define('user', {
     // Making `.password` act like a func hides it when serializing to JSON.
     // This is a hack to get around Sequelize's lack of a "private" option.
     get() {
-      return () => this.getDataValue('password')
+      return () => this.getDataValue('password');
     }
   },
   pin: {
@@ -31,7 +31,7 @@ const User = db.define('user', {
     // Making `.pin` act like a func hides it when serializing to JSON.
     // This is a hack to get around Sequelize's lack of a "private" option.
     get() {
-      return () => this.getDataValue('pin')
+      return () => this.getDataValue('pin');
     }
   },
   salt: {
@@ -39,7 +39,7 @@ const User = db.define('user', {
     // Making `.salt` act like a function hides it when serializing to JSON.
     // This is a hack to get around Sequelize's lack of a "private" option.
     get() {
-      return () => this.getDataValue('salt')
+      return () => this.getDataValue('salt');
     }
   },
   saltpin: {
@@ -47,7 +47,7 @@ const User = db.define('user', {
     // Making `.saltpin` act like a function hides it when serializing to JSON.
     // This is a hack to get around Sequelize's lack of a "private" option.
     get() {
-      return () => this.getDataValue('saltpin')
+      return () => this.getDataValue('saltpin');
     }
   },
   googleId: {
@@ -64,69 +64,69 @@ const User = db.define('user', {
     defaultValue:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Oxygen480-emotes-face-smile-big.svg/1200px-Oxygen480-emotes-face-smile-big.svg.png'
   }
-})
+});
 
-module.exports = User
+module.exports = User;
 
 /**
  * instanceMethods
  */
 User.prototype.correctPassword = function (candidatePwd) {
-  return User.encryptPassword(candidatePwd, this.salt()) === this.password()
-}
+  return User.encryptPassword(candidatePwd, this.salt()) === this.password();
+};
 
 User.prototype.correctPin = function (candidatePin) {
-  return User.encryptPin(candidatePin, this.saltpin()) === this.pin()
-}
+  return User.encryptPin(candidatePin, this.saltpin()) === this.pin();
+};
 
 /**
  * classMethods
  */
 User.generateSalt = function () {
-  return crypto.randomBytes(16).toString('base64')
-}
+  return crypto.randomBytes(16).toString('base64');
+};
 User.generatePinSalt = function () {
-  return crypto.randomBytes(16).toString('base64')
-}
+  return crypto.randomBytes(16).toString('base64');
+};
 
 User.encryptPassword = function (plainText, salt) {
   return crypto
     .createHash('RSA-SHA256')
     .update(plainText)
     .update(salt)
-    .digest('hex')
-}
+    .digest('hex');
+};
 User.encryptPin = function (plainText, saltpin) {
   return crypto
     .createHash('RSA-SHA256')
     .update(plainText)
     .update(saltpin)
-    .digest('hex')
-}
+    .digest('hex');
+};
 
 /**
  * hooks
  */
 const setSaltAndPassword = (user) => {
   if (user.changed('password')) {
-    user.salt = User.generateSalt()
-    user.password = User.encryptPassword(user.password(), user.salt())
+    user.salt = User.generateSalt();
+    user.password = User.encryptPassword(user.password(), user.salt());
   }
-}
+};
 const setsaltpinAndPin = (user) => {
   if (user.changed('pin')) {
-    user.saltpin = User.generatePinSalt()
-    user.pin = User.encryptPin(user.pin(), user.saltpin())
+    user.saltpin = User.generatePinSalt();
+    user.pin = User.encryptPin(user.pin(), user.saltpin());
   }
-}
+};
 
-User.beforeCreate(setSaltAndPassword)
-User.beforeUpdate(setSaltAndPassword)
+User.beforeCreate(setSaltAndPassword);
+User.beforeUpdate(setSaltAndPassword);
 User.beforeBulkCreate((users) => {
-  users.forEach(setSaltAndPassword)
-})
-User.beforeCreate(setsaltpinAndPin)
-User.beforeUpdate(setsaltpinAndPin)
+  users.forEach(setSaltAndPassword);
+});
+User.beforeCreate(setsaltpinAndPin);
+User.beforeUpdate(setsaltpinAndPin);
 User.beforeBulkCreate((users) => {
-  users.forEach(setsaltpinAndPin)
-})
+  users.forEach(setsaltpinAndPin);
+});

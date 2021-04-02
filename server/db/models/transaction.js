@@ -1,5 +1,5 @@
-const Sequelize = require('sequelize')
-const db = require('../db')
+const Sequelize = require('sequelize');
+const db = require('../db');
 
 const Transaction = db.define('transaction', {
   transactionHash: {
@@ -17,6 +17,6 @@ const Transaction = db.define('transaction', {
     unique: false,
     allowNull: false
   }
-})
+});
 
-module.exports = Transaction
+module.exports = Transaction;

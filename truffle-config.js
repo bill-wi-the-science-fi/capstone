@@ -1,5 +1,5 @@
-var HDWalletProvider = require('truffle-hdwallet-provider')
-const {MNEMONIC_WALLET_KEY, infuraHTTPSEndpoint} = require('./secrets')
+var HDWalletProvider = require('truffle-hdwallet-provider');
+const {MNEMONIC_WALLET_KEY, infuraHTTPSEndpoint} = require('./secrets');
 
 // module.exports = {
 //   networks: {
@@ -63,7 +63,7 @@ module.exports = {
     },
     ropsten: {
       provider: function () {
-        return new HDWalletProvider(MNEMONIC_WALLET_KEY, infuraHTTPSEndpoint)
+        return new HDWalletProvider(MNEMONIC_WALLET_KEY, infuraHTTPSEndpoint);
       },
       network_id: 3,
       gas: 4000000 //make sure this gas allocation isn't over 4M, which is the max
@@ -136,4 +136,4 @@ module.exports = {
   db: {
     enabled: false
   }
-}
+};

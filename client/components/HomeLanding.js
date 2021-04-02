@@ -1,22 +1,21 @@
-import React, {Component} from 'react'
-import {Carousel, Jumbotron, Button, Card, Image} from 'react-bootstrap'
-import {Link} from 'react-router-dom'
-import {getAllAwards} from '../store'
-import {connect} from 'react-redux'
-import ReactLoading from 'react-loading'
+import React, {Component} from 'react';
+import {Carousel, Jumbotron, Button, Card, Image} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
+import {getAllAwards} from '../store';
+import {connect} from 'react-redux';
+import ReactLoading from 'react-loading';
 /**
  * COMPONENT
  */
 class HomeLanding extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
       dataAvailable: true
-    }
+    };
   }
   componentDidMount() {
-    console.log('homelandoing')
-    this.props.getAllAwards()
+    this.props.getAllAwards();
     if (this.state.dataAvailable) {
       this.timer = setTimeout(
         () =>
@@ -25,14 +24,14 @@ class HomeLanding extends Component {
             dataAvailable: !state.dataAvailable
           })),
         5000
-      )
+      );
     }
   }
 
   render() {
-    const awards = []
+    const awards = [];
     for (let i = 0; i < Math.min(this.props.awards.allAwards.length, 3); i++) {
-      awards.push(this.props.awards.allAwards[i])
+      awards.push(this.props.awards.allAwards[i]);
     }
 
     return (
@@ -178,7 +177,7 @@ class HomeLanding extends Component {
         </div>
         <div className="footer"></div>
       </div>
-    )
+    );
   }
 }
 
@@ -189,13 +188,13 @@ const mapState = (state) => {
   return {
     email: state.signedInUser.email,
     awards: state.awards
-  }
-}
+  };
+};
 
 const mapDispatch = (dispatch) => {
   return {
     getAllAwards: () => dispatch(getAllAwards())
-  }
-}
+  };
+};
 
-export default connect(mapState, mapDispatch)(HomeLanding)
+export default connect(mapState, mapDispatch)(HomeLanding);

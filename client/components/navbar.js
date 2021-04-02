@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
-import {withRouter, Redirect} from 'react-router';
 import {connect} from 'react-redux';
 import {Navbar, Nav} from 'react-bootstrap';
 import {logout, fetchFilteredAwards} from '../store';
@@ -71,7 +70,7 @@ const mapDispatch = (dispatch) => {
   };
 };
 
-export default withRouter(connect(mapState, mapDispatch)(NavbarBootstrap));
+export default connect(mapState, mapDispatch)(NavbarBootstrap);
 
 /**
  * PROP TYPES

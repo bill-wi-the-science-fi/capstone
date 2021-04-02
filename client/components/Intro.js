@@ -1,6 +1,7 @@
-import React from 'react'
-import {Jumbotron, Container, Image} from 'react-bootstrap'
-import {connect} from 'react-redux'
+import React from 'react';
+import {Jumbotron, Container, Image} from 'react-bootstrap';
+
+import {connect} from 'react-redux';
 
 export const Intro = () => {
   return (
@@ -111,18 +112,18 @@ export const Intro = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 /**
  * CONTAINER
  */
 const mapState = (state) => {
-  return {}
-}
+  return {};
+};
 
 const mapDispatch = (dispatch) => {
-  return {}
-}
+  return {};
+};
 
-export default connect(mapState, mapDispatch)(Intro)
+export default connect(mapState, mapDispatch)(Intro);

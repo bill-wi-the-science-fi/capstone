@@ -42,9 +42,8 @@ class Routes extends Component {
 
         {/* <Route path="/donate" component={DonateForm} /> */}
         <Route path="/confirmation" component={Confirmation} />
-        {/* <Route exact path="/awards/:id" component={SingleAward} /> */}
+        <Route exact path="/awards/:id" component={SingleAward} />
         <Route exact path="/awards" component={AllAwards} />
-        <Route path="/awards/:category" component={AllAwards} />
         <Route path="/intro" component={Intro} />
         {isLoggedIn && (
           <Switch>
