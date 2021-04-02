@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Card} from 'react-bootstrap';
+import {Button} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {getAllUserAwards, withdrawAward, getAllUserNoms} from '../store';
 import getWeb3 from '../common/getWeb3';
@@ -7,8 +7,6 @@ import {Link} from 'react-router-dom';
 import Nominate from '../../build/contracts/Nominate.json';
 import Web3 from 'web3';
 
-// import ReactPaginate from 'react-paginate'
-//import ReactPaginate from 'react-paginate'
 import ReactLoading from 'react-loading';
 
 /**
@@ -26,7 +24,6 @@ class UserDashboard extends Component {
       currentPage: 0,
       dataAvailable: true
     };
-    // this.pagination = this.pagination.bind(this)
     this.handlePageClick = this.handlePageClick.bind(this);
     this.withdraw = this.withdraw.bind(this);
     this.convertDonation = this.convertDonation.bind(this);
@@ -57,20 +54,6 @@ class UserDashboard extends Component {
     }
   }
 
-  // pagination() {
-  //   const {perPage, startAwardIndex} = this.state
-  //   // awards to display on page
-  //   const awards = this.props.awards.slice(
-  //     startAwardIndex,
-  //     startAwardIndex + perPage
-  //   )
-  //   //add to state how many pages, and the awards for current page
-  //   this.setState((state) => ({
-  //     awards,
-  //     pageCount: Math.ceil(this.props.awards.length / state.perPage)
-  //   }))
-  // }
-
   //when user clicks on next, previous, or a page buttton
   handlePageClick = (e) => {
     //page that is selected and the new starting point in the index of data
@@ -80,15 +63,10 @@ class UserDashboard extends Component {
     const startAwardIndex = selectedPage * perPage;
 
     //setting new State with new information of awards, current page, and start index
-    this.setState(
-      {
-        currentPage: selectedPage,
-        startAwardIndex: startAwardIndex
-      },
-      () => {
-        this.pagination();
-      }
-    );
+    this.setState({
+      currentPage: selectedPage,
+      startAwardIndex: startAwardIndex
+    });
   };
 
   async componentDidMount() {
@@ -125,9 +103,6 @@ class UserDashboard extends Component {
       await this.props.getAllUserNoms(this.props.signedInUser.id);
 
       this.setState({awards: this.props.awards});
-
-      //paginate page
-      this.pagination();
     } catch (err) {
       console.error(err);
     }
@@ -215,21 +190,6 @@ class UserDashboard extends Component {
               </div>
             ))}
           </div>
-          {/* <div className="centered">
-            <ReactPaginate
-              previousLabel="prev"
-              nextLabel="next"
-              breakLabel="..."
-              breakClassName="break-me"
-              pageCount={this.state.pageCount}
-              marginPagesDisplayed={1}
-              pageRangeDisplayed={1}
-              onPageChange={this.handlePageClick}
-              containerClassName="pagination"
-              subContainerClassName="pages pagination"
-              activeClassName="active"
-            />
-          </div> */}
 
           <h2 className="ml-5">Awards you've nominated people for: </h2>
           <div className="col flex-wrap award">

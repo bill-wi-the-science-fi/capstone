@@ -180,22 +180,6 @@ class SignUpForm extends Component {
                   isValid={touched.passwordConfirm && !errors.passwordConfirm}
                 />
               </Form.Group>
-              {/* {!this.state.urlCheckForPin ? (
-                <Form.Group controlId="formBasicPasswordConfirm">
-                  <Form.Label>PIN</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="PIN from email"
-                    name="pin"
-                    value={values.pin}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    isValid={touched.pin && !errors.pin}
-                  />
-                </Form.Group>
-              ) : (
-                ''
-              )} */}
             </Form.Row>
             <Form.Row>
               <Form.Group as={Col} md="4" controlId="validationFormik104">
