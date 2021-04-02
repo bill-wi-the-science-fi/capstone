@@ -103,6 +103,11 @@ form div {
   height: 50vh;
   object-fit: cover;
 }
+.forbidden-img {
+  width: 90vw;
+  height: 70vh;
+  object-fit: scale-down;
+}
 
 .user-dash-img {
   width: 125px;
