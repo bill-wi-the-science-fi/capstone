@@ -35,42 +35,6 @@ export const clearTransaction = () => ({
  * THUNK CREATORS
  */
 
-// export const getAllTransactions = () => async (dispatch) => {
-//   try {
-
-//   } catch (err) {
-//     console.error(err)
-//   }
-// }
-/* export const postTransaction = (txnData) => {
-  return async (dispatch) => {
-    try {
-      const {
-        // userId,
-        awardId,
-        transactionHash,
-        amountWei,
-        smartContractAddress
-        // recipientEmail
-      } = txnData
-      let body = {
-        // userId,
-        awardId,
-        transactionHash,
-        amountWei,
-        smartContractAddress
-        // recipientEmail
-      }
-
-      const transaction = (await axios.post('/api/transactions', body)).data
-
-      dispatch(_postTransaction(transaction))
-    } catch (error) {
-      console.log(error)
-    }
-  }
-}
- */
 export const getPriceConversion = (amountUSD) => {
   return async (dispatch) => {
     try {
