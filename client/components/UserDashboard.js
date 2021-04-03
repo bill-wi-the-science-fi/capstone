@@ -2,9 +2,7 @@ import React, {Component} from 'react';
 import {Button} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {getAllUserAwards, withdrawAward, getAllUserNoms} from '../store';
-import getWeb3 from '../common/getWeb3';
 import {Link} from 'react-router-dom';
-import Nominate from '../../build/contracts/Nominate.json';
 import Web3 from 'web3';
 
 import ReactLoading from 'react-loading';
@@ -45,10 +43,10 @@ class UserDashboard extends Component {
       //     value: 0
       //   })
       //if transaction is accepted, we will update db award status
-      await this.props.withdrawAward({id: e.target.value, open: 'closed'});
+      await this.props.withdrawAward({id: e.target.value, open: 'withdrawn'});
       //this.props.history.push('/user')
 
-      //if transaction works, change db award status to closed
+      //if transaction works, change db award status to withdrawn
     } catch (error) {
       console.log(error);
     }
@@ -82,7 +80,7 @@ class UserDashboard extends Component {
         );
       }
 
-      //grab all awards for a user, active, pending, or closed
+      //grab all awards for a user, active, pending, or withdrawn
       await this.props.getAllUserAwards(this.props.signedInUser.id);
       await this.props.getAllUserNoms(this.props.signedInUser.id);
 
@@ -95,9 +93,10 @@ class UserDashboard extends Component {
   render() {
     const {awards} = this.state;
     const {nominations} = this.props;
+    const date = new Date();
 
     if (this.props.loading) {
-      return this.state.dataAvailable ? (
+      return (
         <div className="loading-container">
           <div>
             <strong>fetching your awards...</strong>
@@ -109,14 +108,8 @@ class UserDashboard extends Component {
             width={150}
           />
         </div>
-      ) : (
-        <div className="loading-container">
-          <strong>no awards available at this time</strong>
-        </div>
       );
     }
-    const date = new Date();
-
     if (this.props.match.params.id == this.props.signedInUser.id) {
       return (
         <div className="container">
@@ -136,7 +129,9 @@ class UserDashboard extends Component {
                     />
                   </div>
                   <div className="col-lg-6 flex-wrap">
-                    <h3>{award.title}</h3>
+                    <Link to={`/awards/${award.id}/`} className="black-dark">
+                      <h3>{award.title}</h3>
+                    </Link>
                     <p>{award.description}</p>
                   </div>
                   <div className="col-lg-2 flex-wrap">
@@ -200,7 +195,9 @@ class UserDashboard extends Component {
                   </div>
                   <div className="col-lg-6 flex-wrap">
                     {' '}
-                    <h3>{nom.title}</h3>
+                    <Link to={`/awards/${nom.id}/`} className="black-dark">
+                      <h3>{nom.title}</h3>
+                    </Link>
                     <p>{nom.description}</p>
                   </div>
                   <div className="col-lg-2 flex-wrap">
@@ -214,9 +211,12 @@ class UserDashboard extends Component {
                     <Link
                       to={`/user/${this.props.signedInUser.id}/awards/${nom.id}/edit`}
                     >
-                      <Button variant="success" type="button">
-                        Edit
-                      </Button>
+                      {date < new Date(nom.timeConstraint).getTime() &&
+                      (nom.open === 'pending' || nom.open === 'open') ? (
+                        <Button variant="success" type="button">
+                          Edit
+                        </Button>
+                      ) : null}
                     </Link>
                   </div>
                 </div>

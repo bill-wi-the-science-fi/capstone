@@ -103,6 +103,9 @@ router.get('/:id', isLoggedIn, async (req, res, next) => {
 
       awards = await Award.findAll({
         where: {
+          open: {
+            [Op.or]: ['open', 'withdrawn', 'pending']
+          },
           pairId: {
             [Op.or]: pairIds
           }
@@ -131,6 +134,9 @@ router.get('/:id/nominations', isLoggedIn, async (req, res, next) => {
 
       awards = await Award.findAll({
         where: {
+          open: {
+            [Op.or]: ['open', 'withdrawn', 'pending']
+          },
           pairId: {
             [Op.or]: pairIds
           }
