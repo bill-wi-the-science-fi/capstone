@@ -224,7 +224,7 @@ class SignUpForm extends Component {
                 />
               </Form.Group>
             </Form.Row>
-            <Button classvariant="success" type="submit">
+            <Button className="ml-4" variant="success" type="submit">
               Submit form
             </Button>
           </Form>

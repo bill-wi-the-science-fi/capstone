@@ -211,185 +211,216 @@ class NominateForm extends Component {
   }
   render() {
     return (
-      <Formik
-        validationSchema={schema}
-        onSubmit={this.onSubmit}
-        initialValues={{
-          firstName: '',
-          lastName: '',
-          email: '',
-          category: '',
-          donationTotal: '',
-          donationLimit: '',
-          title: '',
-          file: null,
-          description: ''
-        }}
-      >
-        {({
-          handleSubmit,
-          handleChange,
-          handleBlur,
-          values,
-          touched,
-          errors
-        }) => (
-          <Form noValidate onSubmit={handleSubmit}>
-            <Form.Row>
-              <Form.Group as={Col} md="4" controlId="validationFormik101">
-                <Form.Label>First name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="First Name"
-                  name="firstName"
-                  value={values.firstName}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  isValid={touched.firstName && !errors.firstName}
-                />
-              </Form.Group>
-              <Form.Group as={Col} md="4" controlId="validationFormik102">
-                <Form.Label>Last name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Last Name"
-                  name="lastName"
-                  onBlur={handleBlur}
-                  value={values.lastName}
-                  onChange={handleChange}
-                  isValid={touched.lastName && !errors.lastName}
-                />
-              </Form.Group>
-            </Form.Row>
-            <Form.Row>
-              <Form.Group as={Col} md="4" controlId="validationFormikUsername2">
-                <Form.Label>Email</Form.Label>
-                {/* <InputGroup hasValidation> */}
-                <Form.Control
-                  type="text"
-                  placeholder="email"
-                  name="email"
-                  value={values.email}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  isValid={touched.email && !errors.email}
-                />
-                <Form.Control.Feedback type="invalid" tooltip>
-                  {errors.email}
-                </Form.Control.Feedback>
-              </Form.Group>
-              <Form.Group as={Col} md="4" controlId="validationFormik104">
-                <Form.Label>Award Title</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Award Title"
-                  name="title"
-                  value={values.title}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  isValid={touched.title && !errors.title}
-                />
-              </Form.Group>
-            </Form.Row>
-            <Form.Row>
-              <Form.Group as={Col} md="4" controlId="validationFormik105">
-                <Form.Label>Donation ($USD)</Form.Label>
-                <Form.Control
-                  type="number"
-                  placeholder="0.00"
-                  name="donationTotal"
-                  value={values.donationTotal}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  isValid={
-                    touched.donationTotal &&
-                    !errors.donationTotal &&
-                    regEx.test(values.donationTotal)
-                  }
-                />
-              </Form.Group>
-              <Form.Group as={Col} md="4" controlId="validationFormik106">
-                <Form.Label>Donation Limit ($USD)</Form.Label>
-                <Form.Control
-                  readonly="readonly"
-                  type="text"
-                  placeholder="Donation Limit"
-                  name="donationLimit"
-                  value={Math.ceil(values.donationTotal * 1000)}
-                  onBlur={handleBlur}
-                />
-              </Form.Group>
-            </Form.Row>
-            <Form.Row>
-              <Form.Group as={Col} md="4" controlId="validationFormik103">
-                <Form.Label>Award Description</Form.Label>
-                <Form.Control
-                  type="text"
-                  as="textarea"
-                  rows={3}
-                  placeholder="What are they doing that is so amazing"
-                  name="description"
-                  onBlur={handleBlur}
-                  value={values.description}
-                  onChange={handleChange}
-                  isValid={touched.description && !errors.description}
-                />
-              </Form.Group>
-              <Form.Group controlId="SelectCategory">
-                <Form.Label>Category</Form.Label>
-                <Form.Control
-                  as="select"
-                  value={values.category}
-                  name="category"
-                  placeholder="Category"
-                  onChange={handleChange}
-                  isValid={!!touched.category}
+      <div className="container">
+        <Formik
+          validationSchema={schema}
+          onSubmit={this.onSubmit}
+          initialValues={{
+            firstName: '',
+            lastName: '',
+            email: '',
+            category: '',
+            donationTotal: '',
+            donationLimit: '',
+            title: '',
+            file: null,
+            description: ''
+          }}
+        >
+          {({
+            handleSubmit,
+            handleChange,
+            handleBlur,
+            values,
+            touched,
+            errors
+          }) => (
+            <Form noValidate onSubmit={handleSubmit}>
+              <Form.Row>
+                <Form.Group
+                  as={Col}
+                  md="6 ml-0 mr-0 pl-1 pr-1"
+                  controlId="validationFormik101"
                 >
-                  <option value={undefined} defaultValue>
-                    Select a Category
-                  </option>
-                  <option value="Open-Source">Open-Source</option>
-                  <option value="Community">Community</option>
-                  <option value="Lifetime of Awesome">
-                    Lifetime of Awesome
-                  </option>
-                  <option value="Health and Wellness">
-                    Health and Wellness
-                  </option>
-                  <option value="Volunteer">Volunteer</option>
-                  <option value="Animals">Animals</option>
-                  <option value="Heroic Act">Heroic Act</option>
-                  <option value="Enviornment">Enviornment</option>
-                  <option value="Activism">Activism</option>
-                </Form.Control>
-              </Form.Group>
-            </Form.Row>
-            <Form.Row as={Col} md="5 mb-5 ml-0 mr-0 p-0">
-              <Form.Group controlId="file">
-                <Form.Label>Upload an image of their work:</Form.Label>
-                <Form.File
-                  name="file"
-                  value={values.file}
-                  onChange={(e) => this.handleImage(e)}
-                  isInvalid={!!errors.file}
-                  feedback={errors.file}
-                  id="validationFormik107"
-                  feedbackTooltip
-                />
-              </Form.Group>
-            </Form.Row>
+                  <Form.Label>First name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="First Name"
+                    name="firstName"
+                    value={values.firstName}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    isValid={touched.firstName && !errors.firstName}
+                  />
+                </Form.Group>
+                <Form.Group
+                  as={Col}
+                  md="6 ml-0 mr-0 pl-1 pr-1"
+                  controlId="validationFormik102"
+                >
+                  <Form.Label>Last name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Last Name"
+                    name="lastName"
+                    onBlur={handleBlur}
+                    value={values.lastName}
+                    onChange={handleChange}
+                    isValid={touched.lastName && !errors.lastName}
+                  />
+                </Form.Group>
+              </Form.Row>
+              <Form.Row>
+                <Form.Group
+                  as={Col}
+                  md="6 ml-0 mr-0 pl-1 pr-1"
+                  controlId="validationFormikUsername2"
+                >
+                  <Form.Label>Email</Form.Label>
+                  {/* <InputGroup hasValidation> */}
+                  <Form.Control
+                    type="text"
+                    placeholder="email"
+                    name="email"
+                    value={values.email}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    isValid={touched.email && !errors.email}
+                  />
+                  <Form.Control.Feedback type="invalid" tooltip>
+                    {errors.email}
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group
+                  as={Col}
+                  md="6 ml-0 mr-0 pl-1 pr-1"
+                  controlId="validationFormik104"
+                >
+                  <Form.Label>Award Title</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Award Title"
+                    name="title"
+                    value={values.title}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    isValid={touched.title && !errors.title}
+                  />
+                </Form.Group>
+              </Form.Row>
+              <Form.Row>
+                <Form.Group
+                  as={Col}
+                  md="6 ml-0 mr-0 pl-1 pr-1"
+                  controlId="validationFormik105"
+                >
+                  <Form.Label>Donation ($USD)</Form.Label>
+                  <Form.Control
+                    type="number"
+                    placeholder="0.00"
+                    name="donationTotal"
+                    value={values.donationTotal}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    isValid={
+                      touched.donationTotal &&
+                      !errors.donationTotal &&
+                      regEx.test(values.donationTotal)
+                    }
+                  />
+                </Form.Group>
+                <Form.Group
+                  as={Col}
+                  md="6 ml-0 mr-0 pl-1 pr-1"
+                  controlId="validationFormik106"
+                >
+                  <Form.Label>Donation Limit ($USD)</Form.Label>
+                  <Form.Control
+                    readonly="readonly"
+                    type="text"
+                    placeholder="Donation Limit"
+                    name="donationLimit"
+                    value={Math.ceil(values.donationTotal * 1000)}
+                    onBlur={handleBlur}
+                  />
+                </Form.Group>
+              </Form.Row>
+              <Form.Row>
+                <Form.Group
+                  as={Col}
+                  md="6 ml-0 mr-0 pl-1 pr-1"
+                  controlId="validationFormik103"
+                >
+                  <Form.Label>Award Description</Form.Label>
+                  <Form.Control
+                    type="text"
+                    as="textarea"
+                    rows={3}
+                    placeholder="What are they doing that is so amazing"
+                    name="description"
+                    onBlur={handleBlur}
+                    value={values.description}
+                    onChange={handleChange}
+                    isValid={touched.description && !errors.description}
+                  />
+                </Form.Group>
+                <Form.Group controlId="SelectCategory">
+                  <Form.Label>Category</Form.Label>
+                  <Form.Control
+                    as="select"
+                    value={values.category}
+                    name="category"
+                    placeholder="Category"
+                    onChange={handleChange}
+                    isValid={!!touched.category}
+                  >
+                    <option value={undefined} defaultValue>
+                      Select a Category
+                    </option>
+                    <option value="Open-Source">Open-Source</option>
+                    <option value="Community">Community</option>
+                    <option value="Lifetime of Awesome">
+                      Lifetime of Awesome
+                    </option>
+                    <option value="Health and Wellness">
+                      Health and Wellness
+                    </option>
+                    <option value="Volunteer">Volunteer</option>
+                    <option value="Animals">Animals</option>
+                    <option value="Heroic Act">Heroic Act</option>
+                    <option value="Enviornment">Enviornment</option>
+                    <option value="Activism">Activism</option>
+                  </Form.Control>
+                </Form.Group>
+              </Form.Row>
+              <Form.Row as={Col} md="5 mb-5 ml-0 mr-0 p-0">
+                <Form.Group controlId="file">
+                  <Form.Label>Upload an image of their work:</Form.Label>
+                  <Form.File
+                    name="file"
+                    className="ml-0"
+                    value={values.file}
+                    onChange={(e) => this.handleImage(e)}
+                    isInvalid={!!errors.file}
+                    feedback={errors.file}
+                    id="validationFormik107"
+                    feedbackTooltip
+                  />
+                </Form.Group>
+              </Form.Row>
 
-            <Button
-              className="ml-3"
-              variant="success"
-              disabled={!regEx.test(values.donationTotal)}
-              type="submit"
-            >
-              Submit form
-            </Button>
-          </Form>
-        )}
-      </Formik>
+              <Button
+                className="ml-3"
+                variant="success"
+                disabled={!regEx.test(values.donationTotal)}
+                type="submit"
+              >
+                Submit form
+              </Button>
+            </Form>
+          )}
+        </Formik>
+      </div>
     );
   }
 }

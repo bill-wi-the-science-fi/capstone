@@ -12,39 +12,50 @@ const NavbarBootstrap = ({handleClick, isLoggedIn, userId}) => {
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
-        <Nav className="mr-auto">
+        <Nav className="mr-0">
           <Nav.Link as={Link} to="/">
             Home
           </Nav.Link>
           <Nav.Link as={Link} to="/awards">
             All Awards
           </Nav.Link>
-          {isLoggedIn ? (
-            <React.Fragment>
+        </Nav>
+
+        {isLoggedIn ? (
+          <React.Fragment>
+            <Nav className="mr-auto">
               <Nav.Link as={Link} to="/nominate">
                 Nominate
               </Nav.Link>
+            </Nav>
+
+            <Nav className="pull-right">
               <Nav.Link as={Link} to={`/user/${userId}`}>
                 Dashboard
               </Nav.Link>
               <Nav.Link as={Link} to="/" onClick={handleClick}>
                 Logout
               </Nav.Link>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
+            </Nav>
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <Nav className="mr-auto">
               <Nav.Link as={Link} to="/nominateLogin">
                 Nominate
               </Nav.Link>
+            </Nav>
+
+            <Nav className="pull-right">
               <Nav.Link as={Link} to="/login">
                 Login
               </Nav.Link>
               <Nav.Link as={Link} to="/signup">
                 Sign Up
               </Nav.Link>
-            </React.Fragment>
-          )}
-        </Nav>
+            </Nav>
+          </React.Fragment>
+        )}
       </Navbar.Collapse>
     </Navbar>
   );
