@@ -4,8 +4,6 @@ const nominateContractAddress = Nominate.networks[3].address;
 const relayerAddress = '0x7714e9182799ce2f92b26e70c9cd55cd1b3c1d38';
 const Web3 = require('web3');
 const {DefenderRelayProvider} = require('defender-relay-client/lib/web3');
-// PUT SECRET IS SECRETS.JS FILE (PROCESS_ENV)
-// relayer address: 0x7714e9182799ce2f92b26e70c9cd55cd1b3c1d38
 const {credentials} = require('../../../secrets');
 
 const provider = new DefenderRelayProvider(credentials, {speed: 'fast'});

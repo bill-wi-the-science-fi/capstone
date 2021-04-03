@@ -14,6 +14,7 @@ import {
   newTransaction,
   clearTransaction
 } from '../store';
+import {storage} from '../firebase/index';
 
 const regEx = /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/;
 // put in common
@@ -36,16 +37,18 @@ const schema = yup.object().shape({
     ])
     .required(),
   donationTotal: yup.number().required().positive(),
-  donationLimit: yup.number().required().positive(),
   title: yup.string().required(),
-  description: yup.string().required()
+  description: yup.string().required(),
+  file: yup.mixed()
 });
 
 class NominateForm extends Component {
   constructor() {
     super();
+
     this.onSubmit = this.onSubmit.bind(this);
     this.startAwardAndDonate = this.startAwardAndDonate.bind(this);
+    this.handleImage = this.handleImage.bind(this);
   }
 
   async componentDidMount() {
@@ -89,7 +92,8 @@ class NominateForm extends Component {
     recipientAddress,
     amountOfDonation,
     recipientEmail,
-    donationLimit
+    donationLimit,
+    imageUrl
   ) => {
     try {
       const {accounts, contract, web3} = this.state;
@@ -104,7 +108,8 @@ class NominateForm extends Component {
           await this.props.newTransaction({
             status: 'pending',
             hash: hash,
-            award: awardId
+            award: awardId,
+            imageUrl: imageUrl
           });
           // similar behavior as an HTTP redirect
           this.props.history.push('/confirmation');
@@ -140,40 +145,70 @@ class NominateForm extends Component {
   async onSubmit(formValues) {
     formValues.nominatorId = this.props.signedInUser.id;
     const donationAmountUSD = +formValues.donationTotal;
-    const donationLimitUSD = +formValues.donationLimit;
-    try {
-      const donationAmountETH = (
-        await this.props.getPriceConversion(donationAmountUSD)
-      ).toString();
-      const donationLimitETH = (
-        await this.props.getPriceConversion(donationLimitUSD)
-      ).toString();
-      const formData = {
-        ...formValues,
-        donationTotal: this.state.web3.utils.toWei(donationAmountETH, 'ether'),
-        donationLimit: this.state.web3.utils.toWei(donationLimitETH, 'ether')
-      };
-      // formValues.donationTotal = this.state.web3.utils.toWei(
-      //   donationAmountETH,
-      //   'ether'
-      // )
-      // formValues.donationLimit = this.state.web3.utils.toWei(
-      //   donationLimitETH,
-      //   'ether'
-      // )
-      await this.props.nominateUser(formData);
-      this.startAwardAndDonate(
-        this.props.nominate.awardId,
-        this.props.nominate.recipient,
-        formData.donationTotal,
-        formValues.email,
-        formData.donationLimit
-      );
-    } catch (error) {
-      console.log(error);
+    const donationLimitUSD = +formValues.donationTotal * 1000;
+    const {file} = this.state;
+    const uploadTask = storage.ref(`images/${file.name}`).put(file);
+    await uploadTask.on(
+      'state_changed',
+      () => {},
+      (error) => {
+        console.log(error);
+      },
+      () =>
+        storage
+          .ref('images')
+          .child(file.name)
+          .getDownloadURL()
+          .then(async (url) => {
+            formValues.imageUrl = url;
+
+            try {
+              const donationAmountETH = (
+                await this.props.getPriceConversion(donationAmountUSD)
+              ).toString();
+              const donationLimitETH = (
+                await this.props.getPriceConversion(donationLimitUSD)
+              ).toString();
+              const formData = {
+                ...formValues,
+                donationTotal: this.state.web3.utils.toWei(
+                  donationAmountETH,
+                  'ether'
+                ),
+                donationLimit: this.state.web3.utils.toWei(
+                  donationLimitETH,
+                  'ether'
+                )
+              };
+              // formValues.donationTotal = this.state.web3.utils.toWei(
+              //   donationAmountETH,
+              //   'ether'
+              // )
+              // formValues.donationLimit = this.state.web3.utils.toWei(
+              //   donationLimitETH,
+              //   'ether'
+              // )
+              await this.props.nominateUser(formData);
+              this.startAwardAndDonate(
+                this.props.nominate.awardId,
+                this.props.nominate.recipient,
+                formData.donationTotal,
+                formValues.email,
+                formData.donationLimit,
+                formData.imageUrl
+              );
+            } catch (error) {
+              console.log(error);
+            }
+          })
+    );
+  }
+  handleImage(e) {
+    e.persist();
+    if (e.target.files[0]) {
+      this.setState({file: e.target.files[0]});
     }
   }
-
   render() {
     return (
       <Formik
@@ -187,6 +222,7 @@ class NominateForm extends Component {
           donationTotal: '',
           donationLimit: '',
           title: '',
+          file: null,
           description: ''
         }}
       >
@@ -258,7 +294,7 @@ class NominateForm extends Component {
               <Form.Group as={Col} md="4" controlId="validationFormik105">
                 <Form.Label>Donation ($USD)</Form.Label>
                 <Form.Control
-                  type="text"
+                  type="number"
                   placeholder="Donation"
                   name="donationTotal"
                   value={values.donationTotal}
@@ -274,21 +310,24 @@ class NominateForm extends Component {
               <Form.Group as={Col} md="4" controlId="validationFormik106">
                 <Form.Label>Donation Limit ($USD)</Form.Label>
                 <Form.Control
+                  readonly="readonly"
                   type="text"
                   placeholder="Donation Limit"
                   name="donationLimit"
-                  value={values.donationLimit}
+                  value={Math.ceil(values.donationTotal * 1000)}
                   onBlur={handleBlur}
-                  onChange={handleChange}
-                  isValid={
-                    touched.donationLimit &&
-                    !errors.donationLimit &&
-                    Number(values.donationLimit) >
-                      Number(values.donationTotal) &&
-                    regEx.test(values.donationLimit)
-                  }
                 />
               </Form.Group>
+              <Form.File
+                className="position-relative"
+                name="file"
+                label="File"
+                onChange={(e) => this.handleImage(e)}
+                isInvalid={!!errors.file}
+                feedback={errors.file}
+                id="validationFormik107"
+                feedbackTooltip
+              />
               <Form.Group as={Col} md="4" controlId="validationFormik103">
                 <Form.Label>Award Description</Form.Label>
                 <Form.Control
@@ -336,10 +375,7 @@ class NominateForm extends Component {
             <Button
               className="ml-3"
               variant="success"
-              disabled={
-                !regEx.test(values.donationLimit) ||
-                !regEx.test(values.donationTotal)
-              }
+              disabled={!regEx.test(values.donationTotal)}
               type="submit"
             >
               Submit form

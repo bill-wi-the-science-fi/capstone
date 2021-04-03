@@ -119,7 +119,10 @@ form div {
   border: #5cb85c;
   border-radius: 5px;
 }
-
+#award-filter-container {
+  display: flex;
+  justify-content: flex-start;
+}
 .award-card-container {
   display: flex;
   max-height: 500px;

@@ -16,9 +16,7 @@ const NavbarBootstrap = ({handleClick, isLoggedIn, userId}) => {
           <Nav.Link as={Link} to="/">
             Home
           </Nav.Link>
-          <Nav.Link as={Link} to="/awards">
-            All Awards
-          </Nav.Link>
+          <Nav.Link href="/awards">All Awards</Nav.Link>
           {isLoggedIn ? (
             <React.Fragment>
               <Nav.Link as={Link} to="/nominate">
@@ -44,12 +42,6 @@ const NavbarBootstrap = ({handleClick, isLoggedIn, userId}) => {
               </Nav.Link>
             </React.Fragment>
           )}
-        </Nav>
-        <Nav>
-          <Form inline>
-            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-            <Button variant="outline-success">Search</Button>
-          </Form>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

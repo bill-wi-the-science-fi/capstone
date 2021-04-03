@@ -13,7 +13,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       title,
       category,
       description,
-      imgUrl,
+      imageUrl,
       donationLimit,
       nominatorId,
       email,
@@ -27,7 +27,8 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     let [nominee, userWasCreated] = await User.findOrCreate({
       where: {email: email}
     });
-
+    console.log(req.body);
+    console.log(imageUrl);
     // Get noiminator Instance
     const nominator = await User.findOne({where: {id: nominatorId}});
 
@@ -42,7 +43,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       title: title,
       category: category,
       description: description,
-      imgUrl: imgUrl,
+      imageUrl: imageUrl,
       donationLimit: donationLimit,
       donationTotal: '0'
     };
@@ -61,7 +62,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       });
       //placeholder url until we create an identifier
       let UserPin = nominee.pin();
-      const inviteUrl = `http://localhost:8080/signup/?email=${email}&pin=${UserPin}`;
+      const inviteUrl = `https://pay-eth-forward.herokuapp.com/signup?email=${email}&pin=${UserPin}`;
 
       sendEmail(email, firstName, nominator.firstName, inviteUrl);
       recipientAddress = nominator.ethPublicAddress;
@@ -74,7 +75,8 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     const result = {
       // WORKAROUND UNITL WE WIPE ETH CONTRACT db is not synced with smart contract
       awardId: newAward.id,
-      recipient: recipientAddress
+      recipient: recipientAddress,
+      imageUrl: imageUrl
     };
     res.json(result);
   } catch (err) {

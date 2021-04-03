@@ -87,7 +87,7 @@ class SingleAward extends Component {
             <Row className="mt-3">
               <Image
                 className="single-award-recipient-img"
-                src={singleAward.recipient_imgUrl}
+                src={singleAward.recipient_imageUrl}
                 rounded
               />
             </Row>

@@ -219,9 +219,7 @@ const sendEmail = (
                   Welcome, ${firstName}!
                 </h1>
                 <p style="font-family: 'Merriweather', serif; margin: 0">
-                  Thank you for being an awesome person and it hasn't gotten unnoticed. ${nominatorName} has
-                  noticed and recently appreciate your kindness and has a donation in your name. In order to receive
-                  this gift, click on the link below and continue to be you, a rockstar!
+                Congratulations! Due to your amazing work, you’ve been nominated to win an award by ${nominatorName}.  A donation to this award fund has been started by ${nominatorName}, and you’ll have access to these funds soon. Even better is that your award will be posted on Pay Eth Forward and others can contribute to Alpay’s initial donation. In order to receive this gift, click on the link below to get signed up. Afterwards, you’ll be able to add additional info to the work you’ve been doing. Thank YOU for being awesome.
                 </p>
               </td>
             </tr>

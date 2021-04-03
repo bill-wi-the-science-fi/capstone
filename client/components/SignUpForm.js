@@ -4,6 +4,8 @@ import {connect} from 'react-redux';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import {authSignUp, checkPin, createVerifiedUser, auth} from '../store';
+import {storage} from '../firebase/index';
+
 import getWeb3 from '../common/getWeb3';
 /**
  * COMPONENT
@@ -27,8 +29,7 @@ const schema = yup.object().shape({
       is: (password) => !!(password && password.length > 0),
       then: yup.string().oneOf([yup.ref('password')], "Password doesn't match")
     }),
-  imgUrl: yup.string()
-  //pin: yup.string().required()
+  file: yup.mixed()
 });
 
 class SignUpForm extends Component {
@@ -40,7 +41,15 @@ class SignUpForm extends Component {
       pin: ''
     };
     this.onSubmit = this.onSubmit.bind(this);
+    this.handleImage = this.handleImage.bind(this);
   }
+  handleImage(e) {
+    e.persist();
+    if (e.target.files[0]) {
+      this.setState({file: e.target.files[0]});
+    }
+  }
+
   async componentDidMount() {
     try {
       const web3 = await getWeb3();
@@ -67,25 +76,48 @@ class SignUpForm extends Component {
   }
   async onSubmit(evt) {
     // const {pin} = evt
-    const {firstName, lastName, email, password, imgUrl} = evt;
-    const ethPublicAddress = this.state.accounts[0];
-    if (this.props.singleUser.userHasPin) {
-      await this.props.createVerifiedUser({
-        ethPublicAddress,
-        firstName,
-        lastName,
-        email,
-        password,
-        imgUrl,
-        pin: this.state.pin
-      });
-      await this.props.auth(email, password, 'login');
-    } else {
-      this.props.authSignUp(
-        {ethPublicAddress, firstName, lastName, email, password, imgUrl},
-        'signup'
-      );
-    }
+    const {firstName, lastName, email, password} = evt;
+    const {file} = this.state;
+    const uploadTask = storage.ref(`images/${file.name}`).put(file);
+    await uploadTask.on(
+      'state_changed',
+      () => {},
+      (error) => {
+        console.log(error);
+      },
+      () =>
+        storage
+          .ref('images')
+          .child(file.name)
+          .getDownloadURL()
+          .then(async (imageUrl) => {
+            const ethPublicAddress = this.state.accounts[0];
+            if (this.props.singleUser.userHasPin) {
+              await this.props.createVerifiedUser({
+                ethPublicAddress,
+                firstName,
+                lastName,
+                email,
+                password,
+                imageUrl,
+                pin: this.state.pin
+              });
+              await this.props.auth(email, password, 'login');
+            } else {
+              this.props.authSignUp(
+                {
+                  ethPublicAddress,
+                  firstName,
+                  lastName,
+                  email,
+                  password,
+                  imageUrl
+                },
+                'signup'
+              );
+            }
+          })
+    );
   }
   render() {
     return (
@@ -99,8 +131,7 @@ class SignUpForm extends Component {
           lastName: '',
           email: '',
           password: '',
-          passwordConfirm: '',
-          imgUrl: ''
+          passwordConfirm: ''
           //pin: ''
         }}
       >
@@ -180,21 +211,18 @@ class SignUpForm extends Component {
                   isValid={touched.passwordConfirm && !errors.passwordConfirm}
                 />
               </Form.Group>
+              <Form.File
+                className="position-relative"
+                name="file"
+                label="File"
+                onChange={(e) => this.handleImage(e)}
+                isInvalid={!!errors.file}
+                feedback={errors.file}
+                id="validationFormik107"
+                feedbackTooltip
+              />
             </Form.Row>
-            <Form.Row>
-              <Form.Group as={Col} md="4" controlId="validationFormik104">
-                <Form.Label>Image Url</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Image Url"
-                  name="imgUrl"
-                  value={values.imgUrl}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  isValid={touched.imgUrl && !errors.imgUrl}
-                />
-              </Form.Group>
-            </Form.Row>
+            <Form.Row></Form.Row>
             <Button type="submit">Submit form</Button>
           </Form>
         )}
@@ -218,12 +246,12 @@ const mapDispatch = (dispatch) => {
       dispatch(auth(email, password, type));
     },
     authSignUp: (
-      {ethPublicAddress, firstName, lastName, email, password, imgUrl},
+      {ethPublicAddress, firstName, lastName, email, password, imageUrl},
       type
     ) =>
       dispatch(
         authSignUp(
-          {ethPublicAddress, firstName, lastName, email, password, imgUrl},
+          {ethPublicAddress, firstName, lastName, email, password, imageUrl},
           type
         )
       )

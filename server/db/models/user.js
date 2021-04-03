@@ -58,7 +58,7 @@ const User = db.define('user', {
     unique: false,
     defaultValue: null
   },
-  imgUrl: {
+  imageUrl: {
     type: Sequelize.STRING,
     unique: false,
     defaultValue:
