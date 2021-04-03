@@ -13,7 +13,7 @@ const {User, Nomination, Transaction} = require('../server/db/models');
 //       lastName: 'melt',
 //       password: '123',
 //       ethPublicAddress: '0x76a992fdc12221DEade9b0c299C3deDde5414f7d',
-//       imgUrl:
+//       imageUrl:
 //         'https://www.pinclipart.com/picdir/middle/395-3956920_free-download-jake-the-dog-finn-the-human.png',
 //       pin: '215019'
 //     },
@@ -31,7 +31,7 @@ const {User, Nomination, Transaction} = require('../server/db/models');
 //       lastName: 'Watson',
 //       password: 'Ether2TheMoon!',
 //       ethPublicAddress: '0x4c5f05721bbcfabec7a5a2f58760d0a0ef20d0e6',
-//       imgUrl:
+//       imageUrl:
 //         'https://tisch.nyu.edu/content/dam/tisch/clive-davis-institute/alanwatson_crop.jpg',
 //       pin: '230419'
 //     },
@@ -41,7 +41,7 @@ const {User, Nomination, Transaction} = require('../server/db/models');
 //       lastName: 'Aldemir',
 //       password: '123',
 //       ethPublicAddress: '0x7E797cEE6176283375A7b5975493F4fB36b54777',
-//       imgUrl:
+//       imageUrl:
 //         'https://tisch.nyu.edu/content/dam/tisch/clive-davis-institute/alanwatson_crop.jpg',
 //       pin: '230419'
 //     }
