@@ -151,7 +151,7 @@ async function deactivateAwardInDb(event) {
   const singleAward = await Award.findOne({
     where: {id: awardId}
   });
-  await singleAward.update({open: 'closed'});
+  await singleAward.update({open: 'withdrawn'});
 }
 
 const initListener = () => {

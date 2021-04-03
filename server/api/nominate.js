@@ -27,8 +27,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     let [nominee, userWasCreated] = await User.findOrCreate({
       where: {email: email}
     });
-    console.log(req.body);
-    console.log(imageUrl);
+
     // Get noiminator Instance
     const nominator = await User.findOne({where: {id: nominatorId}});
 
