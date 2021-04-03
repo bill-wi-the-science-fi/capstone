@@ -144,87 +144,123 @@ class SignUpForm extends Component {
           isValid,
           errors
         }) => (
-          <Form noValidate onSubmit={handleSubmit}>
-            <Form.Row>
-              <Form.Group as={Col} md="4" controlId="validationFormik101">
-                <Form.Label>First name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="First Name"
-                  name="firstName"
-                  value={values.firstName}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  isValid={touched.firstName && !errors.firstName}
-                />
-              </Form.Group>
-              <Form.Group as={Col} md="4" controlId="validationFormik102">
-                <Form.Label>Last name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Last Name"
-                  name="lastName"
-                  onBlur={handleBlur}
-                  value={values.lastName}
-                  onChange={handleChange}
-                  isValid={touched.lastName && !errors.lastName}
-                />
-              </Form.Group>
-              <Form.Group as={Col} md="4" controlId="validationFormikUsername2">
-                <Form.Label>Email</Form.Label>
-                {/* <InputGroup hasValidation> */}
-                <Form.Control
-                  type="text"
-                  placeholder="email"
-                  name="email"
-                  value={values.email}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  isValid={touched.email && !errors.email}
-                />
-                <Form.Control.Feedback type="invalid" tooltip>
-                  {errors.email}
-                </Form.Control.Feedback>
-                {/* </InputGroup> */}
-              </Form.Group>
-              <Form.Group controlId="formBasicPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Password"
-                  name="password"
-                  value={values.password}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  isValid={touched.password && !errors.password}
-                />
-              </Form.Group>
-              <Form.Group controlId="formBasicPasswordConfirm">
-                <Form.Label>Confirm Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Please re-enter"
-                  name="passwordConfirm"
-                  value={values.passwordConfirm}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  isValid={touched.passwordConfirm && !errors.passwordConfirm}
-                />
-              </Form.Group>
-              <Form.File
-                className="position-relative"
-                name="file"
-                label="File"
-                onChange={(e) => this.handleImage(e)}
-                isInvalid={!!errors.file}
-                feedback={errors.file}
-                id="validationFormik107"
-                feedbackTooltip
-              />
-            </Form.Row>
-            <Form.Row></Form.Row>
-            <Button type="submit">Submit form</Button>
-          </Form>
+          <div className="container">
+            <Form noValidate onSubmit={handleSubmit}>
+              <Form.Row>
+                <Form.Group
+                  as={Col}
+                  md="6 ml-0 mr-0 pl-1 pr-2"
+                  controlId="validationFormik101"
+                >
+                  <Form.Label>First name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="First Name"
+                    name="firstName"
+                    value={values.firstName}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    isValid={touched.firstName && !errors.firstName}
+                  />
+                </Form.Group>
+                <Form.Group
+                  as={Col}
+                  md="6 ml-0 mr-0 pl-1 pr-2"
+                  controlId="validationFormik102"
+                >
+                  <Form.Label>Last name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Last Name"
+                    name="lastName"
+                    onBlur={handleBlur}
+                    value={values.lastName}
+                    onChange={handleChange}
+                    isValid={touched.lastName && !errors.lastName}
+                  />
+                </Form.Group>
+              </Form.Row>
+              <Form.Row>
+                <Form.Group
+                  as={Col}
+                  md="6 ml-0 mr-0 pl-1 pr-2"
+                  controlId="validationFormikUsername2"
+                >
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="email"
+                    name="email"
+                    value={values.email}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    isValid={touched.email && !errors.email}
+                  />
+                  <Form.Control.Feedback type="invalid" tooltip>
+                    {errors.email}
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group
+                  as={Col}
+                  md="6 ml-0 mr-0 pl-1 pr-2"
+                  controlId="formBasicPassword"
+                >
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    value={values.password}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    isValid={touched.password && !errors.password}
+                  />
+                </Form.Group>
+              </Form.Row>
+
+              <Form.Row>
+                <Form.Group
+                  as={Col}
+                  md="6 ml-0 mr-0 pl-1 pr-2"
+                  controlId="formBasicPasswordConfirm"
+                >
+                  <Form.Label>Confirm Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Please re-enter"
+                    name="passwordConfirm"
+                    value={values.passwordConfirm}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    isValid={touched.passwordConfirm && !errors.passwordConfirm}
+                  />
+                </Form.Group>
+              </Form.Row>
+
+              <Form.Row>
+                <Form.Group as={Col} md="5 ml-0" controlId="file">
+                  <Form.File
+                    className="position-relative ml-0"
+                    name="file"
+                    label="Upload an image"
+                    onChange={(e) => this.handleImage(e)}
+                    isInvalid={!!errors.file}
+                    feedback={errors.file}
+                    id="validationFormik107"
+                    feedbackTooltip
+                  />
+                </Form.Group>
+              </Form.Row>
+
+              <Button
+                className="ml-6 ml-0 mr-0 pl-1 pr-2"
+                variant="success"
+                type="submit"
+              >
+                Submit
+              </Button>
+            </Form>
+          </div>
         )}
       </Formik>
     );
