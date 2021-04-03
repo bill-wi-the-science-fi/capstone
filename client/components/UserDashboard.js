@@ -12,7 +12,7 @@ import ReactLoading from 'react-loading';
 /**
  * COMPONENT
  */
-const web3Global = new Web3();
+const web3 = new Web3();
 
 class UserDashboard extends Component {
   constructor() {
@@ -30,7 +30,7 @@ class UserDashboard extends Component {
   }
 
   convertDonation(donation) {
-    return web3Global.utils.fromWei(donation, 'ether');
+    return web3.utils.fromWei(donation, 'ether');
   }
 
   //only contracts that are expired and not withdrawn will have this function
@@ -81,23 +81,7 @@ class UserDashboard extends Component {
           5000
         );
       }
-      //creates a web3 instance with metamask
-      const web3 = await getWeb3();
 
-      //grabs account information (public address)
-      const accounts = await web3.eth.getAccounts();
-      if (accounts) {
-        //grabs network information that smart contract is on
-        const networkId = await web3.eth.net.getId();
-        //const deployedNetwork = Nominate.networks[networkId];
-        const deployedNetwork = Nominate.networks[networkId];
-        //create a contract instance
-        const contract = new web3.eth.Contract(
-          Nominate.abi,
-          deployedNetwork && deployedNetwork.address
-        );
-        this.setState({contract, accounts});
-      }
       //grab all awards for a user, active, pending, or closed
       await this.props.getAllUserAwards(this.props.signedInUser.id);
       await this.props.getAllUserNoms(this.props.signedInUser.id);

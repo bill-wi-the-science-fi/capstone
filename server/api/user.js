@@ -38,7 +38,6 @@ router.put('/verified', async (req, res, next) => {
       imageUrl,
       pin
     } = req.body;
-    console.log('verified');
     let user = await User.findOne({
       where: {
         email: email,

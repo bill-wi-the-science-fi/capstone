@@ -93,11 +93,16 @@ class EditAwards extends Component {
 
   // eslint-disable-next-line complexity
   render() {
+    console.log('render', this.props);
     if (
-      Object.keys(this.props.singleAward).length === 0 &&
-      Object.keys(this.props.signedInUser).length === 0
+      (Object.keys(this.props.singleAward).length === 0 &&
+        Object.keys(this.props.signedInUser).length === 0 &&
+        this.state.dataAvailable) ||
+      (Object.keys(this.props.singleAward).length === 0 &&
+        Object.keys(this.props.signedInUser).length &&
+        this.state.dataAvailable)
     ) {
-      return this.state.dataAvailable ? (
+      return (
         <div className="loading-container">
           <div>
             <strong>fetching award to edit...</strong>
@@ -109,7 +114,12 @@ class EditAwards extends Component {
             width={150}
           />
         </div>
-      ) : (
+      );
+    } else if (
+      Object.keys(this.props.singleAward).length === 0 &&
+      Object.keys(this.props.signedInUser).length === 0
+    ) {
+      return (
         <div className="loading-container">
           <strong>this award can not be editted</strong>
         </div>
@@ -117,7 +127,8 @@ class EditAwards extends Component {
     } else if (
       this.props.match.params.userId != this.props.signedInUser.id ||
       (this.props.singleAward.recipient_id != this.props.signedInUser.id &&
-        this.props.singleAward.giver_id != this.props.signedInUser.id)
+        this.props.singleAward.giver_id != this.props.signedInUser.id &&
+        !this.state.dataAvailable)
     ) {
       return (
         <div className="forbidden-container">

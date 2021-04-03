@@ -16,9 +16,7 @@ const NavbarBootstrap = ({handleClick, isLoggedIn, userId}) => {
           <Nav.Link as={Link} to="/">
             Home
           </Nav.Link>
-          <Nav.Link as={Link} to="/awards">
-            All Awards
-          </Nav.Link>
+          <Nav.Link href="/awards">All Awards</Nav.Link>
         </Nav>
 
         {isLoggedIn ? (
