@@ -1,6 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/storage';
-import firebaseKey from '../../secrets';
+const firebaseKey = process.env.FIREBASE_KEY;
 const firebaseConfig = {
   apiKey: firebaseKey,
   authDomain: 'pay-eth-foward.firebaseapp.com',
@@ -11,7 +11,5 @@ const firebaseConfig = {
   measurementId: 'G-G3PJNEE59G'
 };
 firebase.initializeApp(firebaseConfig);
-
 const storage = firebase.storage();
-
 export {storage, firebase as default};
