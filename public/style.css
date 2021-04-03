@@ -4,6 +4,7 @@ body {
 
 a {
   text-decoration: none;
+  color: inherit;
 }
 
 label {
@@ -181,4 +182,8 @@ form div {
 .pagination > li:last-child > a,
 .pagination > li:last-child > span {
   border-radius: 6px;
+}
+
+.black-dark {
+  color: black;
 }

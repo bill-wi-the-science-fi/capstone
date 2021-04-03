@@ -64,7 +64,7 @@ router.get('/:awardId', async (req, res, next) => {
   }
 });
 
-//change status of an open award to close after withdrawal of funds or donation reaches max limit
+//change status of an open award to withdrawn after withdrawal of funds or donation reaches max limit
 router.put('/:id/withdraw', checkAwardRelation, async (req, res, next) => {
   const {open} = req.body;
   try {

@@ -23,7 +23,7 @@ const Award = db.define('award', {
     defaultValue: 'Community'
   },
   open: {
-    type: Sequelize.ENUM('open', 'pending', 'closed'),
+    type: Sequelize.ENUM('open', 'pending', 'closed', 'withdrawn'),
     allowNull: false,
     defaultValue: 'closed'
   },
