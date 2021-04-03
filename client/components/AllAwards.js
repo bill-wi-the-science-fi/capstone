@@ -58,12 +58,18 @@ class AllAwards extends Component {
   };
   handleFilter = async (category) => {
     await this.props.fetchFilteredAwards(category);
-    this.handlePageClick({selected: 0});
-    this.setState((prevState) => ({
-      ...prevState,
-      pageCount: Math.ceil(this.props.awards.length / prevState.perPage),
-      awardsLocal: this.props.awards
-    }));
+    const {perPage} = this.state;
+    this.setState(
+      {
+        pageCount: Math.ceil(this.props.awards.length / perPage),
+        awardsLocal: this.props.awards,
+        currentPage: 0,
+        startAwardIndex: 0
+      },
+      () => {
+        this.handlePageClick({selected: 0});
+      }
+    );
   };
   async componentDidMount() {
     await this.props.getAllAwards();
@@ -80,6 +86,7 @@ class AllAwards extends Component {
     }
   }
   render() {
+    console.log('render', this.state);
     const {awardsLocal} = this.state;
     if (!awardsLocal.length) {
       return this.state.dataAvailable ? (
@@ -122,7 +129,7 @@ class AllAwards extends Component {
                 <Dropdown.Item eventKey="Animals">Animals</Dropdown.Item>
                 <Dropdown.Item eventKey="Heroic Act">Heroic Act</Dropdown.Item>
                 <Dropdown.Item eventKey="Enviornment">
-                  Enviornment
+                  Environment
                 </Dropdown.Item>
                 <Dropdown.Item eventKey="Activism">Activism</Dropdown.Item>
               </DropdownButton>
@@ -203,6 +210,7 @@ class AllAwards extends Component {
             pageCount={this.state.pageCount}
             marginPagesDisplayed={1}
             pageRangeDisplayed={1}
+            forcePage={this.state.currentPage}
             onPageChange={this.handlePageClick}
             containerClassName="pagination"
             subContainerClassName="pages pagination"
