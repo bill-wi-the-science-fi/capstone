@@ -211,19 +211,22 @@ class SignUpForm extends Component {
                   isValid={touched.passwordConfirm && !errors.passwordConfirm}
                 />
               </Form.Group>
-              <Form.File
-                className="position-relative"
-                name="file"
-                label="File"
-                onChange={(e) => this.handleImage(e)}
-                isInvalid={!!errors.file}
-                feedback={errors.file}
-                id="validationFormik107"
-                feedbackTooltip
-              />
+              <Form.Group controlId="file">
+                <Form.File
+                  className="position-relative"
+                  name="file"
+                  label="Upload an image"
+                  onChange={(e) => this.handleImage(e)}
+                  isInvalid={!!errors.file}
+                  feedback={errors.file}
+                  id="validationFormik107"
+                  feedbackTooltip
+                />
+              </Form.Group>
             </Form.Row>
-            <Form.Row></Form.Row>
-            <Button type="submit">Submit form</Button>
+            <Button classvariant="success" type="submit">
+              Submit form
+            </Button>
           </Form>
         )}
       </Formik>

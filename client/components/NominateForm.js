@@ -260,6 +260,8 @@ class NominateForm extends Component {
                   isValid={touched.lastName && !errors.lastName}
                 />
               </Form.Group>
+            </Form.Row>
+            <Form.Row>
               <Form.Group as={Col} md="4" controlId="validationFormikUsername2">
                 <Form.Label>Email</Form.Label>
                 {/* <InputGroup hasValidation> */}
@@ -275,10 +277,7 @@ class NominateForm extends Component {
                 <Form.Control.Feedback type="invalid" tooltip>
                   {errors.email}
                 </Form.Control.Feedback>
-                {/* </InputGroup> */}
               </Form.Group>
-            </Form.Row>
-            <Form.Row>
               <Form.Group as={Col} md="4" controlId="validationFormik104">
                 <Form.Label>Award Title</Form.Label>
                 <Form.Control
@@ -291,11 +290,13 @@ class NominateForm extends Component {
                   isValid={touched.title && !errors.title}
                 />
               </Form.Group>
+            </Form.Row>
+            <Form.Row>
               <Form.Group as={Col} md="4" controlId="validationFormik105">
                 <Form.Label>Donation ($USD)</Form.Label>
                 <Form.Control
                   type="number"
-                  placeholder="Donation"
+                  placeholder="0.00"
                   name="donationTotal"
                   value={values.donationTotal}
                   onBlur={handleBlur}
@@ -318,16 +319,8 @@ class NominateForm extends Component {
                   onBlur={handleBlur}
                 />
               </Form.Group>
-              <Form.File
-                className="position-relative"
-                name="file"
-                label="File"
-                onChange={(e) => this.handleImage(e)}
-                isInvalid={!!errors.file}
-                feedback={errors.file}
-                id="validationFormik107"
-                feedbackTooltip
-              />
+            </Form.Row>
+            <Form.Row>
               <Form.Group as={Col} md="4" controlId="validationFormik103">
                 <Form.Label>Award Description</Form.Label>
                 <Form.Control
@@ -369,6 +362,20 @@ class NominateForm extends Component {
                   <option value="Enviornment">Enviornment</option>
                   <option value="Activism">Activism</option>
                 </Form.Control>
+              </Form.Group>
+            </Form.Row>
+            <Form.Row as={Col} md="5 mb-5 ml-0 mr-0 p-0">
+              <Form.Group controlId="file">
+                <Form.Label>Upload an image of their work:</Form.Label>
+                <Form.File
+                  name="file"
+                  value={values.file}
+                  onChange={(e) => this.handleImage(e)}
+                  isInvalid={!!errors.file}
+                  feedback={errors.file}
+                  id="validationFormik107"
+                  feedbackTooltip
+                />
               </Form.Group>
             </Form.Row>
 
