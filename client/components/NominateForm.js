@@ -84,6 +84,7 @@ class NominateForm extends Component {
         error,
         `Failed to load web3, accounts, or contract. Check console for details.`
       );
+      this.props.history.push('/');
     }
   }
 
