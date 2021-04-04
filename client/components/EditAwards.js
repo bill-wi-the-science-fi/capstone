@@ -153,127 +153,152 @@ class EditAwards extends Component {
         award_imageUrl
       } = this.props.singleAward;
       return (
-        <Formik
-          enableReinitialize
-          validationSchema={schema}
-          onSubmit={this.onSubmit}
-          initialValues={{
-            firstName: recipient_firstName,
-            lastName: recipient_lastName,
-            category: award_category,
-            title: award_title,
-            description: award_description,
-            imageUrl: award_imageUrl
-          }}
-        >
-          {({
-            handleSubmit,
-            handleChange,
-            handleBlur,
-            values,
-            touched,
-            isValid,
-            errors
-          }) => (
-            <Form noValidate onSubmit={handleSubmit}>
-              <Form.Row>
-                <Form.Group as={Col} md="4" controlId="validationFormik101">
-                  <Form.Label>First name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder={this.props.singleAward.recipient_firstName}
-                    name="firstName"
-                    value={values.firstName}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    isValid={touched.firstName && !errors.firstName}
-                  />
-                </Form.Group>
-                <Form.Group as={Col} md="4" controlId="validationFormik102">
-                  <Form.Label>Last name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Last Name"
-                    name="lastName"
-                    onBlur={handleBlur}
-                    value={values.lastName}
-                    onChange={handleChange}
-                    isValid={touched.lastName && !errors.lastName}
-                  />
-                </Form.Group>
-              </Form.Row>
-              <Form.Row>
-                <Form.Group as={Col} md="4" controlId="validationFormik104">
-                  <Form.Label>Award Title</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Award Title"
-                    name="title"
-                    value={values.title}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    isValid={touched.title && !errors.title}
-                  />
-                </Form.Group>
-                <Form.Group as={Col} md="4" controlId="validationFormik103">
-                  <Form.Label>Award Description</Form.Label>
-                  <Form.Control
-                    type="text"
-                    as="textarea"
-                    rows={3}
-                    placeholder="What are they doing that is so amazing"
-                    name="description"
-                    onBlur={handleBlur}
-                    value={values.description}
-                    onChange={handleChange}
-                    isValid={touched.description && !errors.description}
-                  />
-                </Form.Group>
-                <Form.File
-                  className="position-relative"
-                  name="file"
-                  label="File"
-                  onChange={(e) => this.handleImage(e)}
-                  isInvalid={!!errors.file}
-                  feedback={errors.file}
-                  id="validationFormik107"
-                  feedbackTooltip
-                />
-
-                <Form.Group controlId="SelectCategory">
-                  <Form.Label>Category</Form.Label>
-                  <Form.Control
-                    as="select"
-                    value={values.category}
-                    name="category"
-                    placeholder="Category"
-                    onChange={handleChange}
-                    isValid={!!touched.values}
+        <div className="container">
+          <Formik
+            enableReinitialize
+            validationSchema={schema}
+            onSubmit={this.onSubmit}
+            initialValues={{
+              firstName: recipient_firstName,
+              lastName: recipient_lastName,
+              category: award_category,
+              title: award_title,
+              description: award_description,
+              imageUrl: award_imageUrl
+            }}
+          >
+            {({
+              handleSubmit,
+              handleChange,
+              handleBlur,
+              values,
+              touched,
+              isValid,
+              errors
+            }) => (
+              <Form noValidate onSubmit={handleSubmit}>
+                <Form.Row>
+                  <Form.Group
+                    as={Col}
+                    md="6 ml-0 mr-0 pl-1 pr-1"
+                    controlId="validationFormik101"
                   >
-                    <option value={undefined} defaultValue>
-                      Select a Category
-                    </option>
-                    <option value="Open-Source">Open-Source</option>
-                    <option value="Community">Community</option>
-                    <option value="Lifetime of Awesome">
-                      Lifetime of Awesome
-                    </option>
-                    <option value="Health and Wellness">
-                      Health and Wellness
-                    </option>
-                    <option value="Volunteer">Volunteer</option>
-                    <option value="Animals">Animals</option>
-                    <option value="Heroic Act">Heroic Act</option>
-                    <option value="Enviornment">Enviornment</option>
-                    <option value="Activism">Activism</option>
-                  </Form.Control>
-                </Form.Group>
-              </Form.Row>
+                    <Form.Label>First name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder={this.props.singleAward.recipient_firstName}
+                      name="firstName"
+                      value={values.firstName}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      isValid={touched.firstName && !errors.firstName}
+                    />
+                  </Form.Group>
+                  <Form.Group
+                    as={Col}
+                    md="6 ml-0 mr-0 pl-1 pr-1"
+                    controlId="validationFormik102"
+                  >
+                    <Form.Label>Last name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Last Name"
+                      name="lastName"
+                      onBlur={handleBlur}
+                      value={values.lastName}
+                      onChange={handleChange}
+                      isValid={touched.lastName && !errors.lastName}
+                    />
+                  </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                  <Form.Group
+                    as={Col}
+                    md="6 ml-0 mr-0 pl-1 pr-1"
+                    controlId="validationFormik104"
+                  >
+                    <Form.Label>Award Title</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Award Title"
+                      name="title"
+                      value={values.title}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      isValid={touched.title && !errors.title}
+                    />
+                  </Form.Group>
+                  <Form.Group
+                    as={Col}
+                    md="6 ml-0 mr-0 pl-1 pr-1"
+                    controlId="validationFormik103"
+                  >
+                    <Form.Label>Award Description</Form.Label>
+                    <Form.Control
+                      type="text"
+                      as="textarea"
+                      rows={3}
+                      placeholder="What are they doing that is so amazing"
+                      name="description"
+                      onBlur={handleBlur}
+                      value={values.description}
+                      onChange={handleChange}
+                      isValid={touched.description && !errors.description}
+                    />
+                  </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                  <Form.Group
+                    as={Col}
+                    md="6 ml-0 mr-0 pl-1 pr-1"
+                    controlId="SelectCategory"
+                  >
+                    <Form.Label>Category</Form.Label>
+                    <Form.Control
+                      as="select"
+                      value={values.category}
+                      name="category"
+                      placeholder="Category"
+                      onChange={handleChange}
+                      isValid={!!touched.values}
+                    >
+                      <option value={undefined} defaultValue>
+                        Select a Category
+                      </option>
+                      <option value="Open-Source">Open-Source</option>
+                      <option value="Community">Community</option>
+                      <option value="Lifetime of Awesome">
+                        Lifetime of Awesome
+                      </option>
+                      <option value="Health and Wellness">
+                        Health and Wellness
+                      </option>
+                      <option value="Volunteer">Volunteer</option>
+                      <option value="Animals">Animals</option>
+                      <option value="Heroic Act">Heroic Act</option>
+                      <option value="Enviornment">Enviornment</option>
+                      <option value="Activism">Activism</option>
+                    </Form.Control>
+                  </Form.Group>
+                  <Form.File
+                    className="col-md-6 ml-0 mr-0 pl-1 pr-1 position-relative"
+                    name="file"
+                    label="File"
+                    onChange={(e) => this.handleImage(e)}
+                    isInvalid={!!errors.file}
+                    feedback={errors.file}
+                    id="validationFormik107"
+                    feedbackTooltip
+                  />
+                </Form.Row>
 
-              <Button type="submit">Submit form</Button>
-            </Form>
-          )}
-        </Formik>
+                <Button variant="success" className="m-0" type="submit">
+                  Submit form
+                </Button>
+              </Form>
+            )}
+          </Formik>
+        </div>
       );
     }
   }

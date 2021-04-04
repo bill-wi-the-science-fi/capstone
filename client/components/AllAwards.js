@@ -103,7 +103,7 @@ class AllAwards extends Component {
         </div>
       ) : (
         <div className="container">
-          <div id="award-filter-container">
+          <div id="award-filter-container" className="m-3">
             <Nav>
               <DropdownButton
                 id="dropdown-button-drop-down"

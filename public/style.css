@@ -120,9 +120,15 @@ form div {
   border: #5cb85c;
   border-radius: 5px;
 }
+#dropdown-button-drop-down {
+  background-color: rgb(164, 164, 164);
+  border-color: rgb(164, 164, 164);
+}
+
 #award-filter-container {
+  margin: 1em;
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
 }
 .award-card-container {
   display: flex;
