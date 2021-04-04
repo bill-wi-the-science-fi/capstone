@@ -253,7 +253,7 @@ class SignUpForm extends Component {
               </Form.Row>
 
               <Button
-                className="ml-6 ml-0 mr-0 pl-1 pr-2"
+                className="ml-6 ml-0 mr-0 pl-2 pr-2"
                 variant="success"
                 type="submit"
               >

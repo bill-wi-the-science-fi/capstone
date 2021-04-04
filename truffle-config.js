@@ -1,5 +1,6 @@
 var HDWalletProvider = require('truffle-hdwallet-provider');
-const {MNEMONIC_WALLET_KEY, infuraHTTPSEndpoint} = require('./secrets');
+const MNEMONIC_WALLET_KEY = process.env.MNEMONIC_WALLET_KEY;
+const infuraHTTPSEndpoint = process.env.INFURA_HTTP;
 
 // module.exports = {
 //   networks: {

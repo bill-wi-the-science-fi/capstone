@@ -15,7 +15,7 @@ const cron = require('node-cron');
 const Nominate = require('../build/contracts/Nominate.json');
 const contractAddress = Nominate.networks[3].address;
 const Web3 = require('web3');
-const {infuraUrl} = require('../secrets');
+const infuraUrl = process.env.INFURA_WSS;
 const web3 = new Web3(infuraUrl);
 const myContract = new web3.eth.Contract(Nominate.abi, contractAddress);
 
@@ -35,7 +35,7 @@ if (process.env.NODE_ENV === 'test') {
  * keys as environment variables, so that they can still be read by the
  * Node process on process.env
  */
-if (process.env.NODE_ENV !== 'production') require('../secrets');
+// if (process.env.NODE_ENV !== 'production') require('../secrets');
 
 // passport registration
 passport.serializeUser((user, done) => done(null, user.id));

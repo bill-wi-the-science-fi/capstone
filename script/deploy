@@ -14,6 +14,8 @@
 # So we set the `-e` flag.
 set -e
 
+branch=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
+
 # If our deploy fails partway through we want to clean up after ourselves.
 # This next block is like a try/catch for our entire script.
 
@@ -22,16 +24,21 @@ set -e
 
 function cleanup_at_exit {
   # return to your master branch
-  git checkout master
+  git checkout $branch
 
   # remove the deploy branch
   git branch -D deploy
 }
 trap cleanup_at_exit EXIT
 
+source ./secrets.env
 # checks out a new branch called "deploy". Note that the name "deploy" here isn't magical,
 # but it needs to match the name of the branch we specify when we push to our heroku remote.
 git checkout -b deploy
+
+# Deploy new smartcontract to ropsten
+npx truffle compile
+npx truffle migrate --network ropsten
 
 # webpack will run in "production mode"
 webpack -p

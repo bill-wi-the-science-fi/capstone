@@ -7,8 +7,14 @@ import {logout} from '../store';
 const NavbarBootstrap = ({handleClick, isLoggedIn, userId}) => {
   return (
     <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
-      <Navbar.Brand as={Link} to="/">
-        Pay Eth Forward
+      <Navbar.Brand className="m-0 p-0" as={Link} to="/">
+        <img
+          src="/logo.png"
+          width="120"
+          height="65"
+          className="m-0 p-0 d-inline-block align-top"
+          alt="Pay Eth Forward logo"
+        />
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
