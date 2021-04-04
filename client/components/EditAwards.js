@@ -33,9 +33,10 @@ const schema = yup.object().shape({
 class EditAwards extends Component {
   constructor() {
     super();
-    this.state = {dataAvailable: true};
+    this.state = {dataAvailable: true, file: {}};
     this.onSubmit = this.onSubmit.bind(this);
     this.handleImage = this.handleImage.bind(this);
+    this.editSingleAwardMethod = this.editSingleAwardMethod.bind(this);
   }
   async componentDidMount() {
     await this.props.getSingleAward(this.props.match.params.id);
@@ -48,6 +49,14 @@ class EditAwards extends Component {
           })),
         5000
       );
+    }
+  }
+  async editSingleAwardMethod(formValues) {
+    try {
+      await this.props.editSingleAward(this.props.match.params.id, formValues);
+      this.props.clearSingleAward();
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -63,37 +72,31 @@ class EditAwards extends Component {
   }
   async onSubmit(formValues) {
     const {file} = this.state;
-    const uploadTask = storage.ref(`images/${file.name}`).put(file);
-    await uploadTask.on(
-      'state_changed',
-      () => {},
-      (error) => {
-        console.log(error);
-      },
-      () =>
-        storage
-          .ref('images')
-          .child(file.name)
-          .getDownloadURL()
-          .then(async (url) => {
-            formValues.imageUrl = url;
-
-            try {
-              await this.props.editSingleAward(
-                this.props.match.params.id,
-                formValues
-              );
-              this.props.clearSingleAward();
-            } catch (error) {
-              console.log(error);
-            }
-          })
-    );
+    if (file.name) {
+      const uploadTask = storage.ref(`images/${file.name}`).put(file);
+      await uploadTask.on(
+        'state_changed',
+        () => {},
+        (error) => {
+          console.log(error);
+        },
+        () =>
+          storage
+            .ref('images')
+            .child(file.name)
+            .getDownloadURL()
+            .then((url) => {
+              formValues.imageUrl = url;
+              this.editSingleAwardMethod(formValues);
+            })
+      );
+    } else {
+      this.editSingleAwardMethod(formValues);
+    }
   }
 
   // eslint-disable-next-line complexity
   render() {
-    console.log('render', this.props);
     if (
       (Object.keys(this.props.singleAward).length === 0 &&
         Object.keys(this.props.signedInUser).length === 0 &&

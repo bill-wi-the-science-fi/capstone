@@ -69,7 +69,6 @@ class SingleAward extends Component {
     const percentDonated = Math.ceil(
       (amountDonatedETH / donationLimitETH) * 100
     );
-
     return (
       <div className="container-fluid">
         <div className="container-fluid mt-5 mr-4 ml-4 mb-0">
@@ -122,16 +121,15 @@ class SingleAward extends Component {
                 rounded
               />
             </Row>
-            <Row className="mt-3">
-              <p>{singleAward.award_description}</p>
-            </Row>
-            <Row>
-              <DonateForm
-                awardId={`${singleAward.award_id}`}
-                history={this.props.history}
-                awardInfo={singleAward}
-              />
-            </Row>
+            {singleAward.award_open === 'open' ? (
+              <Row>
+                <DonateForm
+                  awardId={`${singleAward.award_id}`}
+                  history={this.props.history}
+                  awardInfo={singleAward}
+                />
+              </Row>
+            ) : null}
           </div>
         </Row>
       </div>

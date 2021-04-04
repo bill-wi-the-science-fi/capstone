@@ -8,7 +8,10 @@ import {connect} from 'react-redux';
 
 export const Confirmation = (props) => {
   const {previousTransaction, pendingTransaction} = props.transactions;
-  const {hash, award, imageUrl} = pendingTransaction;
+  let {hash, award, imageUrl} = pendingTransaction;
+  imageUrl =
+    imageUrl ||
+    'https://media.npr.org/assets/img/2015/10/16/undefined_wide-3e974801314a154e108c3ed9c07f501ad477e14b.jpg';
 
   if (award && Object.keys(pendingTransaction).length) {
     if (!Object.keys(previousTransaction).length) {

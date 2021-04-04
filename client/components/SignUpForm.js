@@ -38,11 +38,42 @@ class SignUpForm extends Component {
     this.state = {
       urlCheckForPin: this.props.match.path === '/signup',
       accounts: [],
-      pin: ''
+      pin: '',
+      file: {}
     };
     this.onSubmit = this.onSubmit.bind(this);
     this.handleImage = this.handleImage.bind(this);
+    this.signUpMethod = this.signUpMethod.bind(this);
   }
+  async signUpMethod(evt, imageUrl) {
+    const ethPublicAddress = this.state.accounts[0];
+    const {firstName, lastName, email, password} = evt;
+    if (this.props.singleUser.userHasPin) {
+      await this.props.createVerifiedUser({
+        ethPublicAddress,
+        firstName,
+        lastName,
+        email,
+        password,
+        imageUrl,
+        pin: this.state.pin
+      });
+      await this.props.auth(email, password, 'login');
+    } else {
+      this.props.authSignUp(
+        {
+          ethPublicAddress,
+          firstName,
+          lastName,
+          email,
+          password,
+          imageUrl
+        },
+        'signup'
+      );
+    }
+  }
+
   handleImage(e) {
     e.persist();
     if (e.target.files[0]) {
@@ -76,48 +107,27 @@ class SignUpForm extends Component {
   }
   async onSubmit(evt) {
     // const {pin} = evt
-    const {firstName, lastName, email, password} = evt;
     const {file} = this.state;
-    const uploadTask = storage.ref(`images/${file.name}`).put(file);
-    await uploadTask.on(
-      'state_changed',
-      () => {},
-      (error) => {
-        console.log(error);
-      },
-      () =>
-        storage
-          .ref('images')
-          .child(file.name)
-          .getDownloadURL()
-          .then(async (imageUrl) => {
-            const ethPublicAddress = this.state.accounts[0];
-            if (this.props.singleUser.userHasPin) {
-              await this.props.createVerifiedUser({
-                ethPublicAddress,
-                firstName,
-                lastName,
-                email,
-                password,
-                imageUrl,
-                pin: this.state.pin
-              });
-              await this.props.auth(email, password, 'login');
-            } else {
-              this.props.authSignUp(
-                {
-                  ethPublicAddress,
-                  firstName,
-                  lastName,
-                  email,
-                  password,
-                  imageUrl
-                },
-                'signup'
-              );
-            }
-          })
-    );
+    if (file.name) {
+      const uploadTask = storage.ref(`images/${file.name}`).put(file);
+      await uploadTask.on(
+        'state_changed',
+        () => {},
+        (error) => {
+          console.log(error);
+        },
+        () =>
+          storage
+            .ref('images')
+            .child(file.name)
+            .getDownloadURL()
+            .then((imageUrl) => {
+              this.signUpMethod(evt, imageUrl);
+            })
+      );
+    } else {
+      this.signUpMethod(evt);
+    }
   }
   render() {
     return (

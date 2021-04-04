@@ -40,7 +40,6 @@ class AllAwards extends Component {
   }
   //when user clicks on next, previous, or a page buttton
   handlePageClick = (e) => {
-    console.log(e.selected);
     //page that is selected and the new starting point in the index of data
     const {perPage} = this.state;
     const selectedPage = e.selected;

@@ -57,7 +57,8 @@ function DonateForm(props) {
                     props.newTransaction({
                       status: 'pending',
                       hash: hash,
-                      award: props.awardInfo
+                      award: props.awardInfo,
+                      imageUrl: props.awardInfo.award_imageUrl
                     });
 
                     //sending user to a confirmation page with pending transaction
