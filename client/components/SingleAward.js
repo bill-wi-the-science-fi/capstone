@@ -69,7 +69,6 @@ class SingleAward extends Component {
     const percentDonated = Math.ceil(
       (amountDonatedETH / donationLimitETH) * 100
     );
-    console.log('sadsa', singleAward);
     return (
       <div className="container-fluid">
         <div className="container-fluid mt-5 mr-4 ml-4 mb-0">

@@ -108,7 +108,6 @@ class SignUpForm extends Component {
   async onSubmit(evt) {
     // const {pin} = evt
     const {file} = this.state;
-    console.log('file', file, Object.keys(file).length);
     if (file.name) {
       const uploadTask = storage.ref(`images/${file.name}`).put(file);
       await uploadTask.on(
