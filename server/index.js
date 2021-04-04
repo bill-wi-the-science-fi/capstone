@@ -107,6 +107,7 @@ async function createTransactionInDB(event) {
   const {transactionHash, address, returnValues} = event;
   const smartContractAddress = address;
   const awardId = returnValues['3'];
+  console.log(awardId);
   const donatorAddress = returnValues['0'];
   const amountWei = returnValues['2'];
   const singleAward = await Award.findOne({
@@ -128,7 +129,8 @@ async function createTransactionInDB(event) {
     awardId
   });
   const updatesToAward = {
-    donationTotal: singleAward.donatationTotal
+    donationTotal: singleAward.donatationTotal,
+    open: singleAward.open
   };
   // if it's there, that means its a new award donation, and the smart contract is established, so we can move it's status to pending.
   if (!recipientOfAward.ethPublicAddress) {
