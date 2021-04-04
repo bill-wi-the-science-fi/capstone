@@ -18,13 +18,11 @@ pragma solidity >=0.7.0 <0.8.0;
 */
 contract Nominate {
    address public owner;
-   uint internal donationLimitValue;
    uint8 awardDurationDays;
    address relayerAddress;
 
    constructor() {
       owner = msg.sender;
-      donationLimitValue = 5 ether;
       awardDurationDays = 14;
       relayerAddress = 0x7714E9182799cE2f92B26E70c9CD55cD1b3c1d38;
    }
