@@ -29,7 +29,7 @@ const AuthForm = (props) => {
           <Form.Label>Password</Form.Label>
           <Form.Control type="password" placeholder="Password" />
         </Form.Group>
-        <Button variant="dark" type="submit">
+        <Button variant="success" type="submit">
           {displayName}
         </Button>
 
