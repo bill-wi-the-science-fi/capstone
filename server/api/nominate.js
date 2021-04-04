@@ -19,7 +19,8 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       email,
       firstName,
       lastName,
-      donationTotal
+      donationTotal,
+      currentURL
     } = req.body;
     let openOrClosed = 'closed';
     let recipientAddress;
@@ -61,7 +62,8 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       });
       //placeholder url until we create an identifier
       let UserPin = nominee.pin();
-      const inviteUrl = `https://pay-eth-forward.herokuapp.com/signup?email=${email}&pin=${UserPin}`;
+
+      const inviteUrl = `${currentURL}signup?email=${email}&pin=${UserPin}`;
 
       sendEmail(email, firstName, nominator.firstName, inviteUrl);
       recipientAddress = nominator.ethPublicAddress;

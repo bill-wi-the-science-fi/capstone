@@ -115,6 +115,7 @@ class NominateForm extends Component {
         error,
         `Failed to load web3, accounts, or contract. Check console for details.`
       );
+      this.props.history.push('/');
     }
   }
 
@@ -288,9 +289,11 @@ class NominateForm extends Component {
                     onChange={handleChange}
                     isValid={touched.email && !errors.email}
                   />
-                  <Form.Control.Feedback type="invalid" tooltip>
-                    {errors.email}
-                  </Form.Control.Feedback>
+                  {touched.email && errors.email ? (
+                    <p className="invalid">Invalid email</p>
+                  ) : (
+                    <span></span>
+                  )}
                 </Form.Group>
                 <Form.Group
                   as={Col}
@@ -344,6 +347,9 @@ class NominateForm extends Component {
                     value={Math.ceil(values.donationTotal * 1000)}
                     onBlur={handleBlur}
                   />
+                  <Form.Text id="passwordHelpBlock" muted>
+                    The donation limit will always be 1000x your initial amount.
+                  </Form.Text>
                 </Form.Group>
               </Form.Row>
               <Form.Row>
