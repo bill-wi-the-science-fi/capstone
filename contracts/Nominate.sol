@@ -11,7 +11,7 @@ pragma solidity >=0.7.0 <0.8.0;
 * check if recipient address is default or has been set
 * platform pays gas fee WHEN RECIPIENT SETS ADDRESS
 *
-* v13 --------------------------------------------------------------------------------------------
+* v14 --------------------------------------------------------------------------------------------
 * ToDo --------------------------------------------------------------------------------------------
 * check for sufficient balance on SC before deactivating an award (before distributing funds)
 
@@ -19,14 +19,12 @@ pragma solidity >=0.7.0 <0.8.0;
 contract Nominate {
    address public owner;
    uint internal donationLimitValue;
-   uint internal range;
    uint8 awardDurationDays;
    address relayerAddress;
 
    constructor() {
       owner = msg.sender;
       donationLimitValue = 5 ether;
-      range = 0.005 ether;
       awardDurationDays = 14;
       relayerAddress = 0x7714E9182799cE2f92B26E70c9CD55cD1b3c1d38;
    }
@@ -46,7 +44,7 @@ contract Nominate {
   function setRelayerAddress (address _newRelayerAddress) public onlyOwner() {
       relayerAddress = _newRelayerAddress;
   }
-  function donateFunds (uint _awardId) public payable aboveMinimum() awardExist(_awardId) donationUnderLimit (_awardId)  {
+  function donateFunds (uint _awardId) public payable aboveMinimum() awardExist(_awardId) {
       require(allAwards[_awardId].recipientAddress != allAwards[_awardId].nominatorAddress, 'this award can not accept any donations until recipient address has been set');
       // add donation amount to award
       allAwards[_awardId].donationTotal += msg.value;
@@ -73,7 +71,7 @@ contract Nominate {
   }
   //Notes--This function is invoked to set the award winners address
   function setRecipient(uint _awardId, address payable _recipientAddress) public awardExist(_awardId) {
-      require(msg.sender == relayerAddress, 'msg.sender is not the designated sender for setRecipient');
+      require(msg.sender == relayerAddress, 'msg.sender is not the designated sender for setting recipient');
       //check to see if award id in the object if not reject donation….I.e. person tries to claim award after its expired
       //modifier to check if there is an award
       //set the award
@@ -83,7 +81,7 @@ contract Nominate {
       emit Set_Recipient(_recipientAddress, _awardId);
   }
   function setRecipients(uint[] memory _awardIdList, address payable _recipientAddress) public {
-      require(msg.sender == relayerAddress, 'msg.sender is not the designated sender for setRecipient');
+      require(msg.sender == relayerAddress, 'msg.sender is not the designated sender for setting recipient');
       for (uint i = 0; i < _awardIdList.length; i++) {
           if (allAwards[_awardIdList[i]].active) {
               allAwards[_awardIdList[i]].recipientAddress = _recipientAddress;
@@ -99,7 +97,7 @@ contract Nominate {
   }
   // Helpper Functions -----------------------------------------------------------------------------------------------------
   function checkLimit(uint _awardId) internal {
-      if (allAwards[_awardId].donationLimit - allAwards[_awardId].donationTotal < range) {
+      if (allAwards[_awardId].donationLimit <= allAwards[_awardId].donationTotal) {
           // emit goal reached
           emit Award_Goal_Reached(allAwards[_awardId].recipientAddress, address(this), allAwards[_awardId].donationTotal, _awardId);
           // end lifecycle of award
@@ -141,13 +139,7 @@ contract Nominate {
        revert('not actionable');
    }
   // Modifiers -----------------------------------------------------------------------------------------------------
-  // used by donateFunds -> make sure donation amount is NOT greater than available amount remaining
-  modifier donationUnderLimit (uint _awardId) {
-      // use msg.value?
-      require((msg.value + allAwards[_awardId].donationTotal) < (allAwards[_awardId].donationLimit + range), "this donation exceeds available limit remaining");
-      _;
-      // - allAwards[_awardId].donationTotal
-  }
+
   //used by expireAward as a safety check to make sure that contract is expired before paying the recipient
   modifier timeCheck (uint _awardId) {
     require(block.timestamp > allAwards[_awardId].expires, "this contract is not expired and payout will not happen");
