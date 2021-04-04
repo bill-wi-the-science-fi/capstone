@@ -45,10 +45,41 @@ const schema = yup.object().shape({
 class NominateForm extends Component {
   constructor() {
     super();
+    this.state = {
+      file: {}
+    };
 
     this.onSubmit = this.onSubmit.bind(this);
     this.startAwardAndDonate = this.startAwardAndDonate.bind(this);
     this.handleImage = this.handleImage.bind(this);
+    this.nominateMethod = this.nominateMethod.bind(this);
+  }
+  async nominateMethod(formValues, donationAmountUSD, donationLimitUSD) {
+    try {
+      const donationAmountETH = (
+        await this.props.getPriceConversion(donationAmountUSD)
+      ).toString();
+      const donationLimitETH = (
+        await this.props.getPriceConversion(donationLimitUSD)
+      ).toString();
+      const formData = {
+        ...formValues,
+        donationTotal: this.state.web3.utils.toWei(donationAmountETH, 'ether'),
+        donationLimit: this.state.web3.utils.toWei(donationLimitETH, 'ether')
+      };
+
+      await this.props.nominateUser(formData);
+      this.startAwardAndDonate(
+        this.props.nominate.awardId,
+        this.props.nominate.recipient,
+        formData.donationTotal,
+        formValues.email,
+        formData.donationLimit,
+        formData.imageUrl
+      );
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async componentDidMount() {
@@ -147,61 +178,31 @@ class NominateForm extends Component {
     const donationAmountUSD = +formValues.donationTotal;
     const donationLimitUSD = +formValues.donationTotal * 1000;
     const {file} = this.state;
-    const uploadTask = storage.ref(`images/${file.name}`).put(file);
-    await uploadTask.on(
-      'state_changed',
-      () => {},
-      (error) => {
-        console.log(error);
-      },
-      () =>
-        storage
-          .ref('images')
-          .child(file.name)
-          .getDownloadURL()
-          .then(async (url) => {
-            formValues.imageUrl = url;
-
-            try {
-              const donationAmountETH = (
-                await this.props.getPriceConversion(donationAmountUSD)
-              ).toString();
-              const donationLimitETH = (
-                await this.props.getPriceConversion(donationLimitUSD)
-              ).toString();
-              const formData = {
-                ...formValues,
-                donationTotal: this.state.web3.utils.toWei(
-                  donationAmountETH,
-                  'ether'
-                ),
-                donationLimit: this.state.web3.utils.toWei(
-                  donationLimitETH,
-                  'ether'
-                )
-              };
-              // formValues.donationTotal = this.state.web3.utils.toWei(
-              //   donationAmountETH,
-              //   'ether'
-              // )
-              // formValues.donationLimit = this.state.web3.utils.toWei(
-              //   donationLimitETH,
-              //   'ether'
-              // )
-              await this.props.nominateUser(formData);
-              this.startAwardAndDonate(
-                this.props.nominate.awardId,
-                this.props.nominate.recipient,
-                formData.donationTotal,
-                formValues.email,
-                formData.donationLimit,
-                formData.imageUrl
+    if (file.name) {
+      const uploadTask = storage.ref(`images/${file.name}`).put(file);
+      await uploadTask.on(
+        'state_changed',
+        () => {},
+        (error) => {
+          console.log(error);
+        },
+        () =>
+          storage
+            .ref('images')
+            .child(file.name)
+            .getDownloadURL()
+            .then((url) => {
+              formValues.imageUrl = url;
+              this.nominateMethod(
+                formValues,
+                donationAmountUSD,
+                donationLimitUSD
               );
-            } catch (error) {
-              console.log(error);
-            }
-          })
-    );
+            })
+      );
+    } else {
+      this.nominateMethod(formValues, donationAmountUSD, donationLimitUSD);
+    }
   }
   handleImage(e) {
     e.persist();

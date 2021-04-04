@@ -50,14 +50,15 @@ function DonateForm(props) {
                   .donateFunds(props.awardId)
                   .send({
                     from: accounts[0],
-                    value: web3.utils.toWei(amountETH, 'ether')
+                    value: web3.utils.toWei(amountETH, 'ether').toString()
                   })
                   .on('transactionHash', (hash) => {
                     //sending hash from pending transaction into state
                     props.newTransaction({
                       status: 'pending',
                       hash: hash,
-                      award: props.awardInfo
+                      award: props.awardInfo,
+                      imageUrl: props.awardInfo.award_imageUrl
                     });
 
                     //sending user to a confirmation page with pending transaction
