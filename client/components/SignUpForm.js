@@ -196,9 +196,11 @@ class SignUpForm extends Component {
                     onChange={handleChange}
                     isValid={touched.email && !errors.email}
                   />
-                  <Form.Control.Feedback type="invalid" tooltip>
-                    {errors.email}
-                  </Form.Control.Feedback>
+                  {touched.email && errors.email ? (
+                    <p className="invalid">Invalid email</p>
+                  ) : (
+                    <span></span>
+                  )}
                 </Form.Group>
                 <Form.Group
                   as={Col}
@@ -214,7 +216,17 @@ class SignUpForm extends Component {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     isValid={touched.password && !errors.password}
+                    feedbacktooltip
                   />
+                  <Form.Text id="passwordHelpBlock" muted>
+                    Password must contain at least 8 characters, one uppercase,
+                    one number and one special case character.
+                  </Form.Text>
+                  {touched.password && errors.password ? (
+                    <p className="invalid">Invalid password</p>
+                  ) : (
+                    <span></span>
+                  )}
                 </Form.Group>
               </Form.Row>
 
@@ -234,6 +246,12 @@ class SignUpForm extends Component {
                     onChange={handleChange}
                     isValid={touched.passwordConfirm && !errors.passwordConfirm}
                   />
+
+                  {touched.passwordConfirm && errors.passwordConfirm ? (
+                    <p className="invalid">Passwords must match</p>
+                  ) : (
+                    <span></span>
+                  )}
                 </Form.Group>
               </Form.Row>
 
