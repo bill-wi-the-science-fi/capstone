@@ -50,7 +50,7 @@ function DonateForm(props) {
                   .donateFunds(props.awardId)
                   .send({
                     from: accounts[0],
-                    value: web3.utils.toWei(amountETH, 'ether').toString()
+                    value: web3.utils.toWei(amountETH, 'ether')
                   })
                   .on('transactionHash', (hash) => {
                     //sending hash from pending transaction into state
