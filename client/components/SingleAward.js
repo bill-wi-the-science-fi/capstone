@@ -115,15 +115,15 @@ class SingleAward extends Component {
             <Row className="mt-5">
               <h2>{singleAward.award_title}</h2>
             </Row>
-            <Row className="mt-3">
-              <p>{singleAward.award_description}</p>
-            </Row>
             <Row>
               <Image
                 className="single-award-img mt-3"
                 src={singleAward.award_imageUrl}
                 rounded
               />
+            </Row>
+            <Row className="mt-3">
+              <p>{singleAward.award_description}</p>
             </Row>
             <Row>
               <DonateForm

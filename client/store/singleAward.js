@@ -10,6 +10,12 @@ const CLEAR_SINGLE_AWARD = 'CLEAR_SINGLE_AWARD';
 
 function flattenObj(obj, parent, res = {}) {
   for (let key in obj) {
+    const textToSearch = 'email';
+    const textToSearch2 = 'updatedAt';
+    const textToSearch3 = 'createdAt';
+    if (key.toLowerCase().indexOf(textToSearch.toLowerCase()) >= 0) continue;
+    if (key.toLowerCase().indexOf(textToSearch2.toLowerCase()) >= 0) continue;
+    if (key.toLowerCase().indexOf(textToSearch3.toLowerCase()) >= 0) continue;
     let propName = parent ? parent + '_' + key : key;
     if (typeof obj[key] == 'object') {
       flattenObj(obj[key], propName, res);

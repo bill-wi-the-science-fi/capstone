@@ -188,6 +188,9 @@ class NominateForm extends Component {
               //   donationLimitETH,
               //   'ether'
               // )
+              let currentURL = window.location.href;
+              currentURL = currentURL.slice(0, currentURL.length - 8);
+              formData.currentURL = currentURL;
               await this.props.nominateUser(formData);
               this.startAwardAndDonate(
                 this.props.nominate.awardId,
