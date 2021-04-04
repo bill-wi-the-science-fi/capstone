@@ -2,7 +2,7 @@
   "name": "capstone",
   "version": "2.0.0",
   "description": "Some boilerplate code to get you started - get shakin'!",
-  "main": "index.js",
+  "main": "server/index.js",
   "scripts": {
     "build-client": "webpack",
     "build-client-watch": "webpack -w",
@@ -16,7 +16,7 @@
     "seed": "node script/seed.js",
     "start": "node server",
     "start-dev": "NODE_ENV='development' npm run build-client-watch & NODE_ENV='development' npm run start-server",
-    "start-server": "nodemon server -e html,js,scss --ignore public --ignore client",
+    "start-server": "source ./secrets.env && nodemon server -e html,js,scss --ignore public --ignore client",
     "test": "NODE_ENV='test' mocha \"./server/**/*.spec.js\" \"./client/**/*.spec.js\" \"./script/**/*.spec.js\" --require @babel/polyfill --require @babel/register"
   },
   "husky": {
