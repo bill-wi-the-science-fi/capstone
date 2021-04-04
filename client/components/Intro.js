@@ -4,6 +4,7 @@ import {Jumbotron, Container, Image} from 'react-bootstrap';
 import {connect} from 'react-redux';
 
 export const Intro = () => {
+  window.scrollTo(0, 0);
   return (
     <div className="container-fluid pr-0 pl-0">
       <Jumbotron fluid>
