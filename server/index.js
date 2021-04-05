@@ -144,14 +144,14 @@ async function createTransactionInDB(event) {
     .toBN(amountWei)
     .add(web3.utils.toBN(singleAward.donationTotal))
     .toString();
-  updatesToAward.donationTotal = newDonationTotal;
+  let donationTotal = newDonationTotal;
   console.log(
     'newDonation',
     newDonationTotal,
     amountWei,
     singleAward.donationTotal
   );
-  await singleAward.update(updatesToAward);
+  await singleAward.update({donationTotal});
 }
 
 async function deactivateAwardInDb(event) {
