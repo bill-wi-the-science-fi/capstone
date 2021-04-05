@@ -106,23 +106,31 @@ async function createTransactionInDB(event) {
   const {transactionHash, address, returnValues} = event;
   const smartContractAddress = address;
   const awardId = returnValues['3'];
-  console.log(awardId);
+  console.log('awardid', awardId);
   const donatorAddress = returnValues['0'];
   const amountWei = returnValues['2'];
+  console.log('amountWei', amountWei);
   const singleAward = await Award.findOne({
     where: {id: awardId}
   });
+  console.log('singleAward', singleAward);
 
   const singleNomination = await Nomination.findOne({
     where: {id: singleAward.pairId}
   });
+  console.log('singleNomination', singleNomination);
+
   const recipientOfAward = await User.findOne({
     where: {id: singleNomination.recipientId}
   });
+  console.log('recipientOfAward', recipientOfAward);
+
   const giverOfAward = await User.findOne({
     where: {id: singleNomination.userId}
   });
-  giverOfAward.createTransaction({
+  console.log('giverOfAward', giverOfAward);
+
+  await giverOfAward.createTransaction({
     transactionHash,
     smartContractAddress,
     amountWei,
@@ -132,6 +140,11 @@ async function createTransactionInDB(event) {
     donationTotal: singleAward.donatationTotal
   };
   // if it's there, that means its a new award donation, and the smart contract is established, so we can move it's status to pending.
+  console.log(
+    '!recipientOfAward.ethPublicAddress',
+    !recipientOfAward.ethPublicAddress
+  );
+
   if (!recipientOfAward.ethPublicAddress) {
     await singleAward.update({open: 'pending'});
   } else {
@@ -163,7 +176,6 @@ async function deactivateAwardInDb(event) {
 }
 
 const initListener = () => {
-  console.log('starting listener');
   myContract.events
     .allEvents()
     .on('data', (event) => {
@@ -208,7 +220,6 @@ async function bootApp() {
   await syncDb();
   await createApp();
   await startListening();
-  await initListener();
 }
 // This evaluates as true when this file is run directly from the command line,
 // i.e. when we say 'node server/index.js' (or 'nodemon server/index.js', or 'nodemon server', etc)
