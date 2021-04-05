@@ -129,15 +129,15 @@ async function createTransactionInDB(event) {
     awardId
   });
   const updatesToAward = {
-    donationTotal: singleAward.donatationTotal,
-    open: singleAward.open
+    donationTotal: singleAward.donatationTotal
   };
   // if it's there, that means its a new award donation, and the smart contract is established, so we can move it's status to pending.
   if (!recipientOfAward.ethPublicAddress) {
-    updatesToAward.open = 'pending';
+    await singleAward.update({open: 'pending'});
   } else {
-    updatesToAward.open = 'open';
+    await singleAward.update({open: 'open'});
   }
+  console.log('updatestoaward', updatesToAward, singleAward);
   //We need to figure out
   //update amount award instance property of donationTotal with the current donation
   let newDonationTotal = web3.utils
@@ -145,6 +145,12 @@ async function createTransactionInDB(event) {
     .add(web3.utils.toBN(singleAward.donationTotal))
     .toString();
   updatesToAward.donationTotal = newDonationTotal;
+  console.log(
+    'newDonation',
+    newDonationTotal,
+    amountWei,
+    singleAward.donationTotal
+  );
   await singleAward.update(updatesToAward);
 }
 

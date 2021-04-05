@@ -45,7 +45,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       description: description,
       imageUrl: imageUrl,
       donationLimit: donationLimit,
-      donationTotal: '0'
+      donationTotal: '1'
     };
 
     const newAward = await throughRow.createAward(awardInfoToCreate);
