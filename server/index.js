@@ -48,7 +48,95 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
+async function createTransactionInDB(event) {
+  try {
+    const {transactionHash, address, returnValues} = event;
+    const smartContractAddress = address;
+    const awardId = returnValues['3'];
+    const donatorAddress = returnValues['0'];
+    const amountWei = returnValues['2'];
+    const singleAward = await Award.findOne({
+      where: {id: awardId}
+    });
+    const singleNomination = await Nomination.findOne({
+      where: {id: singleAward.pairId}
+    });
+    const recipientOfAward = await User.findOne({
+      where: {id: singleNomination.recipientId}
+    });
+
+    const giverOfAward = await User.findOne({
+      where: {id: singleNomination.userId}
+    });
+    await giverOfAward.createTransaction({
+      transactionHash,
+      smartContractAddress,
+      amountWei,
+      awardId
+    });
+    // if it's there, that means its a new award donation, and the smart contract is established, so we can move it's status to pending.
+    if (!recipientOfAward.ethPublicAddress) {
+      await singleAward.update({open: 'pending'});
+    } else {
+      await singleAward.update({open: 'open'});
+    }
+    //We need to figure out
+    //update amount award instance property of donationTotal with the current donation
+    let newDonationTotal = web3.utils
+      .toBN(amountWei)
+      .add(web3.utils.toBN(singleAward.donationTotal))
+      .toString();
+    await singleAward.update({donationTotal: newDonationTotal});
+  } catch (error) {
+    console.log('createTransactionInDB function \n\nFAILED\n\n');
+  }
+}
+
+async function deactivateAwardInDb(event) {
+  try {
+    const awardId = event.returnValues['3'];
+    const singleAward = await Award.findOne({
+      where: {id: awardId}
+    });
+    await singleAward.update({open: 'withdrawn'});
+  } catch (error) {
+    console.log('deactivateAwardInDb function \n\nFAILED\n\n');
+  }
+}
+
+const initListener = () => {
+  try {
+    myContract.events
+      .allEvents()
+      .on('data', (event) => {
+        console.log('\n --------🚀 ', event.event, '\n\n');
+        console.log('smart contract event logged \n \n', event, '\n\n');
+        if (event.event === 'Emit_Funds_Donated') createTransactionInDB(event);
+        if (event.event === 'Award_Deactivated') deactivateAwardInDb(event);
+      })
+      .on('error', console.error);
+  } catch (error) {
+    console.log('The listener was NOT initialized', error);
+  }
+};
+
+// if this goes down , what next
+
+async function ping() {
+  let balance = await myContract.methods.balanceOfContract().call();
+  console.log('\ncontract balance in ETH', balance * 1e-18, 'ETH\n');
+}
+
 const createApp = () => {
+  console.log('\n --------🚀 \n createApp was run \n');
+
+  let counter = 0;
+  cron.schedule('10 * * * *', () => {
+    counter = counter + 10;
+    ping();
+    console.log('Listener has been running for', counter, 'minutes');
+  });
+
   // logging middleware
   app.use(morgan('dev'));
 
@@ -100,95 +188,13 @@ const createApp = () => {
     console.error(err.stack);
     res.status(err.status || 500).send(err.message || 'Internal server error.');
   });
+  initListener();
 };
-
-async function createTransactionInDB(event) {
-  const {transactionHash, address, returnValues} = event;
-  const smartContractAddress = address;
-  const awardId = returnValues['3'];
-  const donatorAddress = returnValues['0'];
-  const amountWei = returnValues['2'];
-  const singleAward = await Award.findOne({
-    where: {id: awardId}
-  });
-  const singleNomination = await Nomination.findOne({
-    where: {id: singleAward.pairId}
-  });
-  const recipientOfAward = await User.findOne({
-    where: {id: singleNomination.recipientId}
-  });
-
-  const giverOfAward = await User.findOne({
-    where: {id: singleNomination.userId}
-  });
-  await giverOfAward.createTransaction({
-    transactionHash,
-    smartContractAddress,
-    amountWei,
-    awardId
-  });
-  const updatesToAward = {
-    donationTotal: singleAward.donatationTotal
-  };
-  // if it's there, that means its a new award donation, and the smart contract is established, so we can move it's status to pending.
-  if (!recipientOfAward.ethPublicAddress) {
-    await singleAward.update({open: 'pending'});
-  } else {
-    await singleAward.update({open: 'open'});
-  }
-  //We need to figure out
-  //update amount award instance property of donationTotal with the current donation
-  let newDonationTotal = web3.utils
-    .toBN(amountWei)
-    .add(web3.utils.toBN(singleAward.donationTotal))
-    .toString();
-  let donationTotal = newDonationTotal;
-  await singleAward.update({donationTotal});
-}
-
-async function deactivateAwardInDb(event) {
-  const awardId = event.returnValues['3'];
-  const singleAward = await Award.findOne({
-    where: {id: awardId}
-  });
-  await singleAward.update({open: 'withdrawn'});
-}
-
-const initListener = () => {
-  try {
-    myContract.events
-      .allEvents()
-      .on('data', (event) => {
-        console.log('\n --------🚀 ', event.event, '\n\n');
-        console.log('smart contract event logged \n \n', event, '\n\n');
-        if (event.event === 'Emit_Funds_Donated') createTransactionInDB(event);
-        if (event.event === 'Award_Deactivated') deactivateAwardInDb(event);
-      })
-      .on('error', console.error);
-  } catch (error) {
-    console.log('The listener was NOT initialized', error);
-  }
-};
-
-// if this goes down , what next
-let contractListner = initListener();
-
-async function ping() {
-  let balance = await myContract.methods.balanceOfContract().call();
-  console.log('\ncontract balance in ETH', balance * 1e-18, 'ETH\n');
-}
-
-let counter = 0;
-cron.schedule('10 * * * *', () => {
-  counter = counter + 10;
-  ping();
-  console.log('Listener has been running for', counter, 'minutes');
-});
 
 const startListening = () => {
   // start listening (and create a 'server' object representing our server)
   const server = app.listen(PORT, () =>
-    console.log(`Mixing it up on port ${PORT}`)
+    console.log(`MIXIN it up on port ${PORT}`)
   );
   // set up our socket control center
   const io = socketio(server);
@@ -198,6 +204,15 @@ const startListening = () => {
 const syncDb = () => db.sync();
 
 async function bootApp() {
+  console.log('\n --------🚀 \n bootApp was run \n ');
+
+  let counter = 0;
+  cron.schedule('10 * * * *', () => {
+    counter = counter + 10;
+    ping();
+    console.log('Listener has been running for', counter, 'minutes');
+  });
+  initListener();
   await sessionStore.sync();
   await syncDb();
   await createApp();
