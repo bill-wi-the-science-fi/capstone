@@ -9,7 +9,7 @@ module.exports = router;
 // this will be the route attatched to the "nominate" form on the front end
 router.post('/', isLoggedIn, async (req, res, next) => {
   try {
-    const {
+    let {
       title,
       category,
       description,
@@ -20,9 +20,9 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       firstName,
       lastName,
       donationTotal,
-      currentURL
+      currentUrl
     } = req.body;
-    let openOrClosed = 'closed';
+    currentUrl = currentUrl.slice(0, currentUrl.length - 8);
     let recipientAddress;
     // find or create the NOMINEE
     let [nominee, userWasCreated] = await User.findOrCreate({
@@ -45,7 +45,8 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       description: description,
       imageUrl: imageUrl,
       donationLimit: donationLimit,
-      donationTotal: '0'
+      donationTotal: '0',
+      open: 'closed'
     };
 
     const newAward = await throughRow.createAward(awardInfoToCreate);
@@ -63,7 +64,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       //placeholder url until we create an identifier
       let UserPin = nominee.pin();
 
-      const inviteUrl = `${currentURL}signup?email=${email}&pin=${UserPin}`;
+      const inviteUrl = `${currentUrl}signup?email=${email}&pin=${UserPin}`;
 
       sendEmail(email, firstName, nominator.firstName, inviteUrl);
       recipientAddress = nominator.ethPublicAddress;
