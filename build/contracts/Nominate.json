@@ -13519,12 +13519,12 @@
     "3": {
       "events": {},
       "links": {},
-      "address": "0x310fc115257043a50fbaB0A2e9E1F691C858355C",
-      "transactionHash": "0x4dde88971d16fff4cb186456b31a945e027afff4c7abfccb97e496d2e0e5b85f"
+      "address": "0x4399104e4dcD7b078E348A894C55463B60bd4957",
+      "transactionHash": "0x12ab7429ae5f55d89b08f1ac312e31e889b93b253b81c545ea6b512d7932a8f3"
     }
   },
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-04-05T00:41:44.742Z",
+  "updatedAt": "2021-04-05T01:00:10.609Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Store & retrieve value in a variable BASE UNITS on ETHEREUM BC: wei onlyOwner safety check - if we fund the recipient address setting, then we can set ourselves as the only ppl to modify the smart contract (securing our smart contract via admin access) Methods/modifiers needed -------------------------------------------------------------------------------- set recipient address check if recipient address is default or has been set platform pays gas fee WHEN RECIPIENT SETS ADDRESS v14 -------------------------------------------------------------------------------------------- ToDo -------------------------------------------------------------------------------------------- check for sufficient balance on SC before deactivating an award (before distributing funds)",

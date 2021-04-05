@@ -163,6 +163,7 @@ async function deactivateAwardInDb(event) {
 }
 
 const initListener = () => {
+  console.log('starting listener');
   myContract.events
     .allEvents()
     .on('data', (event) => {
@@ -176,6 +177,7 @@ const initListener = () => {
 
 // if this goes down , what next
 let contractListner = initListener();
+console.log('initialized', contractListner);
 
 async function ping() {
   let balance = await myContract.methods.balanceOfContract().call();
@@ -206,6 +208,7 @@ async function bootApp() {
   await syncDb();
   await createApp();
   await startListening();
+  await initListener();
 }
 // This evaluates as true when this file is run directly from the command line,
 // i.e. when we say 'node server/index.js' (or 'nodemon server/index.js', or 'nodemon server', etc)

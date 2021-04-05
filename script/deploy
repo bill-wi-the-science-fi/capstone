@@ -38,7 +38,7 @@ git checkout -b deploy
 
 # Deploy new smartcontract to ropsten
 npx truffle compile
-npx truffle deploy --network ropsten --reset
+npx truffle deploy --network ropsten
 
 # webpack will run in "production mode"
 webpack -p
