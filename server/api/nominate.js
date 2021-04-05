@@ -8,6 +8,7 @@ module.exports = router;
 // nominateUser thunk
 // this will be the route attatched to the "nominate" form on the front end
 router.post('/', isLoggedIn, async (req, res, next) => {
+  console.log('jerico ocnsole logs');
   try {
     const {
       title,
