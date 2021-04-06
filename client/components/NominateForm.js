@@ -175,7 +175,7 @@ class NominateForm extends Component {
   };
 
   async onSubmit(formValues) {
-    formValues.currentUrl = window.location.href;
+    formValues.currentUrl = window.location.origin;
     formValues.nominatorId = this.props.signedInUser.id;
     const donationAmountUSD = +formValues.donationTotal;
     const donationLimitUSD = +formValues.donationTotal * 1000;
