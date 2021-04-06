@@ -176,15 +176,19 @@ async function deactivateAwardInDb(event) {
 }
 
 const initListener = () => {
-  myContract.events
-    .allEvents()
-    .on('data', (event) => {
-      console.log('\n --------🚀 ', event.event, '\n\n');
-      console.log('smart contract event logged \n \n', event, '\n\n');
-      if (event.event === 'Emit_Funds_Donated') createTransactionInDB(event);
-      if (event.event === 'Award_Deactivated') deactivateAwardInDb(event);
-    })
-    .on('error', console.error);
+  try {
+    myContract.events
+      .allEvents()
+      .on('data', (event) => {
+        console.log('\n --------🚀 ', event.event, '\n\n');
+        console.log('smart contract event logged \n \n', event, '\n\n');
+        if (event.event === 'Emit_Funds_Donated') createTransactionInDB(event);
+        if (event.event === 'Award_Deactivated') deactivateAwardInDb(event);
+      })
+      .on('error', console.error);
+  } catch (error) {
+    console.log('The listener was NOT initialized', error);
+  }
 };
 
 // if this goes down , what next
@@ -220,6 +224,7 @@ async function bootApp() {
   await syncDb();
   await createApp();
   await startListening();
+  await initListener();
 }
 // This evaluates as true when this file is run directly from the command line,
 // i.e. when we say 'node server/index.js' (or 'nodemon server/index.js', or 'nodemon server', etc)

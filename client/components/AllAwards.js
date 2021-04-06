@@ -85,7 +85,6 @@ class AllAwards extends Component {
     }
   }
   render() {
-    console.log('render', this.state);
     const {awardsLocal} = this.state;
     if (!awardsLocal.length) {
       return this.state.dataAvailable ? (
