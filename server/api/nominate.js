@@ -10,7 +10,7 @@ module.exports = router;
 router.post('/', isLoggedIn, async (req, res, next) => {
   console.log('jerico ocnsole logs');
   try {
-    let {
+    const {
       title,
       category,
       description,
@@ -21,9 +21,9 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       firstName,
       lastName,
       donationTotal,
-      currentUrl
+      currentURL
     } = req.body;
-    currentUrl = currentUrl.slice(0, currentUrl.length - 8);
+    let openOrClosed = 'closed';
     let recipientAddress;
     // find or create the NOMINEE
     let [nominee, userWasCreated] = await User.findOrCreate({
@@ -46,8 +46,8 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       description: description,
       imageUrl: imageUrl,
       donationLimit: donationLimit,
-      donationTotal: '0',
-      open: 'closed'
+      donationTotal: '1',
+      open: 'pending'
     };
 
     const newAward = await throughRow.createAward(awardInfoToCreate);
@@ -65,7 +65,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       //placeholder url until we create an identifier
       let UserPin = nominee.pin();
 
-      const inviteUrl = `${currentUrl}signup?email=${email}&pin=${UserPin}`;
+      const inviteUrl = `${currentURL}signup?email=${email}&pin=${UserPin}`;
 
       sendEmail(email, firstName, nominator.firstName, inviteUrl);
       recipientAddress = nominator.ethPublicAddress;
