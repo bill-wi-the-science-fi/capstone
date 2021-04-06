@@ -35,6 +35,7 @@ if (process.env.NODE_ENV === 'test') {
  * keys as environment variables, so that they can still be read by the
  * Node process on process.env
  */
+// if (process.env.NODE_ENV !== 'production') require('../secrets');
 
 // passport registration
 passport.serializeUser((user, done) => done(null, user.id));
@@ -106,6 +107,7 @@ async function createTransactionInDB(event) {
   const {transactionHash, address, returnValues} = event;
   const smartContractAddress = address;
   const awardId = returnValues['3'];
+  console.log(awardId);
   const donatorAddress = returnValues['0'];
   const amountWei = returnValues['2'];
   const singleAward = await Award.findOne({
@@ -117,11 +119,10 @@ async function createTransactionInDB(event) {
   const recipientOfAward = await User.findOne({
     where: {id: singleNomination.recipientId}
   });
-
   const giverOfAward = await User.findOne({
     where: {id: singleNomination.userId}
   });
-  await giverOfAward.createTransaction({
+  giverOfAward.createTransaction({
     transactionHash,
     smartContractAddress,
     amountWei,
@@ -136,6 +137,7 @@ async function createTransactionInDB(event) {
   } else {
     await singleAward.update({open: 'open'});
   }
+  console.log('updatestoaward', updatesToAward, singleAward);
   //We need to figure out
   //update amount award instance property of donationTotal with the current donation
   let newDonationTotal = web3.utils
@@ -143,6 +145,12 @@ async function createTransactionInDB(event) {
     .add(web3.utils.toBN(singleAward.donationTotal))
     .toString();
   let donationTotal = newDonationTotal;
+  console.log(
+    'newDonation',
+    newDonationTotal,
+    amountWei,
+    singleAward.donationTotal
+  );
   await singleAward.update({donationTotal});
 }
 
@@ -155,23 +163,21 @@ async function deactivateAwardInDb(event) {
 }
 
 const initListener = () => {
-  try {
-    myContract.events
-      .allEvents()
-      .on('data', (event) => {
-        console.log('\n --------🚀 ', event.event, '\n\n');
-        console.log('smart contract event logged \n \n', event, '\n\n');
-        if (event.event === 'Emit_Funds_Donated') createTransactionInDB(event);
-        if (event.event === 'Award_Deactivated') deactivateAwardInDb(event);
-      })
-      .on('error', console.error);
-  } catch (error) {
-    console.log('The listener was NOT initialized', error);
-  }
+  console.log('starting listener');
+  myContract.events
+    .allEvents()
+    .on('data', (event) => {
+      console.log('\n --------🚀 ', event.event, '\n\n');
+      console.log('smart contract event logged \n \n', event, '\n\n');
+      if (event.event === 'Emit_Funds_Donated') createTransactionInDB(event);
+      if (event.event === 'Award_Deactivated') deactivateAwardInDb(event);
+    })
+    .on('error', console.error);
 };
 
 // if this goes down , what next
 let contractListner = initListener();
+console.log('initialized', contractListner);
 
 async function ping() {
   let balance = await myContract.methods.balanceOfContract().call();
@@ -202,6 +208,7 @@ async function bootApp() {
   await syncDb();
   await createApp();
   await startListening();
+  await initListener();
 }
 // This evaluates as true when this file is run directly from the command line,
 // i.e. when we say 'node server/index.js' (or 'nodemon server/index.js', or 'nodemon server', etc)

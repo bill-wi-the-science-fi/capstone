@@ -8,8 +8,9 @@ module.exports = router;
 // nominateUser thunk
 // this will be the route attatched to the "nominate" form on the front end
 router.post('/', isLoggedIn, async (req, res, next) => {
+  console.log('jerico ocnsole logs');
   try {
-    let {
+    const {
       title,
       category,
       description,
@@ -22,7 +23,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       donationTotal,
       currentUrl
     } = req.body;
-    currentUrl = currentUrl.slice(0, currentUrl.length - 8);
+    let openOrClosed = 'closed';
     let recipientAddress;
     // find or create the NOMINEE
     let [nominee, userWasCreated] = await User.findOrCreate({
@@ -64,7 +65,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       //placeholder url until we create an identifier
       let UserPin = nominee.pin();
 
-      const inviteUrl = `${currentUrl}signup?email=${email}&pin=${UserPin}`;
+      const inviteUrl = `${currentUrl}/signup?email=${email}&pin=${UserPin}`;
 
       sendEmail(email, firstName, nominator.firstName, inviteUrl);
       recipientAddress = nominator.ethPublicAddress;
