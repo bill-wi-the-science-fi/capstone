@@ -35,6 +35,7 @@ if (process.env.NODE_ENV === 'test') {
  * keys as environment variables, so that they can still be read by the
  * Node process on process.env
  */
+// if (process.env.NODE_ENV !== 'production') require('../secrets');
 
 // passport registration
 passport.serializeUser((user, done) => done(null, user.id));
@@ -106,31 +107,22 @@ async function createTransactionInDB(event) {
   const {transactionHash, address, returnValues} = event;
   const smartContractAddress = address;
   const awardId = returnValues['3'];
-  console.log('awardid', awardId);
+  console.log(awardId);
   const donatorAddress = returnValues['0'];
   const amountWei = returnValues['2'];
-  console.log('amountWei', amountWei);
   const singleAward = await Award.findOne({
     where: {id: awardId}
   });
-  console.log('singleAward', singleAward);
-
   const singleNomination = await Nomination.findOne({
     where: {id: singleAward.pairId}
   });
-  console.log('singleNomination', singleNomination);
-
   const recipientOfAward = await User.findOne({
     where: {id: singleNomination.recipientId}
   });
-  console.log('recipientOfAward', recipientOfAward);
-
   const giverOfAward = await User.findOne({
     where: {id: singleNomination.userId}
   });
-  console.log('giverOfAward', giverOfAward);
-
-  await giverOfAward.createTransaction({
+  giverOfAward.createTransaction({
     transactionHash,
     smartContractAddress,
     amountWei,
@@ -140,11 +132,6 @@ async function createTransactionInDB(event) {
     donationTotal: singleAward.donatationTotal
   };
   // if it's there, that means its a new award donation, and the smart contract is established, so we can move it's status to pending.
-  console.log(
-    '!recipientOfAward.ethPublicAddress',
-    !recipientOfAward.ethPublicAddress
-  );
-
   if (!recipientOfAward.ethPublicAddress) {
     await singleAward.update({open: 'pending'});
   } else {
@@ -176,19 +163,16 @@ async function deactivateAwardInDb(event) {
 }
 
 const initListener = () => {
-  try {
-    myContract.events
-      .allEvents()
-      .on('data', (event) => {
-        console.log('\n --------🚀 ', event.event, '\n\n');
-        console.log('smart contract event logged \n \n', event, '\n\n');
-        if (event.event === 'Emit_Funds_Donated') createTransactionInDB(event);
-        if (event.event === 'Award_Deactivated') deactivateAwardInDb(event);
-      })
-      .on('error', console.error);
-  } catch (error) {
-    console.log('The listener was NOT initialized', error);
-  }
+  console.log('starting listener');
+  myContract.events
+    .allEvents()
+    .on('data', (event) => {
+      console.log('\n --------🚀 ', event.event, '\n\n');
+      console.log('smart contract event logged \n \n', event, '\n\n');
+      if (event.event === 'Emit_Funds_Donated') createTransactionInDB(event);
+      if (event.event === 'Award_Deactivated') deactivateAwardInDb(event);
+    })
+    .on('error', console.error);
 };
 
 // if this goes down , what next
