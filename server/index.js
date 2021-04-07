@@ -107,12 +107,14 @@ async function createTransactionInDB(event) {
   const {transactionHash, address, returnValues} = event;
   const smartContractAddress = address;
   const awardId = returnValues['3'];
-  console.log(awardId);
-  const donatorAddress = returnValues['0'];
   const amountWei = returnValues['2'];
   const singleAward = await Award.findOne({
     where: {id: awardId}
   });
+  console.log(
+    '\n --------🚀 \n createTransactionInDB \n singleAward',
+    singleAward
+  );
   const singleNomination = await Nomination.findOne({
     where: {id: singleAward.pairId}
   });
@@ -128,30 +130,25 @@ async function createTransactionInDB(event) {
     amountWei,
     awardId
   });
-  const updatesToAward = {
-    donationTotal: singleAward.donatationTotal
-  };
-  // if it's there, that means its a new award donation, and the smart contract is established, so we can move it's status to pending.
-  if (!recipientOfAward.ethPublicAddress) {
-    await singleAward.update({open: 'pending'});
-  } else {
-    await singleAward.update({open: 'open'});
-  }
-  console.log('updatestoaward', updatesToAward, singleAward);
-  //We need to figure out
-  //update amount award instance property of donationTotal with the current donation
   let newDonationTotal = web3.utils
     .toBN(amountWei)
     .add(web3.utils.toBN(singleAward.donationTotal))
     .toString();
-  let donationTotal = newDonationTotal;
+
   console.log(
-    'newDonation',
-    newDonationTotal,
-    amountWei,
-    singleAward.donationTotal
+    '\n --------🚀 \n createTransactionInDB \n newDonationTotal',
+    newDonationTotal
   );
-  await singleAward.update({donationTotal});
+  //update amount award instance property of donationTotal with the current donation
+
+  if (!recipientOfAward.ethPublicAddress) {
+    await singleAward.update({
+      open: 'pending',
+      donationTotal: newDonationTotal
+    });
+  } else {
+    await singleAward.update({open: 'open', donationTotal: newDonationTotal});
+  }
 }
 
 async function deactivateAwardInDb(event) {
