@@ -25,7 +25,7 @@ branch=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
 function cleanup_at_exit {
   # return to your master branch
   git checkout $branch
-
+  git pull heroku master
   # remove the deploy branch
   git branch -D deploy
 }

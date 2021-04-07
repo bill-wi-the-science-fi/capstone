@@ -104,50 +104,59 @@ const createApp = () => {
 };
 
 async function createTransactionInDB(event) {
-  const {transactionHash, address, returnValues} = event;
-  const smartContractAddress = address;
-  const awardId = returnValues['3'];
-  const amountWei = returnValues['2'];
-  const singleAward = await Award.findOne({
-    where: {id: awardId}
-  });
-  console.log(
-    '\n --------🚀 \n createTransactionInDB \n singleAward',
-    singleAward
-  );
-  const singleNomination = await Nomination.findOne({
-    where: {id: singleAward.pairId}
-  });
-  const recipientOfAward = await User.findOne({
-    where: {id: singleNomination.recipientId}
-  });
-  const giverOfAward = await User.findOne({
-    where: {id: singleNomination.userId}
-  });
-  giverOfAward.createTransaction({
-    transactionHash,
-    smartContractAddress,
-    amountWei,
-    awardId
-  });
-  let newDonationTotal = web3.utils
-    .toBN(amountWei)
-    .add(web3.utils.toBN(singleAward.donationTotal))
-    .toString();
-
-  console.log(
-    '\n --------🚀 \n createTransactionInDB \n newDonationTotal',
-    newDonationTotal
-  );
-  //update amount award instance property of donationTotal with the current donation
-
-  if (!recipientOfAward.ethPublicAddress) {
-    await singleAward.update({
-      open: 'pending',
-      donationTotal: newDonationTotal
+  try {
+    console.log('entering the try block\n\n');
+    const {transactionHash, address, returnValues} = event;
+    const smartContractAddress = address;
+    const awardId = returnValues['3'];
+    const amountWei = returnValues['2'];
+    const singleAward = await Award.findOne({
+      where: {id: awardId}
     });
-  } else {
-    await singleAward.update({open: 'open', donationTotal: newDonationTotal});
+    console.log(
+      '\n --------🚀 \n createTransactionInDB \n singleAward',
+      singleAward
+    );
+    const singleNomination = await Nomination.findOne({
+      where: {id: singleAward.pairId}
+    });
+    const recipientOfAward = await User.findOne({
+      where: {id: singleNomination.recipientId}
+    });
+    const giverOfAward = await User.findOne({
+      where: {id: singleNomination.userId}
+    });
+    giverOfAward.createTransaction({
+      transactionHash,
+      smartContractAddress,
+      amountWei,
+      awardId
+    });
+
+    let newDonationTotal = web3.utils
+      .toBN(amountWei)
+      .add(web3.utils.toBN(singleAward.donationTotal))
+      .toString();
+
+    console.log(
+      '\n --------🚀 \n createTransactionInDB \n newDonationTotal',
+      newDonationTotal
+    );
+    //update amount award instance property of donationTotal with the current donation
+
+    if (!recipientOfAward.ethPublicAddress) {
+      await singleAward.update({
+        open: 'pending',
+        donationTotal: newDonationTotal
+      });
+    } else {
+      await singleAward.update({
+        open: 'open',
+        donationTotal: newDonationTotal
+      });
+    }
+  } catch (error) {
+    console.log('createTransactionInDB function failed, please see log \n\n');
   }
 }
 
@@ -210,7 +219,7 @@ async function bootApp() {
   await syncDb();
   await createApp();
   await startListening();
-  await initListener();
+  // await initListener();
 }
 // This evaluates as true when this file is run directly from the command line,
 // i.e. when we say 'node server/index.js' (or 'nodemon server/index.js', or 'nodemon server', etc)
