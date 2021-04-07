@@ -104,54 +104,60 @@ const createApp = () => {
 };
 
 async function createTransactionInDB(event) {
-  const {transactionHash, address, returnValues} = event;
-  const smartContractAddress = address;
-  const awardId = returnValues['3'];
-  console.log(awardId);
-  const donatorAddress = returnValues['0'];
-  const amountWei = returnValues['2'];
-  const singleAward = await Award.findOne({
-    where: {id: awardId}
-  });
-  const singleNomination = await Nomination.findOne({
-    where: {id: singleAward.pairId}
-  });
-  const recipientOfAward = await User.findOne({
-    where: {id: singleNomination.recipientId}
-  });
-  const giverOfAward = await User.findOne({
-    where: {id: singleNomination.userId}
-  });
-  giverOfAward.createTransaction({
-    transactionHash,
-    smartContractAddress,
-    amountWei,
-    awardId
-  });
-  const updatesToAward = {
-    donationTotal: singleAward.donatationTotal
-  };
-  // if it's there, that means its a new award donation, and the smart contract is established, so we can move it's status to pending.
-  if (!recipientOfAward.ethPublicAddress) {
-    await singleAward.update({open: 'pending'});
-  } else {
-    await singleAward.update({open: 'open'});
+  try {
+    console.log('entering the try block\n\n');
+    const {transactionHash, address, returnValues} = event;
+    const smartContractAddress = address;
+    const awardId = returnValues['3'];
+    const amountWei = returnValues['2'];
+    const singleAward = await Award.findOne({
+      where: {id: awardId}
+    });
+    console.log(
+      '\n --------🚀 \n createTransactionInDB \n singleAward',
+      singleAward
+    );
+    const singleNomination = await Nomination.findOne({
+      where: {id: singleAward.pairId}
+    });
+    const recipientOfAward = await User.findOne({
+      where: {id: singleNomination.recipientId}
+    });
+    const giverOfAward = await User.findOne({
+      where: {id: singleNomination.userId}
+    });
+    giverOfAward.createTransaction({
+      transactionHash,
+      smartContractAddress,
+      amountWei,
+      awardId
+    });
+
+    let newDonationTotal = web3.utils
+      .toBN(amountWei)
+      .add(web3.utils.toBN(singleAward.donationTotal))
+      .toString();
+
+    console.log(
+      '\n --------🚀 \n createTransactionInDB \n newDonationTotal',
+      newDonationTotal
+    );
+    //update amount award instance property of donationTotal with the current donation
+
+    if (!recipientOfAward.ethPublicAddress) {
+      await singleAward.update({
+        open: 'pending',
+        donationTotal: newDonationTotal
+      });
+    } else {
+      await singleAward.update({
+        open: 'open',
+        donationTotal: newDonationTotal
+      });
+    }
+  } catch (error) {
+    console.log('createTransactionInDB function failed, please see log \n\n');
   }
-  console.log('updatestoaward', updatesToAward, singleAward);
-  //We need to figure out
-  //update amount award instance property of donationTotal with the current donation
-  let newDonationTotal = web3.utils
-    .toBN(amountWei)
-    .add(web3.utils.toBN(singleAward.donationTotal))
-    .toString();
-  let donationTotal = newDonationTotal;
-  console.log(
-    'newDonation',
-    newDonationTotal,
-    amountWei,
-    singleAward.donationTotal
-  );
-  await singleAward.update({donationTotal});
 }
 
 async function deactivateAwardInDb(event) {
@@ -180,13 +186,18 @@ let contractListner = initListener();
 console.log('initialized', contractListner);
 
 async function ping() {
+  console.log(
+    '\n --------🚀 \n Smartcontract address-> ',
+    contractAddress,
+    ' \n\n'
+  );
   let balance = await myContract.methods.balanceOfContract().call();
   console.log('\ncontract balance in ETH', balance * 1e-18, 'ETH\n');
 }
 
 let counter = 0;
-cron.schedule('10 * * * *', () => {
-  counter = counter + 10;
+cron.schedule('1 * * * *', () => {
+  counter = counter + 1;
   ping();
   console.log('Listener has been running for', counter, 'minutes');
 });
@@ -208,7 +219,7 @@ async function bootApp() {
   await syncDb();
   await createApp();
   await startListening();
-  await initListener();
+  // await initListener();
 }
 // This evaluates as true when this file is run directly from the command line,
 // i.e. when we say 'node server/index.js' (or 'nodemon server/index.js', or 'nodemon server', etc)

@@ -23,7 +23,7 @@ contract Nominate {
 
    constructor() {
       owner = msg.sender;
-      awardDurationDays = 14;
+      awardDurationDays = 1;
       relayerAddress = 0x7714E9182799cE2f92B26E70c9CD55cD1b3c1d38;
    }
 
