@@ -38,13 +38,13 @@ git checkout -b deploy
 
 # Deploy new smartcontract to ropsten
 npx truffle compile
-npx truffle deploy --network ropsten
+npx truffle deploy --network ropsten --reset
 
 # webpack will run in "production mode"
 webpack -p
 
 # "force" add the otherwise gitignored build files
-git add -f public/bundle.js public/bundle.js.map
+git add -f public/bundle.js public/bundle.js.map build/contracts/Migrations.json build/contracts/Nominate.json
 
 # create a commit, even if nothing changed
 git commit --allow-empty -m 'Deploying'
