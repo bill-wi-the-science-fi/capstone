@@ -177,13 +177,18 @@ let contractListner = initListener();
 console.log('initialized', contractListner);
 
 async function ping() {
+  console.log(
+    '\n --------🚀 \n Smartcontract address-> ',
+    contractAddress,
+    ' \n\n'
+  );
   let balance = await myContract.methods.balanceOfContract().call();
   console.log('\ncontract balance in ETH', balance * 1e-18, 'ETH\n');
 }
 
 let counter = 0;
-cron.schedule('10 * * * *', () => {
-  counter = counter + 10;
+cron.schedule('1 * * * *', () => {
+  counter = counter + 1;
   ping();
   console.log('Listener has been running for', counter, 'minutes');
 });
